@@ -1,0 +1,161 @@
+
+
+# dnd-mentee-4th-5-backend
+
+## 개요
+
+DND 4기 5팀의 백엔드 프로젝트 입니다. 
+
+<br>
+
+## 프로젝트 구조
+
+추후 작성 예정
+
+<br>
+
+## 설치 방법
+
+```bash
+$ git clone https://github.com/dnd-mentee-4th/dnd-mentee-4th-5-backend.git
+...
+
+$ cd dnd-mentee-4th-5-backend.git
+$ poetry install
+```
+
+<br>
+
+## 실행 및 배포 방법
+
+추후 작성 예정
+
+
+
+<br>
+
+---
+
+## 개발 및 버저닝 규칙
+
+### 패키지 의존성 관리
+
+개발 과정에서는 [poetry](https://github.com/python-poetry/poetry)로 패키지를 관리합니다.  
+다만 실제 운영에서 배포할 때는 `pip`와 `requirements.txt` 를 이용합니다.
+
+```bash
+# git clone 이후 필요한 패키지를 다운받습니다.
+$ poetry install 
+
+# 필요한 패키지(ex. pandas, pytest)를 추가해야할 경우
+$ poetry add pandas
+$ poetry add pytest -D  # 개발 환경에서만 쓰이는 패키지로 추가하는 경우에 -D 옵션을 붙여줍니다.
+
+# 배포를 위해 requirements.txt 를 만들어야하는 경우
+$ poetry export -o requirements.txt --without-hashes
+```
+
+<br>
+
+### Git Commit
+
+[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) 규칙을 따릅니다.
+
+```
+fix: A bug fix. Correlates with PATCH in SemVer
+feat: A new feature. Correlates with MINOR in SemVer
+docs: Documentation only changes
+style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+refactor: A code change that neither fixes a bug nor adds a feature
+perf: A code change that improves performance
+test: Adding missing or correcting existing tests
+build: Changes that affect the build system or external dependencies (example scopes: pip, docker, npm)
+ci: Changes to our CI configuration files and scripts (example scopes: GitLabCI)
+```
+
+커밋은 `git commit` 을 직접 사용하지 않고 다음처럼 [commitizen](https://github.com/commitizen-tools/commitizen) 을 사용합니다.
+
+```bash
+# commitzen 사용을 위해 가상환경 shell에 먼저 접속합니다.
+$ poetry shell
+
+# commitzen 을 사용한 커밋 과정 예시입니다.
+$ (.venv) cz c
+? Select the type of change you are committing  build: Changes that affect the build system or external dependencies (example scopes: pip, docker, npm)
+? What is the scope of this change? (class or file name): (press [enter] to skip)
+
+? Write a short and imperative summary of the code changes: (lower case and no period)
+ poetry 관련 설정 초기화 및 commitizen, semantic-release 패키지 추가
+? Provide additional contextual information about the code changes: (press [enter] to skip)
+
+? Is this a BREAKING CHANGE? Correlates with MAJOR in SemVer  No
+? Footer. Information about Breaking Changes and reference issues that this commit closes: (press [enter] to skip)
+
+build: poetry 관련 설정 초기화 및 commitizen, semantic-release 패키지 추가
+```
+
+이후 `git log` 를 통해 [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) 규칙대로 추가된 것을 확인할 수 있습니다.
+
+```bash
+$ (.venv) git log --oneline
+
+b3929f1 (HEAD -> main) build: poetry 관련 설정 초기화 및 commitizen, semantic-release 패키지 추가
+d55aa6a (origin/main, origin/HEAD) template update: ISSUE + PR (#2)
+56b13b1 Initial commit
+```
+
+<br>
+
+### Git Branch
+
+브랜치는 다음과 같이 운영됩니다.
+
+```
+메인(main): 실제 서비스에 배포되어 운영되고 있는 코드입니다.
+개발(develop): 아직 서비스에 배포되지는 않았지만, 다음 버전에 배포될 코드입니다.
+기능(feature): 개발 브랜치에서 뻗어나와 개발해야될 기능을 담은 코드입니다.
+```
+
+특히 `feature` 브랜치 이름은 `feature/이슈 번호/작업 이름` 으로 만들어야 합니다.  
+예를 들면, `feature/3/auth` 이런 식입니다.
+작업할 때는 다음과 같은 플로우를 가지게 됩니다.
+
+```bash
+$ git switch develop
+$ git switch -c feature/3/auth
+
+코드 개발 및 커밋 작업 ..
+
+$ git push origin feature/3/auth
+```
+
+이후 Pull Request와 Merge은 Github 상에서 이뤄집니다.  
+Pull Request과 Merge의 흐름은  `feature` -> `develop` -> `main` 입니다.
+
+<br>
+
+---
+
+## 팀 정보
+
+- 팀 이름: 5조 - 5늘 술사줘
+- 팀 내 역할
+
+| Parts         | Name   |
+| ------------- | ------ |
+| Backend(조장) | 전시흠 |
+| Backend       | 홍석준 |
+| Frontend      | 이다예 |
+| Frontend      | 김동영 |
+| Design        | 이예나 |
+| Design        | 최소은 |
+
+<br>
+
+## 관련 링크
+
+- [프론트엔드](https://github.com/dnd-mentee-4th/dnd-mentee-4th-5-frontend)
+- [백엔드](https://github.com/dnd-mentee-4th/dnd-mentee-4th-5-backend)
+- [팀 노션](https://www.notion.so/330adbd74609421e89a9473e84a8204f) 
+
+
