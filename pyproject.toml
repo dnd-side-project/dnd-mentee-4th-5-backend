@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "dnd-mentee-4th-5-backend"
+version = "0.1.0"
+description = ""
+authors = ["heumsi <heumsi@naver.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+[tool.poetry.dev-dependencies]
+commitizen = "^2.13.0"
+pre-commit = "^2.9.3"
+python-semantic-release = "^7.11.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.0.1"
+tag_format = "$version"
