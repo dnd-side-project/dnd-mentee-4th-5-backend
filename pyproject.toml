@@ -11,6 +11,8 @@ python = "^3.8"
 commitizen = "^2.13.0"
 pre-commit = "^2.9.3"
 python-semantic-release = "^7.11.0"
+black = "^20.8b1"
+isort = "^5.7.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
