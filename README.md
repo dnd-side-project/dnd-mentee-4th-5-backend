@@ -1,10 +1,8 @@
-
-
 # dnd-mentee-4th-5-backend
 
 ## 개요
 
-DND 4기 5팀의 백엔드 프로젝트 입니다. 
+DND 4기 5팀의 백엔드 프로젝트 입니다.
 
 <br>
 
@@ -30,8 +28,6 @@ $ poetry install
 
 추후 작성 예정
 
-
-
 <br>
 
 ---
@@ -45,7 +41,7 @@ $ poetry install
 
 ```bash
 # git clone 이후 필요한 패키지를 다운받습니다.
-$ poetry install 
+$ poetry install
 
 # 필요한 패키지(ex. pandas, pytest)를 추가해야할 경우
 $ poetry add pandas
@@ -129,8 +125,18 @@ $ git switch -c feature/3/auth
 $ git push origin feature/3/auth
 ```
 
-이후 Pull Request와 Merge은 Github 상에서 이뤄집니다.  
-Pull Request과 Merge의 흐름은  `feature` -> `develop` -> `main` 입니다.
+### Pull Request
+
+Pull Request와 Merge은 Github 상에서 이뤄집니다.
+
+- PR 전에 관련 내용이 Issue 에 먼저 등록되어 있어야 합니다. Issue 가 없다면 이를 먼저 작성해주세요.
+- PR 제목은 `#{이슈 번호}: 제목` 으로 해주세요.
+  - 예를 들어, 관련 Issue 번호가 3번이고, 로그인 관련된 내용인 경우 : `#3: 로그인 관련 PR`
+- PR 내용은 설정된 템플릿을 이용해주세요.
+- `feature` -> `develop` Merge 는 `Squash & Merge` 로 해주세요.
+- `develop` -> `main` Merge 는 `Merge commits` 으로 해주세요.
+
+Pull Request과 Merge의 흐름은 `feature` -> `develop` -> `main` 입니다.
 
 <br>
 
@@ -156,6 +162,4 @@ Pull Request과 Merge의 흐름은  `feature` -> `develop` -> `main` 입니다.
 
 - [프론트엔드](https://github.com/dnd-mentee-4th/dnd-mentee-4th-5-frontend)
 - [백엔드](https://github.com/dnd-mentee-4th/dnd-mentee-4th-5-backend)
-- [팀 노션](https://www.notion.so/330adbd74609421e89a9473e84a8204f) 
-
-
+- [팀 노션](https://www.notion.so/330adbd74609421e89a9473e84a8204f)
