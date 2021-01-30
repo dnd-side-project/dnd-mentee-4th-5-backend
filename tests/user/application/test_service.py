@@ -13,7 +13,7 @@ from users.application.service import UserApplicationService
 from users.domain.entities import User
 from users.application.exceptions import UserNotExistError
 from users.domain.value_objects import UserId, UserName, LoginStatus
-from users.infra_structures.in_memory_repository import InMemoryUserRepository
+from users.infra_structure.in_memory_repository import InMemoryUserRepository
 
 
 @pytest.fixture
