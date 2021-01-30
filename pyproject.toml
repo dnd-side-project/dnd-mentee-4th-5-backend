@@ -7,6 +7,7 @@ authors = ["heumsi <heumsi@naver.com>"]
 [tool.poetry.dependencies]
 python = "^3.8"
 fastapi = {extras = ["all"], version = "^0.63.0"}
+dependency-injector = "^4.12.0"
 
 [tool.poetry.dev-dependencies]
 commitizen = "^2.13.0"
