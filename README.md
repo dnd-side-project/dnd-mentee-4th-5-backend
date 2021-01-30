@@ -130,9 +130,8 @@ $ git push origin feature/3/auth
 Pull Request와 Merge은 Github 상에서 이뤄집니다.
 
 - PR 전에 관련 내용이 Issue 에 먼저 등록되어 있어야 합니다. Issue 가 없다면 이를 먼저 작성해주세요.
-- PR 제목은 `#{이슈 번호}: 제목` 으로 해주세요.
-  - 예를 들어, 관련 Issue 번호가 3번이고, 로그인 관련된 내용인 경우 : `#3: 로그인 관련 PR`
 - PR 내용은 설정된 템플릿을 이용해주세요.
+- PR 생성 후 Linked issued 에 관련된 이슈를 추가 해주세요.
 - `feature` -> `develop` Merge 는 `Squash & Merge` 로 해주세요.
 - `develop` -> `main` Merge 는 `Merge commits` 으로 해주세요.
 
