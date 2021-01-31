@@ -43,8 +43,6 @@ def test_find_user(user_application_service, user_repository, user_id, user_name
         description="",
         hashed_password=hashed_password,
         image_url="",
-        review_ids=[],
-        wished_drinks_ids=[],
     )
     assert actual == expected
 
@@ -120,8 +118,10 @@ def test_login(user_application_service, user_repository, user_id, user_name, ha
     input_dto = LoginInputDto(user_id=UserId(value="joon"), hashed_password=hashed_password)
     actual = user_application_service.login(input_dto)
     expected = LoginOutputDto(status=LoginStatus.FAILED, message=f"{str(input_dto.user_id)} 아이디는 존재하지 않습니다.")
+    assert actual == expected
 
     # Wrong PW
     input_dto = LoginInputDto(user_id=UserId(value=user_id), hashed_password="4321")
     actual = user_application_service.login(input_dto)
     expected = LoginOutputDto(status=LoginStatus.FAILED, message=f"잘못된 비밀번호 입니다.")
+    assert actual == expected
