@@ -3,6 +3,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 from reviews.domain.value_objects import ReviewRating
+from users.domain.value_objects import UserId
 
 
 class FindReviewInputDto(BaseModel):
@@ -15,7 +16,7 @@ class FindReviewOutputDto(BaseModel):
     user_id: UserId
     rating: ReviewRating
     comment: str
-    created_at: datetime
+    created_at: float
 
 
 class CreateReviewInputDto(BaseModel):
@@ -24,7 +25,7 @@ class CreateReviewInputDto(BaseModel):
     user_id: UserId
     rating: ReviewRating
     comment: str
-    created_at: datetime
+    created_at: float
 
 
 class UpdateReviewInputDto(BaseModel):
@@ -33,7 +34,7 @@ class UpdateReviewInputDto(BaseModel):
     user_id: UserId
     rating: ReviewRating
     comment: str
-    created_at: datetime
+    created_at: float
 
 
 class DeleteReviewInputDto(BaseModel):
