@@ -27,8 +27,6 @@ class UserApplicationService:
             description=user.description,
             hashed_password=user.hashed_password,
             image_url=user.image_url,
-            review_ids=user.review_ids,
-            wished_drinks_ids=user.wished_drinks_ids,
         )
 
     def create_user(self, input_dto: CreateUserInputDto) -> None:

@@ -10,5 +10,3 @@ class User(BaseModel):
     description: str = Field(default="")
     hashed_password: str
     image_url: str = Field(default="")
-    review_ids: List[str] = Field(default=[])
-    wished_drinks_ids: List[str] = Field(default=[])

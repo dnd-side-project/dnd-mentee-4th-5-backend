@@ -15,8 +15,6 @@ class FindUserOutputDto(BaseModel):
     description: str
     hashed_password: str
     image_url: str
-    review_ids: List[str]
-    wished_drinks_ids: List[str]
 
 
 class CreateUserInputDto(BaseModel):
