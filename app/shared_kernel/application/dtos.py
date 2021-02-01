@@ -1,12 +1,10 @@
 import abc
 from typing import ClassVar
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class SuccessOutputDto(BaseModel, abc.ABC):
-    status: str = Field(default="Success")
-
     def __bool__(self) -> bool:
         return True
 
