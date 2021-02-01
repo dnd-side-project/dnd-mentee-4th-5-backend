@@ -1,14 +1,17 @@
 import abc
 from typing import ClassVar
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
-class OutputDto(BaseModel, abc.ABC):
-    status: str
+class SuccessOutputDto(BaseModel, abc.ABC):
+    status: str = Field(default="Success")
+
+    def __bool__(self) -> bool:
+        return True
 
 
-class FailedOutputDto(OutputDto):
+class FailedOutputDto(BaseModel):
     RESOURCE_ERROR: ClassVar = "ResourceError"
     PARAMETERS_ERROR: ClassVar = "ParametersError"
     SYSTEM_ERROR: ClassVar = "SystemError"
@@ -31,3 +34,6 @@ class FailedOutputDto(OutputDto):
     @classmethod
     def build_parameters_error(cls, message: str = ""):
         return cls(status=cls.PARAMETERS_ERROR, message=message)
+
+    def __bool__(self) -> bool:
+        return False
