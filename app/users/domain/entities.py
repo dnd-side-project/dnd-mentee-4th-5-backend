@@ -8,5 +8,5 @@ class User(BaseModel):
     id: UserId
     name: UserName
     description: str = Field(default="")
-    hashed_password: str
+    password: str
     image_url: str = Field(default="")

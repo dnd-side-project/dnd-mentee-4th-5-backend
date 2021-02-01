@@ -1,5 +1,6 @@
 import pytest
 
+from shared_kernel.application.dtos import FailedOutputDto
 from users.application.dtos import (
     CreateUserInputDto,
     UpdateUserInputDto,
@@ -11,8 +12,7 @@ from users.application.dtos import (
 )
 from users.application.service import UserApplicationService
 from users.domain.entities import User
-from users.application.exceptions import UserNotExistError
-from users.domain.value_objects import UserId, UserName, LoginStatus
+from users.domain.value_objects import UserId, UserName
 from users.infra_structure.in_memory_repository import InMemoryUserRepository
 
 
@@ -29,47 +29,41 @@ def user_application_service(user_repository):
 user_data = [("heumsi", "heumsi", "1234")]
 
 
-@pytest.mark.parametrize("user_id, user_name, hashed_password", user_data)
-def test_find_user(user_application_service, user_repository, user_id, user_name, hashed_password):
-    user_repository.add(
-        User(id=UserId(value=user_id), name=UserName(value=user_name), hashed_password=hashed_password)
-    )
+@pytest.mark.parametrize("user_id, user_name, password", user_data)
+def test_find_user(user_application_service, user_repository, user_id, user_name, password):
+    user_repository.add(User(id=UserId(value=user_id), name=UserName(value=user_name), password=password))
 
-    input_dto = FindUserInputDto(user_id=UserId(value=user_id))
+    input_dto = FindUserInputDto(user_id=user_id)
     actual = user_application_service.find_user(input_dto)
     expected = FindUserOutputDto(
-        user_id=UserId(value=user_id),
-        user_name=UserName(value=user_name),
+        user_id=user_id,
+        user_name=user_name,
         description="",
-        hashed_password=hashed_password,
+        password=password,
         image_url="",
     )
     assert actual == expected
 
 
-@pytest.mark.parametrize("user_id, user_name, hashed_password", user_data)
-def test_create_user(user_application_service, user_repository, user_id, user_name, hashed_password):
-    input_dto = CreateUserInputDto(
-        user_id=UserId(value="heumsi"), user_name=UserName(value="heumsi"), hashed_password="1234"
-    )
+@pytest.mark.parametrize("user_id, user_name, password", user_data)
+def test_create_user(user_application_service, user_repository, user_id, user_name, password):
+    input_dto = CreateUserInputDto(user_id=user_id, user_name=user_name, password=password)
     user_application_service.create_user(input_dto)
 
     actual = user_repository.find_all()
-    expected = [User(id=UserId(value="heumsi"), name=UserName(value="heumsi"), hashed_password="1234")]
+    expected = [User(id=UserId(value=user_id), name=UserName(value=user_name), password=password)]
     assert actual == expected
 
 
-@pytest.mark.parametrize("user_id, user_name, hashed_password", user_data)
-def test_update_user(user_application_service, user_repository, user_id, user_name, hashed_password):
-    user_repository.add(
-        User(id=UserId(value=user_id), name=UserName(value=user_name), hashed_password=hashed_password)
-    )
+@pytest.mark.parametrize("user_id, user_name, password", user_data)
+def test_update_user(user_application_service, user_repository, user_id, user_name, password):
+    user_repository.add(User(id=UserId(value=user_id), name=UserName(value=user_name), password=password))
 
     input_dto = UpdateUserInputDto(
-        user_id=UserId(value=user_id),
-        user_name=UserName(value="siheum"),
+        user_id=user_id,
+        user_name="siheum",
         description="hi, I'm siheum!",
-        hashed_password="4321",
+        password="4321",
         image_url="",
     )
     user_application_service.update_user(input_dto)
@@ -79,19 +73,17 @@ def test_update_user(user_application_service, user_repository, user_id, user_na
         id=UserId(value=user_id),
         name=UserName(value="siheum"),
         description="hi, I'm siheum!",
-        hashed_password="4321",
+        password="4321",
         image_url="",
     )
     assert actual == expected
 
 
-@pytest.mark.parametrize("user_id, user_name, hashed_password", user_data)
-def test_delete_user(user_application_service, user_repository, user_id, user_name, hashed_password):
-    user_repository.add(
-        User(id=UserId(value=user_id), name=UserName(value=user_name), hashed_password=hashed_password)
-    )
+@pytest.mark.parametrize("user_id, user_name, password", user_data)
+def test_delete_user(user_application_service, user_repository, user_id, user_name, password):
+    user_repository.add(User(id=UserId(value=user_id), name=UserName(value=user_name), password=password))
 
-    input_dto = DeleteUserInputDto(user_id=UserId(value=user_id))
+    input_dto = DeleteUserInputDto(user_id=user_id)
     user_application_service.delete_user(input_dto)
 
     actual = user_repository.find_by_user_id(user_id=UserId(value=user_id))
@@ -99,29 +91,27 @@ def test_delete_user(user_application_service, user_repository, user_id, user_na
     assert actual == expected
 
     # Check delete user when user in-memory repo is Empty
-    with pytest.raises(UserNotExistError):
-        user_application_service.delete_user(input_dto)
+    output_dto = user_application_service.delete_user(input_dto)
+    assert output_dto == FailedOutputDto.build_resource_error("heumsi의 유저를 찾지 못했습니다.")
 
 
-@pytest.mark.parametrize("user_id, user_name, hashed_password", user_data)
-def test_login(user_application_service, user_repository, user_id, user_name, hashed_password):
-    user_repository.add(
-        User(id=UserId(value=user_id), name=UserName(value=user_name), hashed_password=hashed_password)
-    )
+@pytest.mark.parametrize("user_id, user_name, password", user_data)
+def test_login(user_application_service, user_repository, user_id, user_name, password):
+    user_repository.add(User(id=UserId(value=user_id), name=UserName(value=user_name), password=password))
 
-    input_dto = LoginInputDto(user_id=UserId(value=user_id), hashed_password=hashed_password)
+    input_dto = LoginInputDto(user_id=user_id, password=password)
     actual = user_application_service.login(input_dto)
-    expected = LoginOutputDto(status=LoginStatus.SUCCESS)
+    expected = LoginOutputDto()
     assert actual == expected
 
     # Wrong Id
-    input_dto = LoginInputDto(user_id=UserId(value="joon"), hashed_password=hashed_password)
+    input_dto = LoginInputDto(user_id="joon", password=password)
     actual = user_application_service.login(input_dto)
-    expected = LoginOutputDto(status=LoginStatus.FAILED, message=f"{str(input_dto.user_id)} 아이디는 존재하지 않습니다.")
+    expected = FailedOutputDto.build_resource_error(message=f"{str(input_dto.user_id)}의 유저를 찾지 못했습니다.")
     assert actual == expected
 
     # Wrong PW
-    input_dto = LoginInputDto(user_id=UserId(value=user_id), hashed_password="4321")
+    input_dto = LoginInputDto(user_id=user_id, password="4321")
     actual = user_application_service.login(input_dto)
-    expected = LoginOutputDto(status=LoginStatus.FAILED, message=f"잘못된 비밀번호 입니다.")
+    expected = FailedOutputDto.build_resource_error(message=f"잘못된 비밀번호 입니다.")
     assert actual == expected
