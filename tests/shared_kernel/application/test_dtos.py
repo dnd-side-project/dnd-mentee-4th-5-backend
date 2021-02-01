@@ -14,7 +14,7 @@ def test_success_output_dto():
 
 def test_failed_output_dto():
     actual = FailedOutputDto.build_from_invalid_request_object()
-    expected = FailedOutputDto(status=FailedOutputDto.PARAMETERS_ERROR, message="")
+    expected = FailedOutputDto(type=FailedOutputDto.PARAMETERS_ERROR, message="")
 
     if not actual:
         assert True
