@@ -22,12 +22,12 @@ class FailedOutputDto(OutputDto):
 
     @classmethod
     def build_resource_error(cls, message: str = ""):
-        return cls(cls.RESOURCE_ERROR, message)
+        return cls(status=cls.RESOURCE_ERROR, message=message)
 
     @classmethod
     def build_system_error(cls, message: str = ""):
-        return cls(cls.SYSTEM_ERROR, message)
+        return cls(status=cls.SYSTEM_ERROR, message=message)
 
     @classmethod
     def build_parameters_error(cls, message: str = ""):
-        return cls(cls.PARAMETERS_ERROR, message)
+        return cls(status=cls.PARAMETERS_ERROR, message=message)
