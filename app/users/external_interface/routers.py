@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends
 from starlette import status
 
 from shared_kernel.external_interface.json_dto import FailedJsonResponse
-from users.infra_structure.container import Container
+from container import Container
 from users.application.dtos import CreateUserInputDto
 from users.application.service import UserApplicationService
 from users.domain.repository import UserRepository

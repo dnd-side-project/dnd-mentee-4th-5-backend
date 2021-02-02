@@ -1,13 +1,14 @@
 import uvicorn
 from fastapi import FastAPI
 
-from users.infra_structure.container import Container
+from container import Container
 
+import auth.external_interface.routers
 import users.external_interface.routers
 import health.external_interface.routers
 
 
-router_modules = [users.external_interface.routers, health.external_interface.routers]
+router_modules = [users.external_interface.routers, health.external_interface.routers, auth.external_interface.routers]
 container = Container()
 container.wire(modules=router_modules)
 
