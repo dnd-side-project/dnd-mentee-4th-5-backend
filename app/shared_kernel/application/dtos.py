@@ -5,7 +5,8 @@ from pydantic import BaseModel
 
 
 class SuccessOutputDto(BaseModel, abc.ABC):
-    def __bool__(self) -> bool:
+    @property
+    def status(self) -> bool:
         return True
 
 
@@ -33,5 +34,6 @@ class FailedOutputDto(BaseModel):
     def build_parameters_error(cls, message: str = ""):
         return cls(type=cls.PARAMETERS_ERROR, message=message)
 
-    def __bool__(self) -> bool:
+    @property
+    def status(self) -> bool:
         return False
