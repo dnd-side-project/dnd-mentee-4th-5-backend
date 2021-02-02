@@ -75,7 +75,7 @@ class UserApplicationService:
     def login(self, input_dto: LoginInputDto) -> Union[LoginOutputDto, FailedOutputDto]:
         try:
             user_id = UserId(value=input_dto.user_id)
-            user = self._user_repository.find_by_user_id(user_id)
+            user = self._user_repository.find_by_user_id(user_id=user_id)
             if user is None:
                 return FailedOutputDto.build_resource_error(f"{str(user_id)}의 유저를 찾지 못했습니다.")
 
