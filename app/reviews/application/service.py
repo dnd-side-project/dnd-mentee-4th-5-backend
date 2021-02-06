@@ -1,9 +1,11 @@
-from reviews.application.dtos import (CreateReviewInputDto,
-                                      DeleteReviewInputDto, FindReviewInputDto,
-                                      FindReviewOutputDto,
-                                      UpdateReviewInputDto)
-from reviews.application.exceptions import (ReviewAlreadyExistError,
-                                            ReviewNotExistError)
+from reviews.application.dtos import (
+    CreateReviewInputDto,
+    DeleteReviewInputDto,
+    FindReviewInputDto,
+    FindReviewOutputDto,
+    UpdateReviewInputDto,
+)
+from reviews.application.exceptions import ReviewAlreadyExistError, ReviewNotExistError
 from reviews.domain.entities import Review
 from reviews.domain.repository import ReviewRepository
 
@@ -36,7 +38,7 @@ class ReviewApplicationService:
             user_id=input_dto.user_id,
             rating=input_dto.rating,
             comment=input_dto.comment,
-            created_at=input_dto.created_at
+            created_at=input_dto.created_at,
         )
         self._user_repository.add(review)
 
@@ -51,7 +53,7 @@ class ReviewApplicationService:
             user_id=input_dto.user_id,
             rating=input_dto.rating,
             comment=input_dto.comment,
-            created_at=input_dto.created_at
+            created_at=input_dto.created_at,
         )
         self._user_repository.update(review)
 
@@ -61,9 +63,3 @@ class ReviewApplicationService:
             raise ReviewNotExistError(f"{str(input_dto.review_id)}의 리뷰를 찾을 수 없습니다.")
 
         self._user_repository.delete_by_review_id(input_dto.review_id)
-        
-
-
-
-
-
