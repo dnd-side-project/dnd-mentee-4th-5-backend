@@ -8,7 +8,11 @@ import users.external_interface.routers
 import health.external_interface.routers
 
 
-router_modules = [users.external_interface.routers, health.external_interface.routers, auth.external_interface.routers]
+router_modules = [
+    users.external_interface.routers,
+    health.external_interface.routers,
+    auth.external_interface.routers,
+]
 container = Container()
 container.wire(modules=router_modules)
 
