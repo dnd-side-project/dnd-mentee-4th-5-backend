@@ -5,9 +5,8 @@ from fastapi import APIRouter, Depends
 from reviews.application.dtos import CreateReviewInputDto
 from reviews.application.service import ReviewApplicationService
 from reviews.domain.repository import ReviewRepository
-from reviews.domain.value_objects import ReviewRating
+from reviews.domain.value_objects import ReviewRating, UserId
 from reviews.infra_structure.container import Container
-from users.domain.value_objects import UserId
 
 router = APIRouter(
     prefix="/users/reviews",
