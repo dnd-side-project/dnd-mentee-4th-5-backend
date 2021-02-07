@@ -11,9 +11,10 @@ class SuccessOutputDto(BaseModel, abc.ABC):
 
 
 class FailedOutputDto(BaseModel):
-    RESOURCE_ERROR: ClassVar = "ResourceError"
-    PARAMETERS_ERROR: ClassVar = "ParametersError"
-    SYSTEM_ERROR: ClassVar = "SystemError"
+    RESOURCE_ERROR: ClassVar[str] = "ResourceError"
+    PARAMETERS_ERROR: ClassVar[str] = "ParametersError"
+    SYSTEM_ERROR: ClassVar[str] = "SystemError"
+    UNAUTHORIZED_ERROR: ClassVar[str] = "UnauthorizedError"
 
     type: str
     message: str
@@ -33,6 +34,10 @@ class FailedOutputDto(BaseModel):
     @classmethod
     def build_parameters_error(cls, message: str = ""):
         return cls(type=cls.PARAMETERS_ERROR, message=message)
+
+    @classmethod
+    def build_unauthorized_error(cls, message: str = ""):
+        return cls(type=cls.UNAUTHORIZED_ERROR, message=message)
 
     @property
     def status(self) -> bool:

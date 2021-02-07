@@ -26,3 +26,22 @@ def get_token(
     if output_dto.status:
         return GetTokenJsonResponse(access_token=output_dto.access_token)
     return FailedJsonResponse.build_by_output_dto(output_dto)
+
+
+# def verify_token():
+#     def _verfiy_token(
+#         request: Request,
+#         auth_application_service=Depends(Provide[Container.auth_application_service]),
+#         access_token: str = Header(...),
+#     ):
+#         input_dto = VerifyTokenInputDto(access_token=access_token, user_id=request.user_id)
+#         output_dto = auth_application_service.verfiy_token(input_dto)
+#         if not output_dto.result:
+#             return HTTPException(
+#                 status_code=status.HTTP_401_UNAUTHORIZED,
+#                 detail="Could not validate credentials",
+#                 headers={"WWW-Authenticate": "Bearer"},
+#             )
+#         return True
+#
+#     return _verfiy_token
