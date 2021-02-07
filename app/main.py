@@ -1,12 +1,9 @@
-import uvicorn
-from fastapi import FastAPI
-
-from container import Container
-
 import auth.external_interface.routers
-import users.external_interface.routers
 import health.external_interface.routers
-
+import users.external_interface.routers
+import uvicorn
+from container import Container
+from fastapi import FastAPI
 
 router_modules = [
     users.external_interface.routers,

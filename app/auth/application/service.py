@@ -1,11 +1,15 @@
-from jose import jwt
-
-from auth.application.dtos import GetTokenInputDto, GetTokenOutputDto, VerifyTokenInputDto, VerifyTokenOutputDto
-from settings import Settings
-from users.application.service import UserApplicationService
+from auth.application.dtos import (
+    GetTokenInputDto,
+    GetTokenOutputDto,
+    VerifyTokenInputDto,
+    VerifyTokenOutputDto,
+)
 from auth.domain.value_objects import TokenPayload
+from jose import jwt
+from settings import Settings
 from shared_kernel.application.dtos import FailedOutputDto
 from users.application.dtos import LoginInputDto
+from users.application.service import UserApplicationService
 
 
 class AuthApplicationService:
@@ -35,7 +39,9 @@ class AuthApplicationService:
     ) -> [VerifyTokenOutputDto, FailedOutputDto]:
         try:
             decoded_jwt = jwt.decode(
-                token=input_dto.access_token, key=self._JWT_SECRET_KEY, algorithms=self._JWT_ALGORITHM
+                token=input_dto.access_token,
+                key=self._JWT_SECRET_KEY,
+                algorithms=self._JWT_ALGORITHM,
             )
             if TokenPayload(**decoded_jwt) == TokenPayload(user_id=input_dto.user_id):
                 return VerifyTokenOutputDto()

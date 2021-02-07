@@ -3,12 +3,12 @@ from typing import Optional, Union
 from shared_kernel.application.dtos import FailedOutputDto
 from users.application.dtos import (
     CreateUserInputDto,
-    UpdateUserInputDto,
     DeleteUserInputDto,
     FindUserInputDto,
     FindUserOutputDto,
     LoginInputDto,
     LoginOutputDto,
+    UpdateUserInputDto,
 )
 from users.domain.entities import User
 from users.domain.repository import UserRepository
