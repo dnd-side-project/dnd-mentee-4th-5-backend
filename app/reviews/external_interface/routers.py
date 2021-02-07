@@ -7,7 +7,7 @@ from reviews.application.service import ReviewApplicationService
 from reviews.domain.repository import ReviewRepository
 from reviews.domain.value_objects import ReviewRating
 from reviews.infra_structure.container import Container
-from users.domain.value_objects import UserId
+from reviews.domain.value_objects import UserId
 
 router = APIRouter(
     prefix="/users/reviews",
@@ -18,8 +18,8 @@ router = APIRouter(
 @router.post("")
 @inject
 def create_review(
-    request: CreateReviewJsonRequest,
-    review_repository: ReviewRepository = Depends(Provide[Container.review_repository]),
+        request: CreateReviewJsonRequest,
+        review_repository: ReviewRepository = Depends(Provide[Container.review_repository])
 ):
     review_application_service = ReviewApplicationService(review_repository=review_repository)
     input_dto = CreateReviewInputDto(
@@ -28,6 +28,6 @@ def create_review(
         user_id=UserId(value=request.user_id),
         rating=ReviewRating(value=request.rating),
         comment=request.comment,
-        created_at=request.created_at,
+        created_at=request.created_at
     )
     review_application_service.create_review(input_dto=input_dto)
