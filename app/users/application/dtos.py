@@ -1,5 +1,4 @@
 from pydantic import BaseModel, Field
-
 from shared_kernel.application.dtos import SuccessOutputDto
 
 
