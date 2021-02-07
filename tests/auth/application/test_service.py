@@ -6,6 +6,8 @@ from auth.application.dtos import (
     GetTokenOutputDto,
     VerifyTokenInputDto,
     VerifyTokenOutputDto,
+    GetTokenDataInputDto,
+    GetTokenDataOutputDto,
 )
 from auth.application.service import AuthApplicationService
 from jose import jwt
@@ -59,6 +61,22 @@ def test_get_token(auth_application_service, user_application_service):
     assert actual == expected
 
 
+def test_get_token_data(auth_application_service):
+    input_dto = GetTokenDataInputDto(access_token="wrong jwt token")
+
+    actual = auth_application_service.get_token_data(input_dto)
+    expected = FailedOutputDto.build_unauthorized_error(message="올바른 access-token이 아닙니다.")
+    assert actual == expected
+
+    input_dto = GetTokenDataInputDto(
+        access_token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiaGV1bXNpIn0.OuFWvZ07CwSzR1j7I-wxFHweVb6sB8_U2LezYL7nz3I"
+    )
+
+    actual = auth_application_service.get_token_data(input_dto)
+    expected = GetTokenDataOutputDto(user_id="heumsi")
+    assert actual == expected
+
+
 def test_verify_token(auth_application_service):
     input_dto = VerifyTokenInputDto(
         access_token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiaGV1bXNpIn0.OuFWvZ07CwSzR1j7I-wxFHweVb6sB8_U2LezYL7nz3I",
@@ -74,5 +92,5 @@ def test_verify_token(auth_application_service):
         user_id="seokjoon",
     )
     actual = auth_application_service.verify_token(input_dto)
-    expected = FailedOutputDto(type="UnauthorizedError", message="access_token이 유효하지 않습니다.")
+    expected = FailedOutputDto(type="UnauthorizedError", message="access-token이 유효하지 않습니다.")
     assert actual == expected
