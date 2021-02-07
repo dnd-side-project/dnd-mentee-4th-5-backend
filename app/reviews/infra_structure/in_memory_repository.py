@@ -39,3 +39,4 @@ class InMemoryReviewRepository(ReviewRepository):
 
     def delete_by_review_id(self, review_id: UUID) -> None:
         self.review_id_to_review.pop(str(review_id), None)
+
