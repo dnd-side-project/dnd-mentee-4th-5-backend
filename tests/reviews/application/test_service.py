@@ -34,11 +34,7 @@ review_data = [
     (
         uuid.uuid5(
             uuid.NAMESPACE_DNS,
-            name=(
-                "Jun"
-                + str(uuid.uuid5(uuid.NAMESPACE_DNS, "drink_id"))
-                + str(1355563265.81)
-            ),
+            name=("Jun" + str(uuid.uuid5(uuid.NAMESPACE_DNS, "drink_id")) + str(1355563265.81)),
         ),
         uuid.uuid5(uuid.NAMESPACE_DNS, "drink_id"),
         "Jun",
@@ -48,9 +44,7 @@ review_data = [
 ]
 
 
-@pytest.mark.parametrize(
-    "review_id, drink_id, user_id, rating, created_at", review_data
-)
+@pytest.mark.parametrize("review_id, drink_id, user_id, rating, created_at", review_data)
 def test_find_review(
     review_application_service,
     review_repository,
@@ -62,9 +56,7 @@ def test_find_review(
 ):
     review_repository.add(
         Review(
-            id=uuid.uuid5(
-                uuid.NAMESPACE_DNS, name=user_id + str(drink_id) + str(created_at)
-            ),
+            id=uuid.uuid5(uuid.NAMESPACE_DNS, name=user_id + str(drink_id) + str(created_at)),
             drink_id=drink_id,
             user_id=UserId(value=user_id),
             rating=ReviewRating(value=rating),
@@ -86,9 +78,7 @@ def test_find_review(
     assert actual == expected
 
 
-@pytest.mark.parametrize(
-    "review_id, drink_id, user_id, rating, created_at", review_data
-)
+@pytest.mark.parametrize("review_id, drink_id, user_id, rating, created_at", review_data)
 def test_create_review(
     review_application_service,
     review_repository,
@@ -122,9 +112,7 @@ def test_create_review(
     assert actual == expected
 
 
-@pytest.mark.parametrize(
-    "review_id, drink_id, user_id, rating, created_at", review_data
-)
+@pytest.mark.parametrize("review_id, drink_id, user_id, rating, created_at", review_data)
 def test_update_review(
     review_application_service,
     review_repository,
@@ -167,9 +155,7 @@ def test_update_review(
     assert actual == expected
 
 
-@pytest.mark.parametrize(
-    "review_id, drink_id, user_id, rating, created_at", review_data
-)
+@pytest.mark.parametrize("review_id, drink_id, user_id, rating, created_at", review_data)
 def test_delete_review(
     review_application_service,
     review_repository,
@@ -199,14 +185,10 @@ def test_delete_review(
 
     # Check delete when review in-memory repo is empty
     output_dto = review_application_service.delete_review(input_dto)
-    assert output_dto == FailedOutputDto.build_resource_error(
-        f"{str(review_id)}의 리뷰를 찾을 수 없습니다."
-    )
+    assert output_dto == FailedOutputDto.build_resource_error(f"{str(review_id)}의 리뷰를 찾을 수 없습니다.")
 
 
-@pytest.mark.parametrize(
-    "review_id, drink_id, user_id, rating, created_at", review_data
-)
+@pytest.mark.parametrize("review_id, drink_id, user_id, rating, created_at", review_data)
 def test_find_reviews_by_user_id(
     review_application_service,
     review_repository,
@@ -254,9 +236,7 @@ def test_find_reviews_by_user_id(
     assert actual == expected
 
 
-@pytest.mark.parametrize(
-    "review_id, drink_id, user_id, rating, created_at", review_data
-)
+@pytest.mark.parametrize("review_id, drink_id, user_id, rating, created_at", review_data)
 def test_find_reviews_by_drink_id(
     review_application_service,
     review_repository,

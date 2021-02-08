@@ -15,7 +15,7 @@ class GetTokenDataInputDto(BaseModel):
     access_token: str
 
 
-class GetTokenDataOutputDto(BaseModel):
+class GetTokenDataOutputDto(SuccessOutputDto):
     user_id: str
 
 

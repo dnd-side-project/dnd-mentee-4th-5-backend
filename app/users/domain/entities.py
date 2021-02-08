@@ -1,5 +1,3 @@
-from typing import List
-
 from pydantic import BaseModel, Field
 from users.domain.value_objects import UserId, UserName
 

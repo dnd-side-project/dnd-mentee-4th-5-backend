@@ -20,16 +20,30 @@ class CreateUserInputDto(BaseModel):
     password: str
 
 
-class UpdateUserInputDto(SuccessOutputDto):
+class CreateUserOutputDto(SuccessOutputDto):
+    user_id: str
+    user_name: str
+    description: str
+    image_url: str
+
+
+class UpdateUserInputDto(BaseModel):
     user_id: str
     user_name: str
     description: str
     password: str
-    image_url: str
+
+
+class UpdateUserOutputDto(SuccessOutputDto):
+    pass
 
 
 class DeleteUserInputDto(BaseModel):
     user_id: str
+
+
+class DeleteUserOutputDto(SuccessOutputDto):
+    pass
 
 
 class LoginInputDto(BaseModel):
@@ -38,4 +52,4 @@ class LoginInputDto(BaseModel):
 
 
 class LoginOutputDto(SuccessOutputDto):
-    message: str = Field(default="")
+    pass
