@@ -17,7 +17,9 @@ router = APIRouter(
 @inject
 def create_user(
     request: CreateUserJsonRequest,
-    user_application_service: UserApplicationService = Depends(Provide[Container.user_application_service]),
+    user_application_service: UserApplicationService = Depends(
+        Provide[Container.user_application_service]
+    ),
 ):
     input_dto = CreateUserInputDto(
         user_id=request.user_id,
