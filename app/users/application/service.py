@@ -21,9 +21,13 @@ class UserApplicationService:
 
     def find_user(self, input_dto: FindUserInputDto) -> Optional[FindUserOutputDto]:
         try:
-            user = self._user_repository.find_by_user_id(user_id=UserId(value=input_dto.user_id))
+            user = self._user_repository.find_by_user_id(
+                user_id=UserId(value=input_dto.user_id)
+            )
             if user is None:
-                return FailedOutputDto.build_resource_error(message=f"{str(input_dto.user_id)}의 유저를 찾지 못했습니다.")
+                return FailedOutputDto.build_resource_error(
+                    message=f"{str(input_dto.user_id)}의 유저를 찾지 못했습니다."
+                )
             return FindUserOutputDto(
                 user_id=str(user.id),
                 user_name=str(user.name),
@@ -43,7 +47,9 @@ class UserApplicationService:
             )
 
             if self._user_repository.find_by_user_id(user.id) is not None:
-                return FailedOutputDto.build_resource_error(f"{str(user.id)}는 이미 존재하는 유저입니다.")
+                return FailedOutputDto.build_resource_error(
+                    f"{str(user.id)}는 이미 존재하는 유저입니다."
+                )
             self._user_repository.add(user)
         except Exception as e:
             return FailedOutputDto.build_system_error(message=str(e))
@@ -58,7 +64,9 @@ class UserApplicationService:
                 image_url=input_dto.image_url,
             )
             if not self._user_repository.find_by_user_id(user.id):
-                return FailedOutputDto.build_resource_error(f"{str(user.id)}의 유저를 찾지 못했습니다.")
+                return FailedOutputDto.build_resource_error(
+                    f"{str(user.id)}의 유저를 찾지 못했습니다."
+                )
             self._user_repository.update(user)
         except Exception as e:
             return FailedOutputDto.build_system_error(message=str(e))
@@ -67,7 +75,9 @@ class UserApplicationService:
         try:
             user_id = UserId(value=input_dto.user_id)
             if not self._user_repository.find_by_user_id(user_id):
-                return FailedOutputDto.build_resource_error(f"{str(user_id)}의 유저를 찾지 못했습니다.")
+                return FailedOutputDto.build_resource_error(
+                    f"{str(user_id)}의 유저를 찾지 못했습니다."
+                )
             self._user_repository.delete_by_user_id(user_id)
         except Exception as e:
             return FailedOutputDto.build_system_error(message=str(e))
@@ -77,7 +87,9 @@ class UserApplicationService:
             user_id = UserId(value=input_dto.user_id)
             user = self._user_repository.find_by_user_id(user_id=user_id)
             if user is None:
-                return FailedOutputDto.build_resource_error(f"{str(user_id)}의 유저를 찾지 못했습니다.")
+                return FailedOutputDto.build_resource_error(
+                    f"{str(user_id)}의 유저를 찾지 못했습니다."
+                )
 
             if not user.password == input_dto.password:
                 return FailedOutputDto.build_resource_error(f"잘못된 비밀번호 입니다.")
