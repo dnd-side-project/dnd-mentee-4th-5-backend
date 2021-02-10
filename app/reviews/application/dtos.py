@@ -1,10 +1,6 @@
-from datetime import datetime
 from typing import List
-from uuid import UUID
 
-from pydantic import BaseModel, Field
-from reviews.domain.value_objects import ReviewRating
-from users.domain.value_objects import UserId
+from pydantic import BaseModel
 
 
 class FindReviewInputDto(BaseModel):

@@ -1,9 +1,10 @@
+import uvicorn
+from fastapi import FastAPI
+
 import auth.external_interface.routers
 import health.external_interface.routers
 import users.external_interface.routers
-import uvicorn
 from container import Container
-from fastapi import FastAPI
 
 
 def create_app():

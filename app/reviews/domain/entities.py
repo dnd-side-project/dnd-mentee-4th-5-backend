@@ -2,6 +2,7 @@ from typing import ClassVar
 
 from pydantic import BaseModel, Field
 from pydantic.types import UUID
+
 from reviews.domain.value_objects import ReviewRating, UserId
 
 
