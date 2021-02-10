@@ -11,10 +11,12 @@ class SuccessOutputDto(BaseModel, abc.ABC):
 
 
 class FailedOutputDto(BaseModel):
-    RESOURCE_ERROR: ClassVar[str] = "ResourceError"
-    PARAMETERS_ERROR: ClassVar[str] = "ParametersError"
-    SYSTEM_ERROR: ClassVar[str] = "SystemError"
-    UNAUTHORIZED_ERROR: ClassVar[str] = "UnauthorizedError"
+    RESOURCE_ERROR: ClassVar[str] = "Resource Error"
+    RESOURCE_NOT_FOUND_ERROR: ClassVar[str] = "Resource Not Found Error"
+    RESOURCE_CONFLICT_ERROR: ClassVar[str] = "Resource Conflict Error"
+    PARAMETERS_ERROR: ClassVar[str] = "Parameters Error"
+    SYSTEM_ERROR: ClassVar[str] = "System Error"
+    UNAUTHORIZED_ERROR: ClassVar[str] = "Unauthorized Error"
 
     type: str
     message: str
@@ -26,6 +28,14 @@ class FailedOutputDto(BaseModel):
     @classmethod
     def build_resource_error(cls, message: str = ""):
         return cls(type=cls.RESOURCE_ERROR, message=message)
+
+    @classmethod
+    def build_resource_not_found_error(cls, message: str = ""):
+        return cls(type=cls.RESOURCE_NOT_FOUND_ERROR, message=message)
+
+    @classmethod
+    def build_resource_conflict_error(cls, message: str = ""):
+        return cls(type=cls.RESOURCE_CONFLICT_ERROR, message=message)
 
     @classmethod
     def build_system_error(cls, message: str = ""):
