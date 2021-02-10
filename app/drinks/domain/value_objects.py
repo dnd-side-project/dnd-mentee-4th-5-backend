@@ -14,21 +14,51 @@ class DrinkRating(BaseModel):
 
 
 class DrinkType(str, Enum):
-    ALL = "ALL"
-    BEER = "BEER"
-    WINE = "WINE"
-    LIQUOR = "LIQUOR"
-    SAKE = "SAKE"
-    SOJU = "SOJU"
-    ETC = "ETC"
+    ALL = "all"
+    BEER = "beer"
+    WINE = "wine"
+    LIQUOR = "liquor"
+    SAKE = "sake"
+    SOJU = "soju"
+    ETC = "etc"
+
+    @staticmethod
+    def from_str(label):
+        switcher = {
+            "all": DrinkType.ALL,
+            "beer": DrinkType.BEER,
+            "wine": DrinkType.WINE,
+            "liquor": DrinkType.LIQUOR,
+            "sake": DrinkType.SAKE,
+            "soju": DrinkType.SOJU,
+            "etc": DrinkType.ETC,
+        }
+        return switcher.get(label, DrinkType.ALL)
 
 
 class FilterType(str, Enum):
-    RATING = "RATING"
-    REVIEW = "REVIEW"
-    WISH = "WISH"
+    REVIEW = "review"
+    RATING = "rating"
+    WISH = "wish"
+
+    @staticmethod
+    def from_str(label):
+        switcher = {
+            "review": FilterType.REVIEW,
+            "rating": FilterType.RATING,
+            "wish": FilterType.WISH,
+        }
+        return switcher.get(label, FilterType.REVIEW)
 
 
 class OrderType(str, Enum):
-    DESC = "DESC"
-    ASC = "ASC"
+    DESC = "descending"
+    ASC = "ascending"
+
+    @staticmethod
+    def from_str(label):
+        switcher = {
+            "descending": OrderType.DESC,
+            "ascending": OrderType.ASC,
+        }
+        return switcher.get(label, OrderType.DESC)

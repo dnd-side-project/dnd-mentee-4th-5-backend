@@ -1,11 +1,14 @@
+from typing import List
+
 from pydantic import BaseModel
+from shared_kernel.application.dtos import SuccessOutputDto
 
 
 class FindDrinkInputDto(BaseModel):
     drink_id: str
 
 
-class FindDrinkOutputDto(BaseModel):
+class FindDrinkOutputDto(SuccessOutputDto):
     drink_id: str
     drink_name: str
     drink_image_url: str
@@ -15,11 +18,25 @@ class FindDrinkOutputDto(BaseModel):
     num_of_wish: int
 
 
+class FindDrinksInputDto(BaseModel):
+    drink_type: str
+    filter_type: str
+    order: str
+
+
+class FindDrinksOutputDto(SuccessOutputDto):
+    drinks_dicts: List[dict]
+
+
 class CreateDrinkInputDto(BaseModel):
     drink_id: str
     drink_name: str
     drink_image_url: str
     drink_type: str
+
+
+class CreateDrinkOutputDto(SuccessOutputDto):
+    pass
 
 
 class UpdateDrinkInputDto(BaseModel):
@@ -32,8 +49,16 @@ class UpdateDrinkInputDto(BaseModel):
     num_of_wish: int
 
 
+class UpdateDrinkOutputDto(SuccessOutputDto):
+    pass
+
+
 class DeleteDrinkInputDto(BaseModel):
     drink_id: str
+
+
+class DeleteDrinkOutputDto(SuccessOutputDto):
+    pass
 
 
 class AddDrinkReviewInputDto(BaseModel):
@@ -41,6 +66,14 @@ class AddDrinkReviewInputDto(BaseModel):
     drink_rating: int
 
 
+class AddDrinkReviewOutputDto(SuccessOutputDto):
+    pass
+
+
 class DeleteDrinkReviewInputDto(BaseModel):
     drink_id: str
     drink_rating: int
+
+
+class DeleteDrinkReviewOutputDto(SuccessOutputDto):
+    pass

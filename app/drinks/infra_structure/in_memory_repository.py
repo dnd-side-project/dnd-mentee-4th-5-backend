@@ -11,11 +11,27 @@ class InMemoryDrinkRepository(DrinkRepository):
         self.drink_id_to_drink = {}
 
     # only for test purpose
-    def find_all(self) -> List[Drink]:
+    def find_all_simple(self) -> List[Drink]:
         return list(self.drink_id_to_drink.values())
 
-    # def find_all(self, drink_type: DrinkType, filter_type: FilterType, order: OrderType) -> List[Drink]:
-    #     return list(self.drink_id_to_drink.values())
+    def find_all(self, drink_type: DrinkType, filter_type: FilterType, order: OrderType) -> List[Drink]:
+        drinks = list(self.drink_id_to_drink.values())
+        drinks_typed = [drink for drink in drinks if drink.type == drink_type]
+
+        drinks_filtered_in_order = []
+        order_type = order != OrderType.DESC
+        if filter_type == filter_type.REVIEW:
+            drinks_filtered_in_order = sorted(drinks_typed, key=lambda drink: drink.num_of_reviews, reverse=order_type)
+
+        elif filter_type == filter_type.RATING:
+            drinks_filtered_in_order = sorted(
+                drinks_typed, key=lambda drink: float(drink.avg_rating), reverse=order_type
+            )
+
+        elif filter_type == filter_type.WISH:
+            drinks_filtered_in_order = sorted(drinks_typed, key=lambda drink: drink.num_of_wish, reverse=order_type)
+
+        return drinks_filtered_in_order
 
     def find_by_drink_id(self, drink_id: UUID) -> Optional[Drink]:
         return self.drink_id_to_drink.get(str(drink_id), None)
