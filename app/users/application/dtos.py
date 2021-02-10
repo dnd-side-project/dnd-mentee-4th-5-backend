@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from shared_kernel.application.dtos import SuccessOutputDto
 
 
@@ -10,7 +10,6 @@ class FindUserOutputDto(SuccessOutputDto):
     user_id: str
     user_name: str
     description: str
-    password: str
     image_url: str
 
 
