@@ -1,8 +1,8 @@
 from fastapi.testclient import TestClient
-from main import app
+from main import create_app
 from pytest import fixture
 
 
-@fixture
+@fixture(scope="function")
 def client():
-    return TestClient(app)
+    return TestClient(create_app())
