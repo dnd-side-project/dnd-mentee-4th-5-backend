@@ -91,8 +91,8 @@ def test_update_drink(drink_application_service, drink_repository, drink_id, dri
     input_dto = UpdateDrinkInputDto(
         drink_id=str(drink_id),
         drink_name="Tequila",
-        drink_image_url="diff image url",
-        type=DrinkType.LIQUOR,
+        drink_image_url="tequila image url",
+        drink_type=DrinkType.LIQUOR,
         avg_rating=float(DrinkRating(value=3.65)),
         num_of_reviews=10,
         num_of_wish=20,
@@ -125,7 +125,7 @@ def test_delete_drink(drink_application_service, drink_repository, drink_id, dri
 
     # Check delete drink when drink in-memory repo is Empty
     output_dto = drink_application_service.delete_drink(input_dto)
-    assert output_dto == FailedOutputDto.build_resource_error(f"{drink_id}의 술 찾지 못했습니다.")
+    assert output_dto == FailedOutputDto.build_resource_error(f"{drink_id}의 술을 찾을 수 없습니다.")
 
 
 @pytest.mark.parametrize("drink_id, drink_name, drink_image_url, drink_type", drink_data)
