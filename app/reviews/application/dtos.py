@@ -1,23 +1,22 @@
-from datetime import datetime
 from typing import List
-from uuid import UUID
 
-from pydantic import BaseModel, Field
-from reviews.domain.value_objects import ReviewRating
-from users.domain.value_objects import UserId
+from pydantic import BaseModel
+
+from shared_kernel.application.dtos import SuccessOutputDto
 
 
 class FindReviewInputDto(BaseModel):
     review_id: str
 
 
-class FindReviewOutputDto(BaseModel):
+class FindReviewOutputDto(SuccessOutputDto):
     review_id: str
     drink_id: str
     user_id: str
     rating: int
     comment: str
     created_at: float
+    updated_at: float
 
 
 class CreateReviewInputDto(BaseModel):
@@ -25,20 +24,33 @@ class CreateReviewInputDto(BaseModel):
     user_id: str
     rating: int
     comment: str
-    created_at: float
 
 
-class UpdateReviewInputDto(BaseModel):
-    review_id: str
+class CreateReviewOutputDto(SuccessOutputDto):
     drink_id: str
     user_id: str
     rating: int
     comment: str
     created_at: float
+    updated_at: float
+
+
+class UpdateReviewInputDto(BaseModel):
+    review_id: str
+    rating: int
+    comment: str
+
+
+class UpdateReviewOutputDto(SuccessOutputDto):
+    pass
 
 
 class DeleteReviewInputDto(BaseModel):
     review_id: str
+
+
+class DeleteReviewOutputDto(SuccessOutputDto):
+    pass
 
 
 class FindReviewsByUserIdInputDto(BaseModel):

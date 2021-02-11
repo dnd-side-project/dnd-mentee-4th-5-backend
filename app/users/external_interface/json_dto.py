@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+
 from users.application.dtos import FindUserOutputDto, CreateUserOutputDto
 
 

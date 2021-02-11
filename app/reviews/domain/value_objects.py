@@ -1,7 +1,23 @@
+import uuid
 from enum import Enum
 from typing import ClassVar
 
 from pydantic import BaseModel, Field
+
+
+class ReviewId(BaseModel):
+    __root__: uuid.UUID = Field(alias="value")
+
+    @classmethod
+    def build(cls, user_id: str, drink_id: str) -> "ReviewId":
+        return cls(value=uuid.uuid5(uuid.NAMESPACE_DNS, name=user_id + drink_id))
+
+    @classmethod
+    def from_str(cls, review_id: str) -> "ReviewId":
+        return cls(value=uuid.UUID(review_id))
+
+    def __str__(self):
+        return str(self.__root__)
 
 
 class ReviewRating(BaseModel):
@@ -24,3 +40,14 @@ class UserId(BaseModel):
 
     def __str__(self):
         return self.__root__
+
+
+class DrinkId(BaseModel):
+    __root__: uuid.UUID = Field(alias="value")
+
+    @classmethod
+    def from_str(cls, drink_id: str) -> "DrinkId":
+        return cls(value=uuid.UUID(drink_id))
+
+    def __str__(self):
+        return str(self.__root__)
