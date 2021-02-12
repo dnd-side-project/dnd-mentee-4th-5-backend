@@ -6,6 +6,8 @@ from reviews.infra_structure.in_memory_repository import InMemoryReviewRepositor
 from settings import Settings
 from users.application.service import UserApplicationService
 from users.infra_structure.in_memory_repository import InMemoryUserRepository
+from wishes.application.service import WishApplicationService
+from wishes.infra_structure.in_memory_repository import InMemoryWishRepository
 
 
 class Container(containers.DeclarativeContainer):
@@ -15,6 +17,7 @@ class Container(containers.DeclarativeContainer):
     # repository
     user_repository = providers.Singleton(InMemoryUserRepository)
     review_repository = providers.Singleton(InMemoryReviewRepository)
+    wish_repository = providers.Singleton(InMemoryWishRepository)
 
     # application service
     user_application_service = providers.Singleton(UserApplicationService, user_repository=user_repository)
@@ -22,3 +25,4 @@ class Container(containers.DeclarativeContainer):
         AuthApplicationService, user_application_service=user_application_service, settings=settings
     )
     review_application_service = providers.Singleton(ReviewApplicationService, review_repository=review_repository)
+    wish_application_service = providers.Singleton(WishApplicationService, wish_repository=wish_repository)
