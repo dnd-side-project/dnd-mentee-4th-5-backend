@@ -5,6 +5,7 @@ import auth.external_interface.routers
 import health.external_interface.routers
 import reviews.external_interface.routers
 import users.external_interface.routers
+import wishes.external_interface.routers
 from container import Container
 
 
@@ -14,6 +15,7 @@ def create_app():
         health.external_interface.routers,
         users.external_interface.routers,
         reviews.external_interface.routers,
+        wishes.external_interface.routers,
     ]
     container = Container()
     container.wire(modules=router_modules)
