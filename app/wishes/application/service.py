@@ -1,18 +1,14 @@
 import time
 from typing import Union
 
-from drinks.application.dtos import AddDrinkWishInputDto, CreateDrinkWishInputDto, DeleteDrinkWishInputDto
+from drinks.application.dtos import (AddDrinkWishInputDto,
+                                     DeleteDrinkWishInputDto)
 from drinks.application.service import DrinkApplicationService
 from drinks.infra_structure.in_memory_repository import InMemoryDrinkRepository
 from shared_kernel.application.dtos import FailedOutputDto
-from wishes.application.dto import (
-    CreateWishInputDto,
-    CreateWishOutputDto,
-    DeleteWishInputDto,
-    DeleteWishOutputDto,
-    FindWishesInputDto,
-    FindWishesOutputDto,
-)
+from wishes.application.dto import (CreateWishInputDto, CreateWishOutputDto,
+                                    DeleteWishInputDto, DeleteWishOutputDto,
+                                    FindWishesInputDto, FindWishesOutputDto)
 from wishes.domain.entities import Wish
 from wishes.domain.repository import QueryParam, WishRepository
 from wishes.domain.value_objects import DrinkId, UserId

@@ -1,15 +1,14 @@
 import pytest
-from reviews.application.dtos import (
-    CreateReviewInputDto,
-    DeleteReviewInputDto,
-    FindReviewInputDto,
-    FindReviewOutputDto,
-    UpdateReviewInputDto,
-)
+from reviews.application.dtos import (CreateReviewInputDto,
+                                      DeleteReviewInputDto, FindReviewInputDto,
+                                      FindReviewOutputDto,
+                                      UpdateReviewInputDto)
 from reviews.application.service import ReviewApplicationService
 from reviews.domain.entities import Review
-from reviews.domain.value_objects import ReviewRating, UserId, ReviewId, DrinkId
-from reviews.infra_structure.in_memory_repository import InMemoryReviewRepository
+from reviews.domain.value_objects import (DrinkId, ReviewId, ReviewRating,
+                                          UserId)
+from reviews.infra_structure.in_memory_repository import \
+    InMemoryReviewRepository
 from shared_kernel.application.dtos import FailedOutputDto
 
 

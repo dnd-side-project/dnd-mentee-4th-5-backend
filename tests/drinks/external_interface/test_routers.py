@@ -2,56 +2,56 @@ import json
 import uuid
 
 import pytest
-from drinks.domain.value_objects import DrinkType
+from drinks.domain.value_objects import DrinkId
 
 
 @pytest.fixture()
 def sample_drink_list():
     drink_dicts = [
         {
-            "drink_id": str(uuid.uuid5(uuid.NAMESPACE_DNS, "drink_num_1")),
+            "drink_id": str(DrinkId(value=uuid.uuid5(uuid.NAMESPACE_DNS, "drink_num_1"))),
             "drink_name": "wine_1",
             "drink_image_url": "picture_wine_1",
             "drink_type": "wine",
         },
         {
-            "drink_id": str(uuid.uuid5(uuid.NAMESPACE_DNS, "drink_num_2")),
+            "drink_id": str(DrinkId(value=uuid.uuid5(uuid.NAMESPACE_DNS, "drink_num_2"))),
             "drink_name": "wine_2",
             "drink_image_url": "picture_wine_2",
             "drink_type": "wine",
         },
         {
-            "drink_id": str(uuid.uuid5(uuid.NAMESPACE_DNS, "drink_num_3")),
+            "drink_id": str(DrinkId(value=uuid.uuid5(uuid.NAMESPACE_DNS, "drink_num_3"))),
             "drink_name": "wine_3",
             "drink_image_url": "picture_wine_3",
             "drink_type": "wine",
         },
         {
-            "drink_id": str(uuid.uuid5(uuid.NAMESPACE_DNS, "drink_num_4")),
+            "drink_id": str(DrinkId(value=uuid.uuid5(uuid.NAMESPACE_DNS, "drink_num_4"))),
             "drink_name": "beer_1",
             "drink_image_url": "picture_beer_1",
             "drink_type": "beer",
         },
         {
-            "drink_id": str(uuid.uuid5(uuid.NAMESPACE_DNS, "drink_num_5")),
+            "drink_id": str(DrinkId(value=uuid.uuid5(uuid.NAMESPACE_DNS, "drink_num_5"))),
             "drink_name": "beer_2",
             "drink_image_url": "picture_beer_2",
             "drink_type": "beer",
         },
         {
-            "drink_id": str(uuid.uuid5(uuid.NAMESPACE_DNS, "drink_num_6")),
+            "drink_id": str(DrinkId(value=uuid.uuid5(uuid.NAMESPACE_DNS, "drink_num_6"))),
             "drink_name": "beer_3",
             "drink_image_url": "picture_beer_3",
             "drink_type": "beer",
         },
         {
-            "drink_id": str(uuid.uuid5(uuid.NAMESPACE_DNS, "drink_num_7")),
+            "drink_id": str(DrinkId(value=uuid.uuid5(uuid.NAMESPACE_DNS, "drink_num_7"))),
             "drink_name": "liquor_1",
             "drink_image_url": "picture_liquor_1",
             "drink_type": "liquor",
         },
         {
-            "drink_id": str(uuid.uuid5(uuid.NAMESPACE_DNS, "drink_num_8")),
+            "drink_id": str(DrinkId(value=uuid.uuid5(uuid.NAMESPACE_DNS, "drink_num_8"))),
             "drink_name": "liquor_2",
             "drink_image_url": "picture_liquor_2",
             "drink_type": "liquor",
@@ -64,7 +64,7 @@ def test_post_drinks(client):
     response = client.post(
         "/drinks",
         json={
-            "drink_id": str(uuid.uuid5(uuid.NAMESPACE_DNS, "drink_num_1")),
+            "drink_id": str(DrinkId(value=uuid.uuid5(uuid.NAMESPACE_DNS, "drink_num_1"))),
             "drink_name": "wine_1",
             "drink_image_url": "picture_wine_1",
             "drink_type": "wine",
@@ -92,19 +92,19 @@ def test_get_drinks(client, sample_drink_list):
     assert response.json()["drinks_json"] == json.dumps(
         [
             {
-                "drink_id": str(uuid.uuid5(uuid.NAMESPACE_DNS, "drink_num_1")),
+                "drink_id": str(DrinkId(value=uuid.uuid5(uuid.NAMESPACE_DNS, "drink_num_1"))),
                 "drink_name": "wine_1",
                 "drink_image_url": "picture_wine_1",
                 "drink_type": "wine",
             },
             {
-                "drink_id": str(uuid.uuid5(uuid.NAMESPACE_DNS, "drink_num_2")),
+                "drink_id": str(DrinkId(value=uuid.uuid5(uuid.NAMESPACE_DNS, "drink_num_2"))),
                 "drink_name": "wine_2",
                 "drink_image_url": "picture_wine_2",
                 "drink_type": "wine",
             },
             {
-                "drink_id": str(uuid.uuid5(uuid.NAMESPACE_DNS, "drink_num_3")),
+                "drink_id": str(DrinkId(value=uuid.uuid5(uuid.NAMESPACE_DNS, "drink_num_3"))),
                 "drink_name": "wine_3",
                 "drink_image_url": "picture_wine_3",
                 "drink_type": "wine",

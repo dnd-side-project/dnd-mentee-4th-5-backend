@@ -1,9 +1,9 @@
 from typing import List, Optional
-from uuid import UUID
 
 from drinks.domain.entities import Drink
 from drinks.domain.repository import DrinkRepository
-from drinks.domain.value_objects import DrinkType, FilterType, OrderType
+from drinks.domain.value_objects import (DrinkId, DrinkType, FilterType,
+                                         OrderType)
 
 
 class InMemoryDrinkRepository(DrinkRepository):
@@ -33,7 +33,7 @@ class InMemoryDrinkRepository(DrinkRepository):
 
         return drinks_filtered_in_order
 
-    def find_by_drink_id(self, drink_id: UUID) -> Optional[Drink]:
+    def find_by_drink_id(self, drink_id: DrinkId) -> Optional[Drink]:
         return self.drink_id_to_drink.get(str(drink_id), None)
 
     def add(self, drink: Drink) -> None:
@@ -42,5 +42,5 @@ class InMemoryDrinkRepository(DrinkRepository):
     def update(self, drink: Drink) -> None:
         self.drink_id_to_drink[str(drink.id)] = drink
 
-    def delete_by_drink_id(self, drink_id: UUID) -> None:
+    def delete_by_drink_id(self, drink_id: DrinkId) -> None:
         self.drink_id_to_drink.pop(str(drink_id), None)

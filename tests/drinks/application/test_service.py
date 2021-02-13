@@ -12,7 +12,7 @@ from drinks.application.dtos import (
 )
 from drinks.application.service import DrinkApplicationService
 from drinks.domain.entities import Drink
-from drinks.domain.value_objects import DrinkRating, DrinkType
+from drinks.domain.value_objects import DrinkId, DrinkRating, DrinkType
 from drinks.infra_structure.in_memory_repository import InMemoryDrinkRepository
 from shared_kernel.application.dtos import FailedOutputDto
 
@@ -27,7 +27,9 @@ def drink_application_service(drink_repository):
     return DrinkApplicationService(drink_repository=drink_repository)
 
 
-drink_data = [(uuid.uuid5(uuid.NAMESPACE_DNS, "drink_id"), "Cabernet", "wine_image_url", DrinkType.WINE)]
+drink_data = [
+    (DrinkId(value=uuid.uuid5(uuid.NAMESPACE_DNS, "drink_id")), "Cabernet", "wine_image_url", DrinkType.WINE)
+]
 
 
 @pytest.mark.parametrize("drink_id, drink_name, drink_image_url, drink_type", drink_data)
@@ -101,7 +103,7 @@ def test_update_drink(drink_application_service, drink_repository, drink_id, dri
 
     actual = drink_repository.find_by_drink_id(drink_id=drink_id)
     expected = Drink(
-        id=str(drink_id),
+        id=drink_id,
         name="Tequila",
         image_url="tequila image url",
         type=DrinkType.LIQUOR,
@@ -145,7 +147,7 @@ def test_add_drink_review(
     )
 
     input_dto = AddDrinkReviewInputDto(drink_id=str(drink_id), drink_rating=5)
-    drink_application_service.add_drink_reviews(input_dto)
+    drink_application_service.add_drink_review(input_dto)
 
     actual = drink_repository.find_all_simple()
     expected = [
@@ -179,7 +181,7 @@ def test_delete_drink_review(
     )
 
     input_dto = DeleteDrinkReviewInputDto(drink_id=str(drink_id), drink_rating=5)
-    drink_application_service.delete_drink_reviews(input_dto)
+    drink_application_service.delete_drink_review(input_dto)
 
     actual = drink_repository.find_all_simple()
     expected = [

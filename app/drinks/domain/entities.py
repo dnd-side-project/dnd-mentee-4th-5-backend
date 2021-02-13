@@ -1,7 +1,6 @@
 from typing import ClassVar
-from uuid import UUID
 
-from drinks.domain.value_objects import DrinkRating, DrinkType
+from drinks.domain.value_objects import DrinkId, DrinkRating, DrinkType
 from pydantic import BaseModel, Field
 
 
@@ -9,7 +8,7 @@ class Drink(BaseModel):
     MIN_NUM_OF_REVIEWS: ClassVar[int] = 0
     MIN_NUM_OF_WISH: ClassVar[int] = 0
 
-    id: UUID
+    id: DrinkId
     name: str
     image_url: str
     type: DrinkType

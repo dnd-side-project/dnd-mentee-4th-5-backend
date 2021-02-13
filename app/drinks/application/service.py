@@ -1,13 +1,10 @@
-import uuid
-from typing import Optional, Union
+from typing import Union
 
 from drinks.application.dtos import (AddDrinkReviewInputDto,
                                      AddDrinkReviewOutputDto,
                                      AddDrinkWishInputDto,
                                      AddDrinkWishOutputDto,
                                      CreateDrinkInputDto, CreateDrinkOutputDto,
-                                     CreateDrinkWishInputDto,
-                                     CreateDrinkWishOutputDto,
                                      DeleteDrinkInputDto, DeleteDrinkOutputDto,
                                      DeleteDrinkReviewInputDto,
                                      DeleteDrinkReviewOutputDto,
@@ -18,8 +15,8 @@ from drinks.application.dtos import (AddDrinkReviewInputDto,
                                      UpdateDrinkInputDto, UpdateDrinkOutputDto)
 from drinks.domain.entities import Drink
 from drinks.domain.repository import DrinkRepository
-from drinks.domain.value_objects import (DrinkRating, DrinkType, FilterType,
-                                         OrderType)
+from drinks.domain.value_objects import (DrinkId, DrinkRating, DrinkType,
+                                         FilterType, OrderType)
 from shared_kernel.application.dtos import FailedOutputDto
 
 
@@ -29,7 +26,7 @@ class DrinkApplicationService:
 
     def find_drink(self, input_dto: FindDrinkInputDto) -> Union[FindDrinkOutputDto, FailedOutputDto]:
         try:
-            drink = self._drink_repository.find_by_drink_id(drink_id=uuid.UUID(input_dto.drink_id))
+            drink = self._drink_repository.find_by_drink_id(drink_id=DrinkId.from_str(input_dto.drink_id))
             if drink is None:
                 return FailedOutputDto.build_resource_not_found_error(
                     message=f"{str(input_dto.drink_id)}의 술을 찾을 수 없습니다."
@@ -75,7 +72,7 @@ class DrinkApplicationService:
     def create_drink(self, input_dto: CreateDrinkInputDto) -> Union[CreateDrinkOutputDto, FailedOutputDto]:
         try:
             drink = Drink(
-                id=uuid.UUID(input_dto.drink_id),
+                id=DrinkId.from_str(input_dto.drink_id),
                 name=input_dto.drink_name,
                 image_url=input_dto.drink_image_url,
                 type=DrinkType.from_str(input_dto.drink_type),
@@ -91,7 +88,7 @@ class DrinkApplicationService:
 
     def update_drink(self, input_dto: UpdateDrinkInputDto) -> Union[UpdateDrinkOutputDto, FailedOutputDto]:
         try:
-            drink_id = uuid.UUID(input_dto.drink_id)
+            drink_id = DrinkId.from_str(input_dto.drink_id)
             if self._drink_repository.find_by_drink_id(drink_id) is None:
                 return FailedOutputDto.build_resource_not_found_error(f"{str(drink_id)}의 술을 찾을 수 없습니다.")
 
@@ -112,7 +109,7 @@ class DrinkApplicationService:
 
     def delete_drink(self, input_dto: DeleteDrinkInputDto) -> Union[DeleteDrinkOutputDto, FailedOutputDto]:
         try:
-            drink_id = uuid.UUID(input_dto.drink_id)
+            drink_id = DrinkId.from_str(input_dto.drink_id)
             if self._drink_repository.find_by_drink_id(drink_id) is None:
                 return FailedOutputDto.build_resource_not_found_error(f"{str(drink_id)}의 술을 찾을 수 없습니다.")
 
@@ -124,7 +121,7 @@ class DrinkApplicationService:
 
     def add_drink_review(self, input_dto: AddDrinkReviewInputDto) -> Union[AddDrinkReviewOutputDto, FailedOutputDto]:
         try:
-            drink = self._drink_repository.find_by_drink_id(uuid.UUID(input_dto.drink_id))
+            drink = self._drink_repository.find_by_drink_id(DrinkId.from_str(input_dto.drink_id))
             if drink is None:
                 return FailedOutputDto.build_resource_not_found_error(
                     message=f"{str(input_dto.drink_id)}의 술을 찾을 수 없습니다."
@@ -140,7 +137,7 @@ class DrinkApplicationService:
         self, input_dto: DeleteDrinkReviewInputDto
     ) -> Union[DeleteDrinkReviewOutputDto, FailedOutputDto]:
         try:
-            drink = self._drink_repository.find_by_drink_id(uuid.UUID(input_dto.drink_id))
+            drink = self._drink_repository.find_by_drink_id(DrinkId.from_str(input_dto.drink_id))
             if drink is None:
                 return FailedOutputDto.build_resource_not_found_error(
                     message=f"{str(input_dto.drink_id)}의 술을 찾을 수 없습니다."
@@ -154,7 +151,7 @@ class DrinkApplicationService:
 
     def add_drink_wish(self, input_dto: AddDrinkWishInputDto) -> Union[AddDrinkWishOutputDto, FailedOutputDto]:
         try:
-            drink = self._drink_repository.find_by_drink_id(uuid.UUID(input_dto.drink_id))
+            drink = self._drink_repository.find_by_drink_id(DrinkId.from_str(input_dto.drink_id))
             if drink is None:
                 return FailedOutputDto.build_resource_not_found_error(
                     message=f"{str(input_dto.drink_id)}의 술을 찾을 수 없습니다."
@@ -168,7 +165,7 @@ class DrinkApplicationService:
         self, input_dto: DeleteDrinkWishInputDto
     ) -> Union[DeleteDrinkWishOutputDto, FailedOutputDto]:
         try:
-            drink = self._drink_repository.find_by_drink_id(uuid.UUID(input_dto.drink_id))
+            drink = self._drink_repository.find_by_drink_id(DrinkId.from_str(input_dto.drink_id))
             if drink is None:
                 return FailedOutputDto.build_resource_not_found_error(
                     message=f"{str(input_dto.drink_id)}의 술을 찾을 수 없습니다."
