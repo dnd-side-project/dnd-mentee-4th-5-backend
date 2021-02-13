@@ -77,3 +77,19 @@ class DeleteDrinkReviewInputDto(BaseModel):
 
 class DeleteDrinkReviewOutputDto(SuccessOutputDto):
     pass
+
+
+class AddDrinkWishInputDto(BaseModel):
+    drink_id: str
+
+
+class AddDrinkWishOutputDto(SuccessOutputDto):
+    pass
+
+
+class DeleteDrinkWishInputDto(BaseModel):
+    drink_id: str
+
+
+class DeleteDrinkWishOutputDto(SuccessOutputDto):
+    pass

@@ -1,25 +1,25 @@
 import uuid
 from typing import Optional, Union
 
-from drinks.application.dtos import (
-    AddDrinkReviewInputDto,
-    AddDrinkReviewOutputDto,
-    CreateDrinkInputDto,
-    CreateDrinkOutputDto,
-    DeleteDrinkInputDto,
-    DeleteDrinkOutputDto,
-    DeleteDrinkReviewInputDto,
-    DeleteDrinkReviewOutputDto,
-    FindDrinkInputDto,
-    FindDrinkOutputDto,
-    FindDrinksInputDto,
-    FindDrinksOutputDto,
-    UpdateDrinkInputDto,
-    UpdateDrinkOutputDto,
-)
+from drinks.application.dtos import (AddDrinkReviewInputDto,
+                                     AddDrinkReviewOutputDto,
+                                     AddDrinkWishInputDto,
+                                     AddDrinkWishOutputDto,
+                                     CreateDrinkInputDto, CreateDrinkOutputDto,
+                                     CreateDrinkWishInputDto,
+                                     CreateDrinkWishOutputDto,
+                                     DeleteDrinkInputDto, DeleteDrinkOutputDto,
+                                     DeleteDrinkReviewInputDto,
+                                     DeleteDrinkReviewOutputDto,
+                                     DeleteDrinkWishInputDto,
+                                     DeleteDrinkWishOutputDto,
+                                     FindDrinkInputDto, FindDrinkOutputDto,
+                                     FindDrinksInputDto, FindDrinksOutputDto,
+                                     UpdateDrinkInputDto, UpdateDrinkOutputDto)
 from drinks.domain.entities import Drink
 from drinks.domain.repository import DrinkRepository
-from drinks.domain.value_objects import DrinkRating, DrinkType, FilterType, OrderType
+from drinks.domain.value_objects import (DrinkRating, DrinkType, FilterType,
+                                         OrderType)
 from shared_kernel.application.dtos import FailedOutputDto
 
 
@@ -122,7 +122,7 @@ class DrinkApplicationService:
         except Exception as e:
             return FailedOutputDto.build_system_error(message=str(e))
 
-    def add_drink_reviews(self, input_dto: AddDrinkReviewInputDto) -> Union[AddDrinkReviewOutputDto, FailedOutputDto]:
+    def add_drink_review(self, input_dto: AddDrinkReviewInputDto) -> Union[AddDrinkReviewOutputDto, FailedOutputDto]:
         try:
             drink = self._drink_repository.find_by_drink_id(uuid.UUID(input_dto.drink_id))
             if drink is None:
@@ -130,13 +130,13 @@ class DrinkApplicationService:
                     message=f"{str(input_dto.drink_id)}의 술을 찾을 수 없습니다."
                 )
 
-            drink.add_review_rating(input_dto.drink_rating)
+            drink.add_rating(input_dto.drink_rating)
             return AddDrinkReviewOutputDto()
 
         except Exception as e:
             return FailedOutputDto.build_system_error(message=str(e))
 
-    def delete_drink_reviews(
+    def delete_drink_review(
         self, input_dto: DeleteDrinkReviewInputDto
     ) -> Union[DeleteDrinkReviewOutputDto, FailedOutputDto]:
         try:
@@ -146,8 +146,34 @@ class DrinkApplicationService:
                     message=f"{str(input_dto.drink_id)}의 술을 찾을 수 없습니다."
                 )
 
-            drink.delete_review_rating(input_dto.drink_rating)
+            drink.delete_rating(input_dto.drink_rating)
             return DeleteDrinkReviewOutputDto()
 
+        except Exception as e:
+            return FailedOutputDto.build_system_error(message=str(e))
+
+    def add_drink_wish(self, input_dto: AddDrinkWishInputDto) -> Union[AddDrinkWishOutputDto, FailedOutputDto]:
+        try:
+            drink = self._drink_repository.find_by_drink_id(uuid.UUID(input_dto.drink_id))
+            if drink is None:
+                return FailedOutputDto.build_resource_not_found_error(
+                    message=f"{str(input_dto.drink_id)}의 술을 찾을 수 없습니다."
+                )
+            drink.add_wish()
+            return AddDrinkWishOutputDto()
+        except Exception as e:
+            return FailedOutputDto.build_system_error(message=str(e))
+
+    def delete_drink_wish(
+        self, input_dto: DeleteDrinkWishInputDto
+    ) -> Union[DeleteDrinkWishOutputDto, FailedOutputDto]:
+        try:
+            drink = self._drink_repository.find_by_drink_id(uuid.UUID(input_dto.drink_id))
+            if drink is None:
+                return FailedOutputDto.build_resource_not_found_error(
+                    message=f"{str(input_dto.drink_id)}의 술을 찾을 수 없습니다."
+                )
+            drink.delete_wish()
+            return DeleteDrinkWishOutputDto()
         except Exception as e:
             return FailedOutputDto.build_system_error(message=str(e))
