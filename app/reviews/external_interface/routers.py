@@ -1,4 +1,4 @@
-from typing import Union, Optional
+from typing import Optional, Union
 
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, Header
@@ -10,19 +10,19 @@ from auth.application.service import AuthApplicationService
 from container import Container
 from reviews.application.dtos import (
     CreateReviewInputDto,
-    UpdateReviewInputDto,
     DeleteReviewInputDto,
     FindReviewInputDto,
     FindReviewOutputDto,
+    UpdateReviewInputDto,
 )
 from reviews.application.service import ReviewApplicationService
 from reviews.external_interface.json_dtos import (
     CreateReviewJsonRequest,
     CreateReviewJsonResponse,
-    UpdateReviewJsonRequest,
     DeleteReviewJsonRequest,
     GetReviewJsonResponse,
     GetReviewsJsonResponse,
+    UpdateReviewJsonRequest,
 )
 from shared_kernel.external_interface.json_dto import FailedJsonResponse
 

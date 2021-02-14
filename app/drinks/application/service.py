@@ -1,24 +1,30 @@
 from typing import Union
 
-from drinks.application.dtos import (AddDrinkReviewInputDto,
-                                     AddDrinkReviewOutputDto,
-                                     AddDrinkWishInputDto,
-                                     AddDrinkWishOutputDto,
-                                     CreateDrinkInputDto, CreateDrinkOutputDto,
-                                     DeleteDrinkInputDto, DeleteDrinkOutputDto,
-                                     DeleteDrinkReviewInputDto,
-                                     DeleteDrinkReviewOutputDto,
-                                     DeleteDrinkWishInputDto,
-                                     DeleteDrinkWishOutputDto,
-                                     FindDrinkInputDto, FindDrinkOutputDto,
-                                     FindDrinksInputDto, FindDrinksOutputDto,
-                                     UpdateDrinkInputDto, UpdateDrinkOutputDto,
-                                     UpdateDrinkReviewInputDto,
-                                     UpdateDrinkReviewOutputDto)
+from drinks.application.dtos import (
+    AddDrinkReviewInputDto,
+    AddDrinkReviewOutputDto,
+    AddDrinkWishInputDto,
+    AddDrinkWishOutputDto,
+    CreateDrinkInputDto,
+    CreateDrinkOutputDto,
+    DeleteDrinkInputDto,
+    DeleteDrinkOutputDto,
+    DeleteDrinkReviewInputDto,
+    DeleteDrinkReviewOutputDto,
+    DeleteDrinkWishInputDto,
+    DeleteDrinkWishOutputDto,
+    FindDrinkInputDto,
+    FindDrinkOutputDto,
+    FindDrinksInputDto,
+    FindDrinksOutputDto,
+    UpdateDrinkInputDto,
+    UpdateDrinkOutputDto,
+    UpdateDrinkReviewInputDto,
+    UpdateDrinkReviewOutputDto,
+)
 from drinks.domain.entities import Drink
 from drinks.domain.repository import DrinkRepository
-from drinks.domain.value_objects import (DrinkId, DrinkRating, DrinkType,
-                                         FilterType, OrderType)
+from drinks.domain.value_objects import DrinkId, DrinkRating, DrinkType
 from shared_kernel.application.dtos import FailedOutputDto
 
 

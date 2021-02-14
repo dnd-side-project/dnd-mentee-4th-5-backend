@@ -1,15 +1,11 @@
 import uuid
 
 import pytest
-from drinks.application.dtos import (
-    AddDrinkReviewInputDto,
-    CreateDrinkInputDto,
-    DeleteDrinkInputDto,
-    DeleteDrinkReviewInputDto,
-    FindDrinkInputDto,
-    FindDrinkOutputDto,
-    UpdateDrinkInputDto,
-)
+from drinks.application.dtos import (AddDrinkReviewInputDto,
+                                     CreateDrinkInputDto, DeleteDrinkInputDto,
+                                     DeleteDrinkReviewInputDto,
+                                     FindDrinkInputDto, FindDrinkOutputDto,
+                                     UpdateDrinkInputDto)
 from drinks.application.service import DrinkApplicationService
 from drinks.domain.entities import Drink
 from drinks.domain.value_objects import DrinkId, DrinkRating, DrinkType

@@ -6,7 +6,6 @@ from drinks.application.dtos import CreateDrinkInputDto, FindDrinksInputDto
 from drinks.application.service import DrinkApplicationService
 from drinks.domain.repository import QueryParam
 from drinks.external_interface.json_dto import (CreateDrinkJsonRequest,
-                                                GetDrinksJsonRequest,
                                                 GetDrinksJsonResponse)
 from fastapi import APIRouter, Depends
 from shared_kernel.external_interface.json_dto import FailedJsonResponse

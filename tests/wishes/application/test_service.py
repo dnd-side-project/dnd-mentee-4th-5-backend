@@ -1,13 +1,18 @@
 import pytest
+
 from drinks.application.dtos import CreateDrinkInputDto
 from drinks.application.service import DrinkApplicationService
 from drinks.domain.entities import Drink
 from drinks.domain.value_objects import DrinkId as drinks_DrinkId
 from drinks.domain.value_objects import DrinkRating, DrinkType
 from drinks.infra_structure.in_memory_repository import InMemoryDrinkRepository
-from wishes.application.dto import (CreateWishInputDto, CreateWishOutputDto,
-                                    DeleteWishInputDto, FindWishesInputDto,
-                                    FindWishesOutputDto)
+from wishes.application.dto import (
+    CreateWishInputDto,
+    CreateWishOutputDto,
+    DeleteWishInputDto,
+    FindWishesInputDto,
+    FindWishesOutputDto,
+)
 from wishes.application.service import WishApplicationService
 from wishes.domain.entities import Wish
 from wishes.domain.repository import QueryParam
