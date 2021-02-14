@@ -1,5 +1,6 @@
 from typing import List
 
+from drinks.domain.repository import QueryParam
 from pydantic import BaseModel
 from shared_kernel.application.dtos import SuccessOutputDto
 
@@ -19,9 +20,7 @@ class FindDrinkOutputDto(SuccessOutputDto):
 
 
 class FindDrinksInputDto(BaseModel):
-    drink_type: str
-    filter_type: str
-    order: str
+    query_param: QueryParam
 
 
 class FindDrinksOutputDto(SuccessOutputDto):

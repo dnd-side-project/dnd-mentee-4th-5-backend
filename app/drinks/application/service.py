@@ -48,11 +48,7 @@ class DrinkApplicationService:
 
     def find_drinks(self, input_dto: FindDrinksInputDto) -> Union[FindDrinksOutputDto, FailedOutputDto]:
         try:
-            drink_type = DrinkType.from_str(input_dto.drink_type)
-            filter_type = FilterType.from_str(input_dto.filter_type)
-            order = OrderType.from_str(input_dto.order)
-
-            drinks = self._drink_repository.find_all(drink_type=drink_type, filter_type=filter_type, order=order)
+            drinks = self._drink_repository.find_all(input_dto.query_param)
             drinks_dicts = []
             for drink in drinks:
                 temp = {

@@ -87,7 +87,7 @@ def test_get_drinks(client, sample_drink_list):
         )
         assert response.status_code == 201
 
-    response = client.get("/drinks", json={"drink_type": "wine", "filter_type": "review", "order": "descending"})
+    response = client.get("/drinks?drink=wine&filter=review&order=descending")
     assert response.status_code == 200
     assert response.json()["drinks_json"] == json.dumps(
         [

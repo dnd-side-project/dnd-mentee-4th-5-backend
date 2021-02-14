@@ -1,9 +1,16 @@
 from abc import ABCMeta, abstractmethod
-from typing import List, Optional
+from typing import ClassVar, List, Optional
 
 from drinks.domain.entities import Drink
 from drinks.domain.value_objects import (DrinkId, DrinkType, FilterType,
                                          OrderType)
+from pydantic import BaseModel
+
+
+class QueryParam(BaseModel):
+    drink: Optional[str] = "all"
+    filter: Optional[str] = "review"
+    order: Optional[str] = "descending"
 
 
 class DrinkRepository(metaclass=ABCMeta):
@@ -13,7 +20,7 @@ class DrinkRepository(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def find_all(self, drink_type: DrinkType, filter_type: FilterType, order: OrderType) -> List[Drink]:
+    def find_all(self, query_param: QueryParam) -> List[Drink]:
         pass
 
     @abstractmethod
