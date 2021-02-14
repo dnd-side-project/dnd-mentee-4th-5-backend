@@ -1,7 +1,6 @@
 from typing import List
 
 from pydantic import BaseModel
-
 from shared_kernel.application.dtos import SuccessOutputDto
 from wishes.domain.repository import QueryParam
 

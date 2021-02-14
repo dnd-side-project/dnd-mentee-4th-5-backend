@@ -1,22 +1,20 @@
 import pytest
-
 from drinks.application.dtos import CreateDrinkInputDto
 from drinks.application.service import DrinkApplicationService
 from drinks.domain.entities import Drink
 from drinks.domain.value_objects import DrinkId as drinks_DrinkId
 from drinks.domain.value_objects import DrinkRating, DrinkType
 from drinks.infra_structure.in_memory_repository import InMemoryDrinkRepository
-from reviews.application.dtos import (
-    CreateReviewInputDto,
-    DeleteReviewInputDto,
-    FindReviewInputDto,
-    FindReviewOutputDto,
-    UpdateReviewInputDto,
-)
+from reviews.application.dtos import (CreateReviewInputDto,
+                                      DeleteReviewInputDto, FindReviewInputDto,
+                                      FindReviewOutputDto,
+                                      UpdateReviewInputDto)
 from reviews.application.service import ReviewApplicationService
 from reviews.domain.entities import Review
-from reviews.domain.value_objects import DrinkId, ReviewId, ReviewRating, UserId
-from reviews.infra_structure.in_memory_repository import InMemoryReviewRepository
+from reviews.domain.value_objects import (DrinkId, ReviewId, ReviewRating,
+                                          UserId)
+from reviews.infra_structure.in_memory_repository import \
+    InMemoryReviewRepository
 from shared_kernel.application.dtos import FailedOutputDto
 
 

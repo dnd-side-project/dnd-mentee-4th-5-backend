@@ -1,5 +1,6 @@
 from auth.application.dtos import GetTokenInputDto
-from auth.external_interface.json_dto import GetTokenJsonRequest, GetTokenJsonResponse
+from auth.external_interface.json_dto import (GetTokenJsonRequest,
+                                              GetTokenJsonResponse)
 from container import Container
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends
