@@ -1,6 +1,5 @@
 from pydantic import BaseModel
-
-from users.application.dtos import FindUserOutputDto, CreateUserOutputDto
+from users.application.dtos import CreateUserOutputDto, FindUserOutputDto
 
 
 class GetUserJsonResponse(BaseModel):
@@ -32,7 +31,9 @@ class CreateUserJsonResponse(BaseModel):
     image_url: str
 
     @classmethod
-    def build_by_ouput_dto(cls, output_dto: CreateUserOutputDto) -> "CreateUserJsonResponse":
+    def build_by_ouput_dto(
+        cls, output_dto: CreateUserOutputDto
+    ) -> "CreateUserJsonResponse":
         return cls(
             user_id=output_dto.user_id,
             user_name=output_dto.user_name,

@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 from wishes.domain.entities import Wish
-from wishes.domain.repository import WishRepository, QueryParam
+from wishes.domain.repository import QueryParam, WishRepository
 
 
 class InMemoryWishRepository(WishRepository):

@@ -22,14 +22,20 @@ class InMemoryDrinkRepository(DrinkRepository):
         is_order_type = query_param.order != OrderType.DESC
         if filter_type == FilterType.REVIEW:
             drinks_filtered_in_order = sorted(
-                drinks_typed, key=lambda drink: drink.num_of_reviews, reverse=is_order_type
+                drinks_typed,
+                key=lambda drink: drink.num_of_reviews,
+                reverse=is_order_type,
             )
         elif filter_type == FilterType.RATING:
             drinks_filtered_in_order = sorted(
-                drinks_typed, key=lambda drink: float(drink.avg_rating), reverse=is_order_type
+                drinks_typed,
+                key=lambda drink: float(drink.avg_rating),
+                reverse=is_order_type,
             )
         elif filter_type == FilterType.WISH:
-            drinks_filtered_in_order = sorted(drinks_typed, key=lambda drink: drink.num_of_wish, reverse=is_order_type)
+            drinks_filtered_in_order = sorted(
+                drinks_typed, key=lambda drink: drink.num_of_wish, reverse=is_order_type
+            )
 
         return drinks_filtered_in_order
 

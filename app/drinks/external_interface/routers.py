@@ -42,7 +42,6 @@ def get_drinks(
     query_param: QueryParam = Depends(),
     drink_application_service: DrinkApplicationService = Depends(Provide[Container.drink_application_service]),
 ) -> Union[GetDrinksJsonResponse, JSONResponse]:
-    print(query_param)
     input_dto = FindDrinksInputDto(query_param=query_param)
     output_dto = drink_application_service.find_drinks(input_dto=input_dto)
     if not output_dto.status:

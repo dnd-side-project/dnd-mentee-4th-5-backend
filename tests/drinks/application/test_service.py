@@ -24,13 +24,29 @@ def drink_application_service(drink_repository):
 
 
 drink_data = [
-    (DrinkId(value=uuid.uuid5(uuid.NAMESPACE_DNS, "drink_id")), "Cabernet", "wine_image_url", DrinkType.WINE)
+    (
+        DrinkId(value=uuid.uuid5(uuid.NAMESPACE_DNS, "drink_id")),
+        "Cabernet",
+        "wine_image_url",
+        DrinkType.WINE,
+    )
 ]
 
 
-@pytest.mark.parametrize("drink_id, drink_name, drink_image_url, drink_type", drink_data)
-def test_find_drink(drink_application_service, drink_repository, drink_id, drink_name, drink_image_url, drink_type):
-    drink_repository.add(Drink(id=drink_id, name=drink_name, image_url=drink_image_url, type=drink_type))
+@pytest.mark.parametrize(
+    "drink_id, drink_name, drink_image_url, drink_type", drink_data
+)
+def test_find_drink(
+    drink_application_service,
+    drink_repository,
+    drink_id,
+    drink_name,
+    drink_image_url,
+    drink_type,
+):
+    drink_repository.add(
+        Drink(id=drink_id, name=drink_name, image_url=drink_image_url, type=drink_type)
+    )
 
     input_dto = FindDrinkInputDto(drink_id=str(drink_id))
     actual = drink_application_service.find_drink(input_dto)
@@ -46,10 +62,22 @@ def test_find_drink(drink_application_service, drink_repository, drink_id, drink
     assert actual == expected
 
 
-@pytest.mark.parametrize("drink_id, drink_name, drink_image_url, drink_type", drink_data)
-def test_create_drink(drink_application_service, drink_repository, drink_id, drink_name, drink_image_url, drink_type):
+@pytest.mark.parametrize(
+    "drink_id, drink_name, drink_image_url, drink_type", drink_data
+)
+def test_create_drink(
+    drink_application_service,
+    drink_repository,
+    drink_id,
+    drink_name,
+    drink_image_url,
+    drink_type,
+):
     input_dto = CreateDrinkInputDto(
-        drink_id=str(drink_id), drink_name=drink_name, drink_image_url=drink_image_url, drink_type=drink_type
+        drink_id=str(drink_id),
+        drink_name=drink_name,
+        drink_image_url=drink_image_url,
+        drink_type=drink_type,
     )
     drink_application_service.create_drink(input_dto)
 
@@ -69,11 +97,22 @@ def test_create_drink(drink_application_service, drink_repository, drink_id, dri
 
     # try to create the existing drink
     output_dto = drink_application_service.create_drink(input_dto)
-    assert output_dto == FailedOutputDto.build_resource_conflict_error(f"{str(drink_id)}는 이미 존재하는 술 입니다.")
+    assert output_dto == FailedOutputDto.build_resource_conflict_error(
+        f"{str(drink_id)}는 이미 존재하는 술 입니다."
+    )
 
 
-@pytest.mark.parametrize("drink_id, drink_name, drink_image_url, drink_type", drink_data)
-def test_update_drink(drink_application_service, drink_repository, drink_id, drink_name, drink_image_url, drink_type):
+@pytest.mark.parametrize(
+    "drink_id, drink_name, drink_image_url, drink_type", drink_data
+)
+def test_update_drink(
+    drink_application_service,
+    drink_repository,
+    drink_id,
+    drink_name,
+    drink_image_url,
+    drink_type,
+):
     drink_repository.add(
         Drink(
             id=drink_id,
@@ -110,9 +149,20 @@ def test_update_drink(drink_application_service, drink_repository, drink_id, dri
     assert actual == expected
 
 
-@pytest.mark.parametrize("drink_id, drink_name, drink_image_url, drink_type", drink_data)
-def test_delete_drink(drink_application_service, drink_repository, drink_id, drink_name, drink_image_url, drink_type):
-    drink_repository.add(Drink(id=drink_id, name=drink_name, image_url=drink_image_url, type=drink_type))
+@pytest.mark.parametrize(
+    "drink_id, drink_name, drink_image_url, drink_type", drink_data
+)
+def test_delete_drink(
+    drink_application_service,
+    drink_repository,
+    drink_id,
+    drink_name,
+    drink_image_url,
+    drink_type,
+):
+    drink_repository.add(
+        Drink(id=drink_id, name=drink_name, image_url=drink_image_url, type=drink_type)
+    )
 
     input_dto = DeleteDrinkInputDto(drink_id=str(drink_id))
     drink_application_service.delete_drink(input_dto)
@@ -123,12 +173,21 @@ def test_delete_drink(drink_application_service, drink_repository, drink_id, dri
 
     # Check delete drink when drink in-memory repo is Empty
     output_dto = drink_application_service.delete_drink(input_dto)
-    assert output_dto == FailedOutputDto.build_resource_not_found_error(f"{str(drink_id)}의 술을 찾을 수 없습니다.")
+    assert output_dto == FailedOutputDto.build_resource_not_found_error(
+        f"{str(drink_id)}의 술을 찾을 수 없습니다."
+    )
 
 
-@pytest.mark.parametrize("drink_id, drink_name, drink_image_url, drink_type", drink_data)
+@pytest.mark.parametrize(
+    "drink_id, drink_name, drink_image_url, drink_type", drink_data
+)
 def test_add_drink_review(
-    drink_application_service, drink_repository, drink_id, drink_name, drink_image_url, drink_type
+    drink_application_service,
+    drink_repository,
+    drink_id,
+    drink_name,
+    drink_image_url,
+    drink_type,
 ):
     drink_repository.add(
         Drink(
@@ -160,9 +219,16 @@ def test_add_drink_review(
     assert actual == expected
 
 
-@pytest.mark.parametrize("drink_id, drink_name, drink_image_url, drink_type", drink_data)
+@pytest.mark.parametrize(
+    "drink_id, drink_name, drink_image_url, drink_type", drink_data
+)
 def test_delete_drink_review(
-    drink_application_service, drink_repository, drink_id, drink_name, drink_image_url, drink_type
+    drink_application_service,
+    drink_repository,
+    drink_id,
+    drink_name,
+    drink_image_url,
+    drink_type,
 ):
     drink_repository.add(
         Drink(

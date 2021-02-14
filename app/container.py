@@ -23,10 +23,20 @@ class Container(containers.DeclarativeContainer):
     drink_repository = providers.Singleton(InMemoryDrinkRepository)
 
     # application service
-    user_application_service = providers.Singleton(UserApplicationService, user_repository=user_repository)
-    auth_application_service = providers.Singleton(
-        AuthApplicationService, user_application_service=user_application_service, settings=settings
+    user_application_service = providers.Singleton(
+        UserApplicationService, user_repository=user_repository
     )
-    review_application_service = providers.Singleton(ReviewApplicationService, review_repository=review_repository)
-    wish_application_service = providers.Singleton(WishApplicationService, wish_repository=wish_repository)
-    drink_application_service = providers.Singleton(DrinkApplicationService, drink_repository=drink_repository)
+    auth_application_service = providers.Singleton(
+        AuthApplicationService,
+        user_application_service=user_application_service,
+        settings=settings,
+    )
+    review_application_service = providers.Singleton(
+        ReviewApplicationService, review_repository=review_repository
+    )
+    wish_application_service = providers.Singleton(
+        WishApplicationService, wish_repository=wish_repository
+    )
+    drink_application_service = providers.Singleton(
+        DrinkApplicationService, drink_repository=drink_repository
+    )

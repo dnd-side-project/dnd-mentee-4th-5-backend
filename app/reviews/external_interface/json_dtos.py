@@ -1,7 +1,6 @@
 from typing import List
 
 from pydantic import BaseModel, Field
-
 from reviews.application.dtos import CreateReviewOutputDto, FindReviewOutputDto
 
 
@@ -15,7 +14,9 @@ class GetReviewJsonResponse(BaseModel):
     updated_at: float
 
     @classmethod
-    def build_by_ouput_dto(cls, output_dto: FindReviewOutputDto) -> "GetReviewJsonResponse":
+    def build_by_ouput_dto(
+        cls, output_dto: FindReviewOutputDto
+    ) -> "GetReviewJsonResponse":
         return cls(
             review_id=output_dto.review_id,
             user_id=output_dto.user_id,
@@ -28,7 +29,9 @@ class GetReviewJsonResponse(BaseModel):
 
 
 class GetReviewsJsonResponse(BaseModel):
-    __root__: List[FindReviewOutputDto] = Field(alias="values")  # TODO: 좀 더 자세하게 (되도록 객체로 표현)
+    __root__: List[FindReviewOutputDto] = Field(
+        alias="values"
+    )  # TODO: 좀 더 자세하게 (되도록 객체로 표현)
 
 
 class CreateReviewJsonRequest(BaseModel):
@@ -45,7 +48,9 @@ class CreateReviewJsonResponse(BaseModel):
     updated_at: float
 
     @classmethod
-    def build_by_ouput_dto(cls, output_dto: CreateReviewOutputDto) -> "CreateReviewJsonResponse":
+    def build_by_ouput_dto(
+        cls, output_dto: CreateReviewOutputDto
+    ) -> "CreateReviewJsonResponse":
         return cls(
             drink_id=output_dto.drink_id,
             rating=output_dto.rating,
