@@ -1,11 +1,11 @@
+from auth.application.dtos import GetTokenInputDto
+from auth.external_interface.json_dto import (GetTokenJsonRequest,
+                                              GetTokenJsonResponse)
+from container import Container
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends
-from starlette import status
-
-from auth.application.dtos import GetTokenInputDto
-from auth.external_interface.json_dto import GetTokenJsonRequest, GetTokenJsonResponse
-from container import Container
 from shared_kernel.external_interface.json_dto import FailedJsonResponse
+from starlette import status
 
 router = APIRouter(
     prefix="/auth",

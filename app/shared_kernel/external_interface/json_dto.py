@@ -1,10 +1,9 @@
 from typing import ClassVar, Dict
 
 from pydantic import BaseModel
+from shared_kernel.application.dtos import FailedOutputDto
 from starlette import status
 from starlette.responses import JSONResponse
-
-from shared_kernel.application.dtos import FailedOutputDto
 
 
 class FailedJsonResponse(BaseModel):
@@ -24,5 +23,8 @@ class FailedJsonResponse(BaseModel):
     def build_by_output_dto(cls, failed_output_dto: FailedOutputDto) -> JSONResponse:
         return JSONResponse(
             status_code=cls.STATUS_CODES[failed_output_dto.type],
-            content={"error_type": failed_output_dto.type, "message": failed_output_dto.message},
+            content={
+                "error_type": failed_output_dto.type,
+                "message": failed_output_dto.message,
+            },
         )

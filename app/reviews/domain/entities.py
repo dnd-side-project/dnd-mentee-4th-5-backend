@@ -1,8 +1,8 @@
 from typing import ClassVar
 
 from pydantic import BaseModel, Field
-
-from reviews.domain.value_objects import ReviewRating, UserId, ReviewId, DrinkId
+from reviews.domain.value_objects import (DrinkId, ReviewId, ReviewRating,
+                                          UserId)
 
 
 class Review(BaseModel):

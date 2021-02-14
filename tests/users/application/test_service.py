@@ -1,16 +1,9 @@
 import pytest
-
 from shared_kernel.application.dtos import FailedOutputDto
-from users.application.dtos import (
-    CreateUserInputDto,
-    DeleteUserInputDto,
-    FindUserInputDto,
-    FindUserOutputDto,
-    LoginInputDto,
-    LoginOutputDto,
-    UpdateUserInputDto,
-    CreateUserOutputDto,
-)
+from users.application.dtos import (CreateUserInputDto, CreateUserOutputDto,
+                                    DeleteUserInputDto, FindUserInputDto,
+                                    FindUserOutputDto, LoginInputDto,
+                                    LoginOutputDto, UpdateUserInputDto)
 from users.application.service import UserApplicationService
 from users.domain.entities import User
 from users.domain.value_objects import UserId, UserName
@@ -31,8 +24,14 @@ user_data = [("heumsi", "heumsi", "1234")]
 
 
 @pytest.mark.parametrize("user_id, user_name, password", user_data)
-def test_find_user(user_application_service, user_repository, user_id, user_name, password):
-    user_repository.add(User(id=UserId(value=user_id), name=UserName(value=user_name), password=password))
+def test_find_user(
+    user_application_service, user_repository, user_id, user_name, password
+):
+    user_repository.add(
+        User(
+            id=UserId(value=user_id), name=UserName(value=user_name), password=password
+        )
+    )
 
     input_dto = FindUserInputDto(user_id=user_id)
     actual = user_application_service.find_user(input_dto)
@@ -48,19 +47,33 @@ def test_find_user(user_application_service, user_repository, user_id, user_name
 
 @pytest.mark.parametrize("user_id, user_name, password", user_data)
 def test_create_user(user_application_service, user_id, user_name, password):
-    input_dto = CreateUserInputDto(user_id=user_id, user_name=user_name, password=password)
+    input_dto = CreateUserInputDto(
+        user_id=user_id, user_name=user_name, password=password
+    )
     actual = user_application_service.create_user(input_dto)
-    expected = CreateUserOutputDto(user_id=user_id, user_name=user_name, description="", image_url="")
+    expected = CreateUserOutputDto(
+        user_id=user_id, user_name=user_name, description="", image_url=""
+    )
     assert actual == expected
 
-    actual = user_application_service.find_user(input_dto=FindUserInputDto(user_id="heumsi"))
-    expected = FindUserOutputDto(user_id=user_id, user_name=user_name, description="", image_url="")
+    actual = user_application_service.find_user(
+        input_dto=FindUserInputDto(user_id="heumsi")
+    )
+    expected = FindUserOutputDto(
+        user_id=user_id, user_name=user_name, description="", image_url=""
+    )
     assert actual == expected
 
 
 @pytest.mark.parametrize("user_id, user_name, password", user_data)
-def test_update_user(user_application_service, user_repository, user_id, user_name, password):
-    user_repository.add(User(id=UserId(value=user_id), name=UserName(value=user_name), password=password))
+def test_update_user(
+    user_application_service, user_repository, user_id, user_name, password
+):
+    user_repository.add(
+        User(
+            id=UserId(value=user_id), name=UserName(value=user_name), password=password
+        )
+    )
 
     input_dto = UpdateUserInputDto(
         user_id=user_id,
@@ -82,8 +95,14 @@ def test_update_user(user_application_service, user_repository, user_id, user_na
 
 
 @pytest.mark.parametrize("user_id, user_name, password", user_data)
-def test_delete_user(user_application_service, user_repository, user_id, user_name, password):
-    user_repository.add(User(id=UserId(value=user_id), name=UserName(value=user_name), password=password))
+def test_delete_user(
+    user_application_service, user_repository, user_id, user_name, password
+):
+    user_repository.add(
+        User(
+            id=UserId(value=user_id), name=UserName(value=user_name), password=password
+        )
+    )
 
     input_dto = DeleteUserInputDto(user_id=user_id)
     user_application_service.delete_user(input_dto)
@@ -94,12 +113,16 @@ def test_delete_user(user_application_service, user_repository, user_id, user_na
 
     # Check delete user when user in-memory repo is Empty
     output_dto = user_application_service.delete_user(input_dto)
-    assert output_dto == FailedOutputDto.build_resource_not_found_error("heumsi의 유저를 찾지 못했습니다.")
+    assert output_dto == FailedOutputDto.build_resource_not_found_error(
+        "heumsi의 유저를 찾지 못했습니다."
+    )
 
 
 @pytest.mark.parametrize("user_id, user_name, password", user_data)
 def test_login(user_application_service, user_repository, user_id, user_name, password):
-    input_dto = CreateUserInputDto(user_id=user_id, user_name=user_name, password=password)
+    input_dto = CreateUserInputDto(
+        user_id=user_id, user_name=user_name, password=password
+    )
     _ = user_application_service.create_user(input_dto)
 
     input_dto = LoginInputDto(user_id=user_id, password=password)
@@ -110,7 +133,9 @@ def test_login(user_application_service, user_repository, user_id, user_name, pa
     # Wrong Id
     input_dto = LoginInputDto(user_id="joon", password=password)
     actual = user_application_service.login(input_dto)
-    expected = FailedOutputDto.build_resource_not_found_error(message=f"{str(input_dto.user_id)}의 유저를 찾지 못했습니다.")
+    expected = FailedOutputDto.build_resource_not_found_error(
+        message=f"{str(input_dto.user_id)}의 유저를 찾지 못했습니다."
+    )
     assert actual == expected
 
     # Wrong PW

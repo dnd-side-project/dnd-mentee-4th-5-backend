@@ -1,12 +1,12 @@
-import uvicorn
-from fastapi import FastAPI
-
 import auth.external_interface.routers
+import drinks.external_interface.routers
 import health.external_interface.routers
 import reviews.external_interface.routers
 import users.external_interface.routers
+import uvicorn
 import wishes.external_interface.routers
 from container import Container
+from fastapi import FastAPI
 
 
 def create_app():
@@ -16,6 +16,7 @@ def create_app():
         users.external_interface.routers,
         reviews.external_interface.routers,
         wishes.external_interface.routers,
+        drinks.external_interface.routers,
     ]
     container = Container()
     container.wire(modules=router_modules)
