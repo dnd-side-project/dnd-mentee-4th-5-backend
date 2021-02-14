@@ -2,7 +2,8 @@ from typing import List, Optional
 
 from reviews.domain.entities import Review
 from reviews.domain.repository import ReviewRepository
-from reviews.domain.value_objects import OrderType, UserId, ReviewId, DrinkId
+from reviews.domain.value_objects import (DrinkId, OrderType, ReviewId,
+                                          ReviewRating, UserId)
 
 
 class InMemoryReviewRepository(ReviewRepository):
@@ -33,8 +34,10 @@ class InMemoryReviewRepository(ReviewRepository):
         self.review_id_to_review[str(review.id)] = review
         self.drink_id_user_id_to_review_id[(str(review.drink_id), str(review.user_id))] = str(review.id)
 
-    def update(self, review: Review) -> None:
+    def update(self, review: Review) -> ReviewRating:
+        old_rating = self.review_id_to_review[str(review.id)].rating
         self.review_id_to_review[str(review.id)] = review
+        return old_rating
 
     def delete_by_review_id(self, review_id: ReviewId) -> None:
         self.review_id_to_review.pop(str(review_id), None)

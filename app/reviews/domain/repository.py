@@ -2,7 +2,7 @@ from abc import ABCMeta, abstractmethod
 from typing import List, Optional
 
 from reviews.domain.entities import Review
-from reviews.domain.value_objects import OrderType, UserId, DrinkId, ReviewId
+from reviews.domain.value_objects import DrinkId, OrderType, ReviewId, UserId
 
 
 class ReviewRepository(metaclass=ABCMeta):
@@ -31,7 +31,7 @@ class ReviewRepository(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def update(self, review: Review) -> None:
+    def update(self, review: Review) -> int:
         pass
 
     @abstractmethod

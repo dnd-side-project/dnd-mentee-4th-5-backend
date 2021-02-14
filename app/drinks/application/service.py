@@ -12,7 +12,9 @@ from drinks.application.dtos import (AddDrinkReviewInputDto,
                                      DeleteDrinkWishOutputDto,
                                      FindDrinkInputDto, FindDrinkOutputDto,
                                      FindDrinksInputDto, FindDrinksOutputDto,
-                                     UpdateDrinkInputDto, UpdateDrinkOutputDto)
+                                     UpdateDrinkInputDto, UpdateDrinkOutputDto,
+                                     UpdateDrinkReviewInputDto,
+                                     UpdateDrinkReviewOutputDto)
 from drinks.domain.entities import Drink
 from drinks.domain.repository import DrinkRepository
 from drinks.domain.value_objects import (DrinkId, DrinkRating, DrinkType,
@@ -130,6 +132,23 @@ class DrinkApplicationService:
             drink.add_rating(input_dto.drink_rating)
             return AddDrinkReviewOutputDto()
 
+        except Exception as e:
+            return FailedOutputDto.build_system_error(message=str(e))
+
+    def update_drink_review(
+        self, input_dto: UpdateDrinkReviewInputDto
+    ) -> Union[UpdateDrinkReviewOutputDto, FailedOutputDto]:
+        try:
+            drink = self._drink_repository.find_by_drink_id(DrinkId.from_str(input_dto.drink_id))
+            if drink is None:
+                return FailedOutputDto.build_resource_not_found_error(
+                    message=f"{str(input_dto.drink_id)}의 술을 찾을 수 없습니다."
+                )
+
+            drink.update_rating(old_rating=input_dto.old_drink_rating, new_rating=input_dto.new_drink_rating)
+            # self._drink_repository.update(drink)
+
+            return UpdateDrinkReviewOutputDto()
         except Exception as e:
             return FailedOutputDto.build_system_error(message=str(e))
 

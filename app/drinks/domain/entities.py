@@ -21,6 +21,10 @@ class Drink(BaseModel):
         self.num_of_reviews += 1
         self.avg_rating = DrinkRating(value=(sum_rating_value / self.num_of_reviews))
 
+    def update_rating(self, old_rating: int, new_rating: int) -> None:
+        sum_rating_value = (float(self.avg_rating) * self.num_of_reviews) - old_rating + new_rating
+        self.avg_rating = DrinkRating(value=(sum_rating_value / self.num_of_reviews))
+
     def delete_rating(self, input_rating: int) -> None:
         if self.num_of_reviews <= 0:
             return

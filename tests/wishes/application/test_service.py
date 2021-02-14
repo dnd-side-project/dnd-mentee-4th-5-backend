@@ -2,17 +2,12 @@ import pytest
 from drinks.application.dtos import CreateDrinkInputDto
 from drinks.application.service import DrinkApplicationService
 from drinks.domain.entities import Drink
-from drinks.domain.value_objects import DrinkRating, DrinkType
 from drinks.domain.value_objects import DrinkId as drinks_DrinkId
-
+from drinks.domain.value_objects import DrinkRating, DrinkType
 from drinks.infra_structure.in_memory_repository import InMemoryDrinkRepository
-from wishes.application.dto import (
-    CreateWishInputDto,
-    CreateWishOutputDto,
-    DeleteWishInputDto,
-    FindWishesInputDto,
-    FindWishesOutputDto,
-)
+from wishes.application.dto import (CreateWishInputDto, CreateWishOutputDto,
+                                    DeleteWishInputDto, FindWishesInputDto,
+                                    FindWishesOutputDto)
 from wishes.application.service import WishApplicationService
 from wishes.domain.entities import Wish
 from wishes.domain.repository import QueryParam
@@ -32,7 +27,7 @@ def drink_repository():
 
 @pytest.fixture(scope="function")
 def wish_application_service(wish_repository, drink_repository):
-    return WishApplicationService(wish_repository=wish_repository, drink_repository=drink_repository)
+    return WishApplicationService(wish_repository=wish_repository)
 
 
 @pytest.fixture(scope="function")
@@ -91,7 +86,8 @@ def test_create_wish(wish_application_service, wish_repository, drink_applicatio
     drink_application_service.create_drink(input_dto)
 
     input_dto = CreateWishInputDto(user_id="heumsi", drink_id="335ca1a4-5175-5e41-8bac-40ffd840834c")
-    output_dto = wish_application_service.create_wish(input_dto)
+    output_dto = wish_application_service.create_wish(input_dto, drink_application_service)
+
     assert output_dto.status is True
     assert output_dto == CreateWishOutputDto(
         user_id="heumsi", drink_id="335ca1a4-5175-5e41-8bac-40ffd840834c", created_at=output_dto.created_at
@@ -123,6 +119,7 @@ def test_delete_wish(wish_application_service, wish_repository, drink_applicatio
         drink_type=DrinkType.BEER,
     )
     drink_application_service.create_drink(input_dto)
+
     wish_repository.add(
         Wish(
             user_id=UserId(value="heumsi"),
@@ -132,5 +129,5 @@ def test_delete_wish(wish_application_service, wish_repository, drink_applicatio
     )
 
     input_dto = DeleteWishInputDto(user_id="heumsi", drink_id="335ca1a4-5175-5e41-8bac-40ffd840834c")
-    output_dto = wish_application_service.delete_wish(input_dto)
+    output_dto = wish_application_service.delete_wish(input_dto, drink_application_service)
     assert output_dto.status is True

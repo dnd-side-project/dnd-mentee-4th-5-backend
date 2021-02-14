@@ -70,6 +70,16 @@ class AddDrinkReviewOutputDto(SuccessOutputDto):
     pass
 
 
+class UpdateDrinkReviewInputDto(BaseModel):
+    drink_id: str
+    old_drink_rating: int
+    new_drink_rating: int
+
+
+class UpdateDrinkReviewOutputDto(SuccessOutputDto):
+    pass
+
+
 class DeleteDrinkReviewInputDto(BaseModel):
     drink_id: str
     drink_rating: int
