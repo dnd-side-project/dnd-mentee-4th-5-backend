@@ -11,7 +11,7 @@ class UserRepository(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def find_by_user_id(self, user_id: UserId) -> Optional[User]:
+    def find_by_user_id(self, user_id: UserId) -> User:
         pass
 
     @abstractmethod
