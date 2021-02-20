@@ -4,6 +4,7 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 from wishes.domain.entities import Wish
+from wishes.domain.value_objects import WishId
 
 
 class QueryParam(BaseModel):
@@ -13,7 +14,7 @@ class QueryParam(BaseModel):
 
 class WishRepository(metaclass=ABCMeta):
     @abstractmethod
-    def find(self, query_param: QueryParam) -> Optional[Wish]:
+    def find(self, query_param: QueryParam) -> Wish:
         pass
 
     @abstractmethod
@@ -25,5 +26,5 @@ class WishRepository(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def delete(self, wish: Wish) -> None:
+    def delete_by_wish_id(self, wish_id: WishId) -> None:
         pass
