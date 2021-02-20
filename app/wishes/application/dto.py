@@ -12,6 +12,7 @@ class FindWishesInputDto(BaseModel):
 
 class FindWishesOutputDto(SuccessOutputDto):
     class Item(BaseModel):
+        id: str
         user_id: str
         drink_id: str
         created_at: float
@@ -25,14 +26,14 @@ class CreateWishInputDto(BaseModel):
 
 
 class CreateWishOutputDto(SuccessOutputDto):
+    id: str
     user_id: str
     drink_id: str
     created_at: float
 
 
 class DeleteWishInputDto(BaseModel):
-    user_id: str
-    drink_id: str
+    wish_id: str
 
 
 class DeleteWishOutputDto(SuccessOutputDto):
