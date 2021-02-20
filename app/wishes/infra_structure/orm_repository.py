@@ -43,10 +43,11 @@ class OrmWishRepository(WishRepository):
             session.add(wish_orm)
             session.commit()
 
-    def delete_by_wish_id(self, wish_id: WishId) -> None:
+    def delete_by_wish_id(self, wish_id: WishId) -> Wish:
         with self._session_factory() as session:
             wish_orm = session.query(WishOrm).filter(WishOrm.id == str(wish_id)).first()
             if wish_orm is None:
                 raise ResourceNotFoundError(f"{str(wish_id)}의 위시를 찾지 못했습니다.")
             session.delete(wish_orm)
             session.commit()
+            return wish_orm.to_wish()

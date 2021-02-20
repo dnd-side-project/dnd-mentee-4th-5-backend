@@ -8,6 +8,7 @@ from wishes.domain.value_objects import WishId
 
 
 class QueryParam(BaseModel):
+    wish_id: Optional[str] = None
     user_id: Optional[str] = None
     drink_id: Optional[str] = None
 
@@ -26,5 +27,5 @@ class WishRepository(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def delete_by_wish_id(self, wish_id: WishId) -> None:
+    def delete_by_wish_id(self, wish_id: WishId) -> Wish:
         pass

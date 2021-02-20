@@ -85,7 +85,14 @@ def test_delete(orm_wish_repository):
     with pytest.raises(ResourceNotFoundError):
         orm_wish_repository.find(QueryParam(user_id="not exist user"))
 
-    orm_wish_repository.delete_by_wish_id(wish_id=WishId.from_str("bcbfdb54-acb7-5443-926a-42e882ef7db0"))
+    actual = orm_wish_repository.delete_by_wish_id(wish_id=WishId.from_str("bcbfdb54-acb7-5443-926a-42e882ef7db0"))
+    expected = Wish(
+        id=WishId.from_str("bcbfdb54-acb7-5443-926a-42e882ef7db0"),
+        user_id=UserId(value="heumsi"),
+        drink_id=DrinkId.from_str("335ca1a4-5175-5e41-8bac-40ffd840834c"),
+        created_at=1613807667.0,
+    )
+    assert actual == expected
+
     with pytest.raises(ResourceNotFoundError):
-        result = orm_wish_repository.find(query_param=QueryParam(user_id="heumsi"))
-        print(result)
+        orm_wish_repository.find(query_param=QueryParam(user_id="heumsi"))
