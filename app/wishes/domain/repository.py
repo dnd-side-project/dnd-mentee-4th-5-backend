@@ -2,6 +2,7 @@ from abc import ABCMeta, abstractmethod
 from typing import List, Optional
 
 from pydantic import BaseModel
+
 from wishes.domain.entities import Wish
 
 

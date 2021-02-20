@@ -1,4 +1,5 @@
 import pytest
+
 from drinks.application.dtos import CreateDrinkInputDto
 from drinks.application.service import DrinkApplicationService
 from drinks.domain.entities import Drink

@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+
 from wishes.domain.value_objects import DrinkId, UserId
 
 
