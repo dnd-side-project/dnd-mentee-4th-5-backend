@@ -1,9 +1,11 @@
 from pydantic import BaseModel
 
-from wishes.domain.value_objects import DrinkId, UserId
+from shared_kernel.domain.value_objects import UserId, DrinkId
+from wishes.domain.value_objects import WishId
 
 
 class Wish(BaseModel):
+    id: WishId
     user_id: UserId
     drink_id: DrinkId
     created_at: float

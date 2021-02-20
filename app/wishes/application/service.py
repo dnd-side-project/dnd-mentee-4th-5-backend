@@ -4,6 +4,7 @@ from typing import Union
 from drinks.application.dtos import AddDrinkWishInputDto, DeleteDrinkWishInputDto
 from drinks.application.service import DrinkApplicationService
 from shared_kernel.application.dtos import FailedOutputDto
+from shared_kernel.domain.value_objects import UserId, DrinkId
 from wishes.application.dto import (
     CreateWishInputDto,
     CreateWishOutputDto,
@@ -14,7 +15,7 @@ from wishes.application.dto import (
 )
 from wishes.domain.entities import Wish
 from wishes.domain.repository import QueryParam, WishRepository
-from wishes.domain.value_objects import DrinkId, UserId
+from wishes.domain.value_objects import WishId
 
 
 class WishApplicationService:
@@ -45,7 +46,12 @@ class WishApplicationService:
         try:
             user_id = UserId(value=input_dto.user_id)
             drink_id = DrinkId.from_str(input_dto.drink_id)
-            wish = Wish(user_id=user_id, drink_id=drink_id, created_at=time.time())
+            wish = Wish(
+                id=WishId.build(user_id=str(user_id), drink_id=str(drink_id)),
+                user_id=user_id,
+                drink_id=drink_id,
+                created_at=time.time(),
+            )
 
             if self._wish_repository.find(QueryParam(user_id=str(user_id), drink_id=str(drink_id))) is not None:
                 return FailedOutputDto.build_resource_conflict_error(f"해당 리소스는 이미 존재합니다.")
