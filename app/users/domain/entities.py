@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
-from users.domain.value_objects import UserId, UserName
+
+from shared_kernel.domain.value_objects import UserId, UserName
 
 
 class User(BaseModel):

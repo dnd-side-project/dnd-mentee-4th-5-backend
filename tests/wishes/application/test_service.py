@@ -5,9 +5,13 @@ from drinks.domain.entities import Drink
 from drinks.domain.value_objects import DrinkId as drinks_DrinkId
 from drinks.domain.value_objects import DrinkRating, DrinkType
 from drinks.infra_structure.in_memory_repository import InMemoryDrinkRepository
-from wishes.application.dto import (CreateWishInputDto, CreateWishOutputDto,
-                                    DeleteWishInputDto, FindWishesInputDto,
-                                    FindWishesOutputDto)
+from wishes.application.dto import (
+    CreateWishInputDto,
+    CreateWishOutputDto,
+    DeleteWishInputDto,
+    FindWishesInputDto,
+    FindWishesOutputDto,
+)
 from wishes.application.service import WishApplicationService
 from wishes.domain.entities import Wish
 from wishes.domain.repository import QueryParam
@@ -59,9 +63,7 @@ def test_find_create_wish(wish_application_service, wish_repository):
     )
 
     input_dto = FindWishesInputDto(
-        query_param=QueryParam(
-            user_id=None, drink_id="335ca1a4-5175-5e41-8bac-40ffd840834c"
-        )
+        query_param=QueryParam(user_id=None, drink_id="335ca1a4-5175-5e41-8bac-40ffd840834c")
     )
     output_dto = wish_application_service.find_wishes(input_dto)
     assert output_dto.status is True
@@ -98,12 +100,8 @@ def test_create_wish(
     )
     drink_application_service.create_drink(input_dto)
 
-    input_dto = CreateWishInputDto(
-        user_id="heumsi", drink_id="335ca1a4-5175-5e41-8bac-40ffd840834c"
-    )
-    output_dto = wish_application_service.create_wish(
-        input_dto, drink_application_service
-    )
+    input_dto = CreateWishInputDto(user_id="heumsi", drink_id="335ca1a4-5175-5e41-8bac-40ffd840834c")
+    output_dto = wish_application_service.create_wish(input_dto, drink_application_service)
 
     assert output_dto.status is True
     assert output_dto == CreateWishOutputDto(
@@ -126,9 +124,7 @@ def test_create_wish(
     ]
     assert actual == expected
 
-    wish = wish_repository.find(
-        QueryParam(user_id="heumsi", drink_id="335ca1a4-5175-5e41-8bac-40ffd840834c")
-    )
+    wish = wish_repository.find(QueryParam(user_id="heumsi", drink_id="335ca1a4-5175-5e41-8bac-40ffd840834c"))
     assert wish is not None
 
 
@@ -154,10 +150,6 @@ def test_delete_wish(
         )
     )
 
-    input_dto = DeleteWishInputDto(
-        user_id="heumsi", drink_id="335ca1a4-5175-5e41-8bac-40ffd840834c"
-    )
-    output_dto = wish_application_service.delete_wish(
-        input_dto, drink_application_service
-    )
+    input_dto = DeleteWishInputDto(user_id="heumsi", drink_id="335ca1a4-5175-5e41-8bac-40ffd840834c")
+    output_dto = wish_application_service.delete_wish(input_dto, drink_application_service)
     assert output_dto.status is True

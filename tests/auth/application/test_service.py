@@ -1,9 +1,14 @@
 from unittest.mock import Mock
 
 import pytest
-from auth.application.dtos import (GetTokenDataInputDto, GetTokenDataOutputDto,
-                                   GetTokenInputDto, GetTokenOutputDto,
-                                   VerifyTokenInputDto, VerifyTokenOutputDto)
+from auth.application.dtos import (
+    GetTokenInputDto,
+    GetTokenOutputDto,
+    VerifyTokenInputDto,
+    VerifyTokenOutputDto,
+    GetTokenDataInputDto,
+    GetTokenDataOutputDto,
+)
 from auth.application.service import AuthApplicationService
 from jose import jwt
 from settings import Settings
@@ -31,7 +36,9 @@ def settings():
 @pytest.fixture
 def auth_application_service(user_application_service, settings):
     return AuthApplicationService(
-        user_application_service=user_application_service, settings=settings
+        user_application_service=user_application_service,
+        jwt_secret_key=settings.JWT_SECRET_KEY,
+        jwt_algorithm=settings.JWT_ALGORITHM,
     )
 
 
@@ -62,9 +69,7 @@ def test_get_token_data(auth_application_service):
     input_dto = GetTokenDataInputDto(access_token="wrong jwt token")
 
     actual = auth_application_service.get_token_data(input_dto)
-    expected = FailedOutputDto.build_unauthorized_error(
-        message="올바른 access-token이 아닙니다."
-    )
+    expected = FailedOutputDto.build_unauthorized_error(message="올바른 access-token이 아닙니다.")
     assert actual == expected
 
     input_dto = GetTokenDataInputDto(
@@ -91,7 +96,5 @@ def test_verify_token(auth_application_service):
         user_id="seokjoon",
     )
     actual = auth_application_service.verify_token(input_dto)
-    expected = FailedOutputDto(
-        type="Unauthorized Error", message="access-token이 유효하지 않습니다."
-    )
+    expected = FailedOutputDto(type="Unauthorized Error", message="access-token이 유효하지 않습니다.")
     assert actual == expected

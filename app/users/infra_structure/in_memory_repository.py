@@ -1,8 +1,8 @@
 from typing import List, Optional
 
+from shared_kernel.domain.value_objects import UserId
 from users.domain.entities import User
 from users.domain.repository import UserRepository
-from users.domain.value_objects import UserId
 
 
 class InMemoryUserRepository(UserRepository):
