@@ -1,8 +1,8 @@
 from abc import ABCMeta, abstractmethod
-from typing import List, Optional
+from typing import List
 
+from shared_kernel.domain.value_objects import UserId
 from users.domain.entities import User
-from users.domain.value_objects import UserId
 
 
 class UserRepository(metaclass=ABCMeta):

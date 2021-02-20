@@ -1,8 +1,8 @@
 from sqlalchemy import Column, String
 
-from database import Base
+from shared_kernel.domain.value_objects import UserId, UserName
+from shared_kernel.infra_structure.database import Base
 from users.domain.entities import User
-from users.domain.value_objects import UserId, UserName
 
 
 class UserOrm(Base):
@@ -27,8 +27,8 @@ class UserOrm(Base):
     def fetch_user(self, user: User) -> None:
         self.name = str(user.name)
         self.description = user.description
-        self.password = self.password
-        self.image_url = self.image_url
+        self.password = user.password
+        self.image_url = user.image_url
 
     def to_user(self) -> User:
         return User(

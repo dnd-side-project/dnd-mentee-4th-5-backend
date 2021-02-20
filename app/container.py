@@ -1,5 +1,5 @@
 from auth.application.service import AuthApplicationService
-from database import Database
+from shared_kernel.infra_structure.database import Database
 from dependency_injector import containers, providers
 from drinks.application.service import DrinkApplicationService
 from drinks.infra_structure.in_memory_repository import InMemoryDrinkRepository
@@ -15,6 +15,7 @@ class Container(containers.DeclarativeContainer):
     # settings
     settings = providers.Configuration()
 
+    # database
     db = providers.Singleton(Database, db_url=settings.DB_URL)
 
     # repository

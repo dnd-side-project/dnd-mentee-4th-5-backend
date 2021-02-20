@@ -3,7 +3,8 @@ from typing import Union
 from passlib.context import CryptContext
 
 from shared_kernel.application.dtos import FailedOutputDto
-from shared_kernel.infra_structure.exceptions import ResourceNotFoundError, ResourceAlreadyExistError
+from shared_kernel.domain.exceptions import ResourceNotFoundError, ResourceAlreadyExistError
+from shared_kernel.domain.value_objects import UserId, UserName
 from users.application.dtos import (
     CreateUserInputDto,
     DeleteUserInputDto,
@@ -18,7 +19,6 @@ from users.application.dtos import (
 )
 from users.domain.entities import User
 from users.domain.repository import UserRepository
-from users.domain.value_objects import UserId, UserName
 
 
 class UserApplicationService:
