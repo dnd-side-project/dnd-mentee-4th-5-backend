@@ -2,20 +2,22 @@ import pytest
 from drinks.application.dtos import CreateDrinkInputDto
 from drinks.application.service import DrinkApplicationService
 from drinks.domain.entities import Drink
-from drinks.domain.value_objects import DrinkId as drinks_DrinkId
 from drinks.domain.value_objects import DrinkRating, DrinkType
 from drinks.infra_structure.in_memory_repository import InMemoryDrinkRepository
-from reviews.application.dtos import (CreateReviewInputDto,
-                                      DeleteReviewInputDto, FindReviewInputDto,
-                                      FindReviewOutputDto,
-                                      UpdateReviewInputDto)
+from reviews.application.dtos import (
+    CreateReviewInputDto,
+    DeleteReviewInputDto,
+    FindReviewInputDto,
+    FindReviewOutputDto,
+    UpdateReviewInputDto,
+)
 from reviews.application.service import ReviewApplicationService
 from reviews.domain.entities import Review
-from reviews.domain.value_objects import (DrinkId, ReviewId, ReviewRating,
-                                          UserId)
-from reviews.infra_structure.in_memory_repository import \
-    InMemoryReviewRepository
+from reviews.domain.value_objects import ReviewRating
+
+from reviews.infra_structure.in_memory_repository import InMemoryReviewRepository
 from shared_kernel.application.dtos import FailedOutputDto
+from shared_kernel.domain.value_objects import ReviewId, DrinkId, UserId
 
 
 @pytest.fixture
@@ -40,9 +42,7 @@ def drink_application_service(drink_repository):
 
 review_data = [
     (
-        ReviewId.build(
-            user_id="Jun", drink_id="335ca1a4-5175-5e41-8bac-40ffd840834c"
-        ),  # review_id
+        ReviewId.build(user_id="Jun", drink_id="335ca1a4-5175-5e41-8bac-40ffd840834c"),  # review_id
         DrinkId.from_str("335ca1a4-5175-5e41-8bac-40ffd840834c"),  # drink_id
         "Jun",  # user_id
         4,  # rating
@@ -51,9 +51,7 @@ review_data = [
 ]
 
 
-@pytest.mark.parametrize(
-    "review_id, drink_id, user_id, rating, created_at", review_data
-)
+@pytest.mark.parametrize("review_id, drink_id, user_id, rating, created_at", review_data)
 def test_find_review(
     review_application_service,
     review_repository,
@@ -89,9 +87,7 @@ def test_find_review(
     assert actual == expected
 
 
-@pytest.mark.parametrize(
-    "review_id, drink_id, user_id, rating, created_at", review_data
-)
+@pytest.mark.parametrize("review_id, drink_id, user_id, rating, created_at", review_data)
 def test_create_review(
     review_application_service,
     review_repository,
@@ -118,9 +114,7 @@ def test_create_review(
         comment="",
     )
 
-    output_dto = review_application_service.create_review(
-        input_dto, drink_application_service
-    )
+    output_dto = review_application_service.create_review(input_dto, drink_application_service)
     assert output_dto.status
 
     actual = review_repository.find_all()
@@ -141,7 +135,7 @@ def test_create_review(
     actual = drink_repository.find_all_simple()
     expected = [
         Drink(
-            id=drinks_DrinkId.from_str(str(drink_id)),
+            id=DrinkId.from_str(str(drink_id)),
             name="Golden Ale",
             image_url="picture of golden ale",
             type=DrinkType.BEER,
@@ -153,9 +147,7 @@ def test_create_review(
     assert actual == expected
 
 
-@pytest.mark.parametrize(
-    "review_id, drink_id, user_id, rating, created_at", review_data
-)
+@pytest.mark.parametrize("review_id, drink_id, user_id, rating, created_at", review_data)
 def test_update_review(
     review_application_service,
     review_repository,
@@ -169,7 +161,7 @@ def test_update_review(
 ):
     drink_repository.add(
         Drink(
-            id=drinks_DrinkId.from_str(str(drink_id)),
+            id=DrinkId.from_str(str(drink_id)),
             name="Golden Ale",
             image_url="picture of golden ale",
             type=DrinkType.BEER,
@@ -206,7 +198,7 @@ def test_update_review(
     actual = drink_repository.find_all_simple()
     expected = [
         Drink(
-            id=drinks_DrinkId.from_str(str(drink_id)),
+            id=DrinkId.from_str(str(drink_id)),
             name="Golden Ale",
             image_url="picture of golden ale",
             type=DrinkType.BEER,
@@ -218,9 +210,7 @@ def test_update_review(
     assert actual == expected
 
 
-@pytest.mark.parametrize(
-    "review_id, drink_id, user_id, rating, created_at", review_data
-)
+@pytest.mark.parametrize("review_id, drink_id, user_id, rating, created_at", review_data)
 def test_delete_review(
     review_application_service,
     review_repository,
@@ -234,7 +224,7 @@ def test_delete_review(
 ):
     drink_repository.add(
         Drink(
-            id=drinks_DrinkId.from_str(str(drink_id)),
+            id=DrinkId.from_str(str(drink_id)),
             name="Golden Ale",
             image_url="picture of golden ale",
             type=DrinkType.BEER,
@@ -256,9 +246,7 @@ def test_delete_review(
         )
     )
 
-    input_dto = DeleteReviewInputDto(
-        review_id=str(review_id), drink_id=str(drink_id), rating=rating
-    )
+    input_dto = DeleteReviewInputDto(review_id=str(review_id), drink_id=str(drink_id), rating=rating)
     review_application_service.delete_review(input_dto, drink_application_service)
 
     actual = review_repository.find_by_review_id(review_id=review_id)
@@ -266,19 +254,15 @@ def test_delete_review(
     assert actual == expected
 
     # Check delete when review in-memory repo is empty
-    actual = review_application_service.delete_review(
-        input_dto, drink_application_service
-    )
-    expected = FailedOutputDto.build_resource_not_found_error(
-        f"{str(review_id)}의 리뷰를 찾을 수 없습니다."
-    )
+    actual = review_application_service.delete_review(input_dto, drink_application_service)
+    expected = FailedOutputDto.build_resource_not_found_error(f"{str(review_id)}의 리뷰를 찾을 수 없습니다.")
     assert actual == expected
 
     # update rating in drink entity
     actual = drink_repository.find_all_simple()
     expected = [
         Drink(
-            id=drinks_DrinkId.from_str(str(drink_id)),
+            id=DrinkId.from_str(str(drink_id)),
             name="Golden Ale",
             image_url="picture of golden ale",
             type=DrinkType.BEER,

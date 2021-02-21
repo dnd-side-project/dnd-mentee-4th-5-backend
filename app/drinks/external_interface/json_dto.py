@@ -21,7 +21,5 @@ class GetDrinksJsonResponse(BaseModel):
     drinks_json: str
 
     @classmethod
-    def build_by_output_dto(
-        cls, output_dto: FindDrinksOutputDto
-    ) -> "GetDrinksJsonResponse":
+    def build_by_output_dto(cls, output_dto: FindDrinksOutputDto) -> "GetDrinksJsonResponse":
         return cls(drinks_json=json.dumps(output_dto.drinks_dicts))

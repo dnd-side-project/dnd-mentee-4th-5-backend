@@ -33,4 +33,19 @@ class DrinkId(BaseModel):
         return self.value
 
     def __str__(self):
-        return str(self.value)
+        return str(self.__root__)
+
+
+class ReviewId(BaseModel):
+    __root__: uuid.UUID = Field(alias="value")
+
+    @classmethod
+    def build(cls, user_id: str, drink_id: str) -> "ReviewId":
+        return cls(value=uuid.uuid5(uuid.NAMESPACE_DNS, name=user_id + drink_id))
+
+    @classmethod
+    def from_str(cls, review_id: str) -> "ReviewId":
+        return cls(value=uuid.UUID(review_id))
+
+    def __str__(self):
+        return str(self.__root__)

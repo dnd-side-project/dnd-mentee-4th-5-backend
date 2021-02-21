@@ -3,27 +3,39 @@ from typing import Callable, List, Optional
 
 from reviews.domain.entities import Review
 from reviews.domain.repository import QueryParam, ReviewRepository
-from reviews.domain.value_objects import (DrinkId, OrderType, ReviewId,
-                                          ReviewRating, UserId)
+from reviews.domain.value_objects import OrderType, ReviewRating
 from reviews.infra_structure.orm_models import ReviewOrm
-from shared_kernel.domain.exceptions import (InvalidParamInputError,
-                                             ResourceAlreadyExistError,
-                                             ResourceNotFoundError)
+from shared_kernel.domain.exceptions import InvalidParamInputError, ResourceAlreadyExistError, ResourceNotFoundError
+from sqlalchemy import asc, desc
 from sqlalchemy.orm import Session
+
+from shared_kernel.domain.value_objects import UserId, DrinkId, ReviewId
 
 
 class OrmReviewRepository(ReviewRepository):
     def __init__(self, session_factory: Callable[..., AbstractContextManager[Session]]) -> None:
         self._session_factory = session_factory
 
-    def find_all(self, query_param: QueryParam, order: OrderType = OrderType.LIKE_DESC) -> List[Review]:
+    def find_all(self, query_param: QueryParam) -> List[Review]:
         with self._session_factory as session:
-            if not QueryParam.user_id and not QueryParam.drink_id:
-                review_orms = session.query(ReviewOrm).all()
-            elif not QueryParam.user_id:
-                review_orms = session.query(ReviewOrm).filter(ReviewOrm.drink_id == QueryParam.drink_id)
+            if not QueryParam.userId and not QueryParam.drinkId:
+                raise InvalidParamInputError("drink_id, user_id에 해당하는 값이 없습니다.")
+
+            order_type = desc(ReviewOrm.updated_at)
+            if query_param.order == OrderType.LIKE_DESC:
+                order_type = desc(ReviewOrm.num_likes)
+            elif query_param.order == OrderType.LIKE_ASC:
+                order_type = asc(ReviewOrm.num_likes)
+
+            if not QueryParam.drinkId:
+                review_orms = (
+                    session.query(ReviewOrm).filter(ReviewOrm.user_id == QueryParam.userId).order_by(order_type)
+                )
             else:
-                review_orms = session.query(ReviewOrm).filter(ReviewOrm.user_id == QueryParam.user_id)
+                review_orms = (
+                    session.query(ReviewOrm).filter(ReviewOrm.drink_id == QueryParam.drinkId).order_by(order_type)
+                )
+
             return [
                 Review(
                     id=ReviewId(value=review_orm.id),
@@ -44,18 +56,22 @@ class OrmReviewRepository(ReviewRepository):
                 raise ResourceNotFoundError(f"{str(review_id)}의 리뷰를 찾지 못했습니다.")
             return review_orm.to_review()
 
-    def find_by_drink_id_user_id(self, query_param: QueryParam) -> Optional[Review]:
+    def find_by_drink_id_user_id(
+        self,
+        drink_id: DrinkId,
+        user_id: UserId,
+    ) -> Optional[Review]:
         with self._session_factory() as session:
-            if not QueryParam.user_id or not QueryParam.drink_id:
-                raise InvalidParamInputError(f"술: {QueryParam.drink_id}, 유저: {QueryParam.user_id}에 해당하는 값이 없습니다.")
+            if not user_id or not drink_id:
+                raise InvalidParamInputError(f"술: {drink_id}, 유저: {user_id}에 해당하는 값이 없습니다.")
             else:
                 review_orm = (
                     session.query(ReviewOrm)
-                    .filter(ReviewOrm.drink_id == QueryParam.drink_id, ReviewOrm.user_id == QueryParam.user_id)
+                    .filter(ReviewOrm.drink_id == drink_id, ReviewOrm.user_id == user_id)
                     .first()
                 )
             if review_orm is None:
-                raise ResourceNotFoundError(f"술: {QueryParam.drink_id}, 유저: {QueryParam.user_id} 리뷰를 찾지 못했습니다.")
+                raise ResourceNotFoundError(f"술: {drink_id}, 유저: {user_id} 리뷰를 찾지 못했습니다.")
             return review_orm.to_review()
 
     def add(self, review: Review) -> None:

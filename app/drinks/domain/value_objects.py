@@ -1,19 +1,7 @@
-import uuid
 from enum import Enum
 from typing import ClassVar
 
 from pydantic import BaseModel, Field
-
-
-class DrinkId(BaseModel):
-    __root__: uuid.UUID = Field(alias="value")
-
-    @classmethod
-    def from_str(cls, drink_id: str) -> "DrinkId":
-        return cls(value=uuid.UUID(drink_id))
-
-    def __str__(self):
-        return str(self.__root__)
 
 
 class DrinkRating(BaseModel):
