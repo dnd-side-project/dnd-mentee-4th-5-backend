@@ -9,6 +9,7 @@ from users.application.service import UserApplicationService
 from users.infra_structure.orm_repository import OrmUserRepository
 from wishes.application.service import WishApplicationService
 from wishes.infra_structure.in_memory_repository import InMemoryWishRepository
+from wishes.infra_structure.orm_repository import OrmWishRepository
 
 
 class Container(containers.DeclarativeContainer):
@@ -21,7 +22,7 @@ class Container(containers.DeclarativeContainer):
     # repository
     user_repository = providers.Singleton(OrmUserRepository, session_factory=db.provided.session)
     review_repository = providers.Singleton(InMemoryReviewRepository)
-    wish_repository = providers.Singleton(InMemoryWishRepository)
+    wish_repository = providers.Singleton(OrmWishRepository, session_factory=db.provided.session)
     drink_repository = providers.Singleton(InMemoryDrinkRepository)
 
     # application service
