@@ -1,6 +1,6 @@
 import time
 
-from sqlalchemy import Column, String, Float
+from sqlalchemy import Column, String, Float, Text
 
 from shared_kernel.domain.value_objects import UserId, DrinkId
 from shared_kernel.infra_structure.database import Base
@@ -11,9 +11,9 @@ from wishes.domain.value_objects import WishId
 class WishOrm(Base):
     __tablename__ = "wish"
 
-    id = Column(String, primary_key=True)
-    user_id = Column(String, nullable=False)
-    drink_id = Column(String, nullable=False)
+    id = Column(Text, primary_key=True)
+    user_id = Column(String(30), nullable=False)
+    drink_id = Column(Text, nullable=False)
     created_at = Column(Float, default=time.time(), nullable=False)
 
     @classmethod
