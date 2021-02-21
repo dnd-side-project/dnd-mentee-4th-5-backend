@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, Text
 
 from shared_kernel.domain.value_objects import UserId, UserName
 from shared_kernel.infra_structure.database import Base
@@ -8,11 +8,11 @@ from users.domain.entities import User
 class UserOrm(Base):
     __tablename__ = "user"
 
-    id = Column(String, primary_key=True)
-    name = Column(String, nullable=False)
-    description = Column(String, default="", nullable=False)
-    password = Column(String, nullable=False)
-    image_url = Column(String, default="", nullable=False)
+    id = Column(String(30), primary_key=True)
+    name = Column(String(30), nullable=False)
+    description = Column(String(100), default="", nullable=False)
+    password = Column(Text, nullable=False)
+    image_url = Column(Text, default="", nullable=False)
 
     @classmethod
     def from_user(cls, user: User) -> "UserOrm":
