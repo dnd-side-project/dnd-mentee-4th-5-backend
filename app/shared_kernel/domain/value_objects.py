@@ -1,3 +1,5 @@
+import uuid
+
 from pydantic import BaseModel, Field
 
 
@@ -13,3 +15,18 @@ class UserName(BaseModel):
 
     def __str__(self):
         return self.__root__
+
+
+class DrinkId(BaseModel):
+    __root__: uuid.UUID = Field(alias="value")
+
+    @classmethod
+    def build(cls, drink_name: str, created_at: float) -> "DrinkId":
+        return cls(value=uuid.uuid5(uuid.NAMESPACE_DNS, name=drink_name + str(created_at)))
+
+    @classmethod
+    def from_str(cls, drink_id: str) -> "DrinkId":
+        return cls(value=uuid.UUID(drink_id))
+
+    def __str__(self):
+        return str(self.__root__)
