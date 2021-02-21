@@ -14,5 +14,13 @@ class WishId(BaseModel):
     def from_str(cls, wish_id: str) -> "WishId":
         return cls(value=uuid.UUID(wish_id))
 
+    @classmethod
+    def from_bytes(cls, bytes_: bytes):
+        return cls(value=uuid.UUID(bytes=bytes_))
+
+    @property
+    def bytes(self):
+        return self.__root__.bytes
+
     def __str__(self):
         return str(self.__root__)

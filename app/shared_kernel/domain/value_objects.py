@@ -28,5 +28,13 @@ class DrinkId(BaseModel):
     def from_str(cls, drink_id: str) -> "DrinkId":
         return cls(value=uuid.UUID(drink_id))
 
+    @classmethod
+    def from_bytes(cls, bytes_: bytes):
+        return cls(value=uuid.UUID(bytes=bytes_))
+
+    @property
+    def bytes(self):
+        return self.__root__.bytes
+
     def __str__(self):
         return str(self.__root__)
