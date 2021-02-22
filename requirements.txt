@@ -26,6 +26,7 @@ markupsafe==1.1.1
 orjson==3.4.8
 passlib==1.7.4
 promise==2.3
+psycopg2-binary==2.8.6
 pyasn1==0.4.8
 pycparser==2.20
 pydantic==1.7.3
