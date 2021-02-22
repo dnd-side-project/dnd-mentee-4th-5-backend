@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 
 
 class WishId(BaseModel):
-    __root__: uuid.UUID = Field(alias="value")
+    value: uuid.UUID
 
     @classmethod
     def build(cls, user_id: str, drink_id: str) -> "WishId":
@@ -14,5 +14,9 @@ class WishId(BaseModel):
     def from_str(cls, wish_id: str) -> "WishId":
         return cls(value=uuid.UUID(wish_id))
 
+    @property
+    def uuid(self) -> uuid.UUID:
+        return self.value
+
     def __str__(self):
-        return str(self.__root__)
+        return str(self.value)

@@ -1,17 +1,13 @@
-# import pathlib
-
 import pytest
 from starlette.testclient import TestClient
 
 from main import create_app
 from shared_kernel.infra_structure.database import Database
 
-# TEST_ROOT_PATH = pathlib.Path(__file__).parent.absolute()
-
 # fixtures for database (testing ORM Repository)
 @pytest.fixture(scope="session")
 def database():
-    database = Database(db_url=f"sqlite:///./db.sqlite3")
+    database = Database(db_url=f"postgresql://root:1234@localhost:5432/coholy_test")
     database.create_database()
     return database
 

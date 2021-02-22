@@ -4,21 +4,21 @@ from pydantic import BaseModel, Field
 
 
 class UserId(BaseModel):
-    __root__: str = Field(alias="value", min_length=1, max_length=30)
+    value: str = Field(min_length=1, max_length=30)
 
     def __str__(self):
-        return self.__root__
+        return self.value
 
 
 class UserName(BaseModel):
-    __root__: str = Field(alias="value", default="", max_length=30)
+    value: str = Field(default="", max_length=30)
 
     def __str__(self):
-        return self.__root__
+        return self.value
 
 
 class DrinkId(BaseModel):
-    __root__: uuid.UUID = Field(alias="value")
+    value: uuid.UUID
 
     @classmethod
     def build(cls, drink_name: str, created_at: float) -> "DrinkId":
@@ -28,5 +28,9 @@ class DrinkId(BaseModel):
     def from_str(cls, drink_id: str) -> "DrinkId":
         return cls(value=uuid.UUID(drink_id))
 
+    @property
+    def uuid(self) -> uuid.UUID:
+        return self.value
+
     def __str__(self):
-        return str(self.__root__)
+        return str(self.value)

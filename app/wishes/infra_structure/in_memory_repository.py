@@ -31,5 +31,5 @@ class InMemoryWishRepository(WishRepository):
     def add(self, wish: Wish) -> None:
         self._wishes.append(wish)
 
-    def delete(self, wish: Wish) -> None:
+    def delete_by_wish_id(self, wish: Wish) -> None:
         self._wishes.remove(wish)
