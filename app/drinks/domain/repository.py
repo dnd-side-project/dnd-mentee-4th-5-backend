@@ -2,8 +2,8 @@ from abc import ABCMeta, abstractmethod
 from typing import List, Optional
 
 from drinks.domain.entities import Drink
-from drinks.domain.value_objects import DrinkId
 from pydantic import BaseModel
+from shared_kernel.domain.value_objects import DrinkId
 
 
 class QueryParam(BaseModel):

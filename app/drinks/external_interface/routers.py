@@ -5,8 +5,10 @@ from dependency_injector.wiring import Provide, inject
 from drinks.application.dtos import CreateDrinkInputDto, FindDrinksInputDto
 from drinks.application.service import DrinkApplicationService
 from drinks.domain.repository import QueryParam
-from drinks.external_interface.json_dto import (CreateDrinkJsonRequest,
-                                                GetDrinksJsonResponse)
+from drinks.external_interface.json_dto import (
+    CreateDrinkJsonRequest,
+    GetDrinksJsonResponse,
+)
 from fastapi import APIRouter, Depends
 from shared_kernel.external_interface.json_dto import FailedJsonResponse
 from starlette import status
@@ -22,7 +24,9 @@ router = APIRouter(
 @inject
 def create_drink(
     request: CreateDrinkJsonRequest,
-    drink_application_service: DrinkApplicationService = Depends(Provide[Container.drink_application_service]),
+    drink_application_service: DrinkApplicationService = Depends(
+        Provide[Container.drink_application_service]
+    ),
 ) -> Optional[JSONResponse]:
     input_dto = CreateDrinkInputDto(
         drink_id=request.drink_id,
@@ -40,7 +44,9 @@ def create_drink(
 @inject
 def get_drinks(
     query_param: QueryParam = Depends(),
-    drink_application_service: DrinkApplicationService = Depends(Provide[Container.drink_application_service]),
+    drink_application_service: DrinkApplicationService = Depends(
+        Provide[Container.drink_application_service]
+    ),
 ) -> Union[GetDrinksJsonResponse, JSONResponse]:
     input_dto = FindDrinksInputDto(query_param=query_param)
     output_dto = drink_application_service.find_drinks(input_dto=input_dto)

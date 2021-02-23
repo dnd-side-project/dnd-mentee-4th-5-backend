@@ -2,7 +2,8 @@ from typing import List, Optional
 
 from drinks.domain.entities import Drink
 from drinks.domain.repository import DrinkRepository, QueryParam
-from drinks.domain.value_objects import DrinkId, FilterType, OrderType
+from drinks.domain.value_objects import FilterType, OrderType
+from shared_kernel.domain.value_objects import DrinkId
 
 
 class InMemoryDrinkRepository(DrinkRepository):

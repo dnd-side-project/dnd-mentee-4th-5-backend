@@ -1,7 +1,8 @@
 from typing import ClassVar
 
-from drinks.domain.value_objects import DrinkId, DrinkRating, DrinkType
+from drinks.domain.value_objects import DrinkRating, DrinkType
 from pydantic import BaseModel, Field
+from shared_kernel.domain.value_objects import DrinkId
 
 
 class Drink(BaseModel):
@@ -22,20 +23,26 @@ class Drink(BaseModel):
         self.avg_rating = DrinkRating(value=(sum_rating_value / self.num_of_reviews))
 
     def update_rating(self, old_rating: int, new_rating: int) -> None:
-        sum_rating_value = (float(self.avg_rating) * self.num_of_reviews) - old_rating + new_rating
+        sum_rating_value = (
+            (float(self.avg_rating) * self.num_of_reviews) - old_rating + new_rating
+        )
         self.avg_rating = DrinkRating(value=(sum_rating_value / self.num_of_reviews))
 
     def delete_rating(self, input_rating: int) -> None:
         if self.num_of_reviews <= 0:
             return
 
-        total_rating_value = (float(self.avg_rating) * self.num_of_reviews) - input_rating
+        total_rating_value = (
+            float(self.avg_rating) * self.num_of_reviews
+        ) - input_rating
         self.num_of_reviews -= 1
 
         if self.num_of_reviews == 0:
             self.avg_rating = DrinkRating(value=0)
         else:
-            self.avg_rating = DrinkRating(value=(total_rating_value / self.num_of_reviews))
+            self.avg_rating = DrinkRating(
+                value=(total_rating_value / self.num_of_reviews)
+            )
 
     def add_wish(self) -> None:
         self.num_of_wish += 1
