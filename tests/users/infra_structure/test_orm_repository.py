@@ -3,7 +3,6 @@ import pytest
 from shared_kernel.domain.exceptions import ResourceNotFoundError, ResourceAlreadyExistError
 from users.domain.entities import User
 from shared_kernel.domain.value_objects import UserId, UserName
-from users.infra_structure.orm_models import UserOrm
 from users.infra_structure.orm_repository import OrmUserRepository
 
 
@@ -15,35 +14,6 @@ def setup(database):
             "INSERT INTO user(id, name, description, password, image_url) VALUES "
             "('heumsi', 'heumsi', 'hi, I am heumsi', '1234', ''), "
             "('joon', 'joon', 'hello, I am joon', '4321', '')"
-        )
-        session.commit()
-
-
-@pytest.fixture(scope="module", autouse=True)
-def setup(database):
-    with database.session() as session:
-        session.query(UserOrm).delete()
-        session.add_all(
-            [
-                UserOrm.from_user(
-                    User(
-                        id=UserId(value="heumsi"),
-                        name=UserName(value="heumsi"),
-                        description="hi, I am heumsi",
-                        password="1234",
-                        image_url="",
-                    )
-                ),
-                UserOrm.from_user(
-                    User(
-                        id=UserId(value="joon"),
-                        name=UserName(value="joon"),
-                        description="hello, I am joon",
-                        password="4321",
-                        image_url="",
-                    )
-                ),
-            ]
         )
         session.commit()
 

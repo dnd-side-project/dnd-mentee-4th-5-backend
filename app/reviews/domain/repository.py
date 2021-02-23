@@ -10,7 +10,7 @@ from shared_kernel.domain.value_objects import DrinkId, ReviewId, UserId
 class QueryParam(BaseModel):
     userId: Optional[str] = None
     drinkId: Optional[str] = None
-    order: Optional[OrderType] = OrderType.NEWEST
+    order: OrderType = OrderType.NEWEST
 
 
 class ReviewRepository(metaclass=ABCMeta):

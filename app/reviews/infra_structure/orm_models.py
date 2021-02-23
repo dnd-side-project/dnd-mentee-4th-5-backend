@@ -14,17 +14,17 @@ class ReviewOrm(Base):
     id = Column(UUID(as_uuid=True), primary_key=True)
     user_id = Column(String(30), nullable=False)
     drink_id = Column(UUID(as_uuid=True), nullable=False)
-    rating: Column(Integer, nullable=False)
-    comment: Column(String(300), default="", nullable=False)
-    created_at: Column(Float, default=time.time(), nullable=False)
-    updated_at: Column(Float, default=time.time(), nullable=False)
+    rating = Column(Integer, nullable=False)
+    comment = Column(String(300), default="", nullable=False)
+    created_at = Column(Float, default=time.time(), nullable=False)
+    updated_at = Column(Float, default=time.time(), nullable=False)
 
     @classmethod
     def from_review(cls, review: Review) -> "ReviewOrm":
         return ReviewOrm(
-            id=review.id,
+            id=review.id.uuid,
             user_id=str(review.user_id),
-            drink_id=review.drink_id,
+            drink_id=review.drink_id.uuid,
             rating=int(review.rating),
             comment=review.comment,
             created_at=review.created_at,

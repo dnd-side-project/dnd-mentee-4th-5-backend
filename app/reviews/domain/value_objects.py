@@ -7,10 +7,10 @@ from pydantic import BaseModel, Field
 class ReviewRating(BaseModel):
     MIN_VALUE: ClassVar[int] = 0
     MAX_VALUE: ClassVar[int] = 5
-    __root__: int = Field(alias="value", ge=MIN_VALUE, le=MAX_VALUE)
+    value: int = Field(ge=MIN_VALUE, le=MAX_VALUE)
 
     def __int__(self):
-        return self.__root__
+        return self.value
 
 
 class OrderType(Enum):

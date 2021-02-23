@@ -36,7 +36,7 @@ class OrmWishRepository(WishRepository):
 
     def add(self, wish: Wish) -> None:
         with self._session_factory() as session:
-            wish_orm = session.query(WishOrm).filter(WishOrm.id == wish.id.uuid).first()
+            wish_orm = session.query(WishOrm).filter(WishOrm.id == str(wish.id)).first()
             if wish_orm is not None:
                 raise ResourceAlreadyExistError(f"{str(wish.id)}는 이미 존재하는 위시입니다.")
             wish_orm = WishOrm.from_wish(wish)
@@ -45,7 +45,7 @@ class OrmWishRepository(WishRepository):
 
     def delete_by_wish_id(self, wish_id: WishId) -> Wish:
         with self._session_factory() as session:
-            wish_orm = session.query(WishOrm).filter(WishOrm.id == wish_id.uuid).first()
+            wish_orm = session.query(WishOrm).filter(WishOrm.id == str(wish_id)).first()
             if wish_orm is None:
                 raise ResourceNotFoundError(f"{str(wish_id)}의 위시를 찾지 못했습니다.")
             session.delete(wish_orm)

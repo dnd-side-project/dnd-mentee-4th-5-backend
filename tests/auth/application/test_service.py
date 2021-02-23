@@ -1,68 +1,55 @@
-from unittest import mock
+from unittest.mock import Mock
 
 import pytest
 from auth.application.dtos import (
     GetTokenInputDto,
     GetTokenOutputDto,
+    VerifyTokenInputDto,
+    VerifyTokenOutputDto,
     GetTokenDataInputDto,
     GetTokenDataOutputDto,
 )
 from auth.application.service import AuthApplicationService
 from jose import jwt
+from settings import Settings
 from shared_kernel.application.dtos import FailedOutputDto
 from users.application.dtos import LoginOutputDto
 from users.application.service import UserApplicationService
+from users.infra_structure.in_memory_repository import InMemoryUserRepository
 
 
 @pytest.fixture
-def jwt_secret_key():
-    return "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
+def user_repository():
+    return InMemoryUserRepository()
 
 
 @pytest.fixture
-def jwt_algorithm():
-    return "HS256"
+def user_application_service(user_repository):
+    return UserApplicationService(user_repository)
 
 
 @pytest.fixture
-def auth_application_service():
-    user_application_service_mock = mock.Mock(spec=UserApplicationService)
-    user_application_service_mock.login.return_value = LoginOutputDto()
+def settings():
+    return Settings()
 
-    AuthApplicationService(
-        user_application_service=user_application_service_mock,
-        jwt_secret_key="09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7",
-        jwt_algorithm="HS256",
+
+@pytest.fixture
+def auth_application_service(user_application_service, settings):
+    return AuthApplicationService(
+        user_application_service=user_application_service,
+        jwt_secret_key=settings.JWT_SECRET_KEY,
+        jwt_algorithm=settings.JWT_ALGORITHM,
     )
 
 
-def test_get_token_fail(jwt_secret_key, jwt_algorithm):
-    user_application_service_mock = mock.Mock(spec=UserApplicationService)
-    user_application_service_mock.login.return_value = FailedOutputDto.build_resource_not_found_error(
-        "heumsi의 유저를 찾지 못했습니다."
-    )
-    auth_application_service = AuthApplicationService(
-        user_application_service=user_application_service_mock,
-        jwt_secret_key=jwt_secret_key,
-        jwt_algorithm="jwt_algorithm",
-    )
-
+def test_get_token(auth_application_service, user_application_service):
     input_dto = GetTokenInputDto(user_id="heumsi", password="1234")
+
     actual = auth_application_service.get_token(input_dto=input_dto)
     expected = FailedOutputDto.build_resource_error("heumsi의 유저를 찾지 못했습니다.")
     assert actual == expected
 
-
-def test_get_token_success(jwt_secret_key, jwt_algorithm):
-    user_application_service_mock = mock.Mock(spec=UserApplicationService)
-    user_application_service_mock.login.return_value = LoginOutputDto()
-    auth_application_service = AuthApplicationService(
-        user_application_service=user_application_service_mock,
-        jwt_secret_key=jwt_secret_key,
-        jwt_algorithm=jwt_algorithm,
-    )
-
-    input_dto = GetTokenInputDto(user_id="heumsi", password="1234")
+    user_application_service.login = Mock(return_value=LoginOutputDto())
     actual = auth_application_service.get_token(input_dto=input_dto)
     expected = GetTokenOutputDto(
         access_token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiaGV1bXNpIn0.OuFWvZ07CwSzR1j7I-wxFHweVb6sB8_U2LezYL7nz3I"
@@ -71,36 +58,43 @@ def test_get_token_success(jwt_secret_key, jwt_algorithm):
 
     actual = jwt.decode(
         token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiaGV1bXNpIn0.OuFWvZ07CwSzR1j7I-wxFHweVb6sB8_U2LezYL7nz3I",
-        key=jwt_secret_key,
-        algorithms=jwt_algorithm,
+        key=auth_application_service._JWT_SECRET_KEY,
+        algorithms=auth_application_service._JWT_ALGORITHM,
     )
     expected = {"user_id": "heumsi"}
     assert actual == expected
 
 
-def test_get_token_data_fail(jwt_secret_key, jwt_algorithm):
-    auth_application_service = AuthApplicationService(
-        user_application_service=mock.Mock(spec=UserApplicationService),
-        jwt_secret_key=jwt_secret_key,
-        jwt_algorithm=jwt_algorithm,
-    )
+def test_get_token_data(auth_application_service):
     input_dto = GetTokenDataInputDto(access_token="wrong jwt token")
 
     actual = auth_application_service.get_token_data(input_dto)
     expected = FailedOutputDto.build_unauthorized_error(message="올바른 access-token이 아닙니다.")
     assert actual == expected
 
-
-def test_get_token_data_success(jwt_secret_key, jwt_algorithm):
-    auth_application_service = AuthApplicationService(
-        user_application_service=mock.Mock(spec=UserApplicationService),
-        jwt_secret_key=jwt_secret_key,
-        jwt_algorithm=jwt_algorithm,
-    )
-
     input_dto = GetTokenDataInputDto(
         access_token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiaGV1bXNpIn0.OuFWvZ07CwSzR1j7I-wxFHweVb6sB8_U2LezYL7nz3I"
     )
+
     actual = auth_application_service.get_token_data(input_dto)
     expected = GetTokenDataOutputDto(user_id="heumsi")
+    assert actual == expected
+
+
+def test_verify_token(auth_application_service):
+    input_dto = VerifyTokenInputDto(
+        access_token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiaGV1bXNpIn0.OuFWvZ07CwSzR1j7I-wxFHweVb6sB8_U2LezYL7nz3I",
+        user_id="heumsi",
+    )
+
+    actual = auth_application_service.verify_token(input_dto)
+    expected = VerifyTokenOutputDto()
+    assert actual == expected
+
+    input_dto = VerifyTokenInputDto(
+        access_token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiaGV1bXNpIn0.OuFWvZ07CwSzR1j7I-wxFHweVb6sB8_U2LezYL7nz3I",
+        user_id="seokjoon",
+    )
+    actual = auth_application_service.verify_token(input_dto)
+    expected = FailedOutputDto(type="Unauthorized Error", message="access-token이 유효하지 않습니다.")
     assert actual == expected
