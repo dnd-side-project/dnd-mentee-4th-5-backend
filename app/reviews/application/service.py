@@ -1,11 +1,7 @@
 import time
 from typing import Union
 
-from drinks.application.dtos import (
-    AddDrinkReviewInputDto,
-    DeleteDrinkReviewInputDto,
-    UpdateDrinkReviewInputDto,
-)
+from drinks.application.dtos import AddDrinkReviewInputDto, DeleteDrinkReviewInputDto, UpdateDrinkReviewInputDto
 from drinks.application.service import DrinkApplicationService
 from reviews.application.dtos import (
     CreateReviewInputDto,
@@ -23,12 +19,8 @@ from reviews.domain.entities import Review
 from reviews.domain.repository import ReviewRepository
 from reviews.domain.value_objects import ReviewRating
 from shared_kernel.application.dtos import FailedOutputDto
-from shared_kernel.domain.exceptions import (
-    InvalidParamInputError,
-    ResourceAlreadyExistError,
-    ResourceNotFoundError,
-)
-from shared_kernel.domain.value_objects import DrinkId, ReviewId, UserId
+from shared_kernel.domain.exceptions import InvalidParamInputError, ResourceAlreadyExistError, ResourceNotFoundError
+from shared_kernel.domain.value_objects import ReviewId
 
 
 class ReviewApplicationService:
@@ -57,8 +49,8 @@ class ReviewApplicationService:
         try:
             reviews = self._review_repository.find_all(query_param=input_dto.query_param)
             return FindReviewsOutputDto(
-                items=[
-                    FindReviewsOutputDto.Item(
+                item=[
+                    FindReviewOutputDto(
                         review_id=str(review.id),
                         drink_id=str(review.drink_id),
                         user_id=str(review.user_id),
@@ -83,22 +75,20 @@ class ReviewApplicationService:
         try:
             review = Review(
                 id=ReviewId.build(user_id=input_dto.user_id, drink_id=input_dto.drink_id),
-                drink_id=DrinkId(value=input_dto.drink_id),
-                user_id=UserId(value=input_dto.user_id),
+                drink_id=input_dto.drink_id,
+                user_id=input_dto.user_id,
                 rating=ReviewRating(value=input_dto.rating),
                 comment=input_dto.comment,
                 created_at=time.time(),
                 updated_at=time.time(),
             )
             self._review_repository.add(review)
-
             input_dto = AddDrinkReviewInputDto(drink_id=input_dto.drink_id, drink_rating=input_dto.rating)
-            add_drink_review_output_dto = drink_application_service.add_drink_review(input_dto=input_dto)
+            drink_add_review_output_dto = drink_application_service.add_drink_review(input_dto=input_dto)
 
-            if not add_drink_review_output_dto.status:
-                return add_drink_review_output_dto
+            if not drink_add_review_output_dto.status:
+                return drink_add_review_output_dto
             return CreateReviewOutputDto(
-                review_id=str(review.id),
                 drink_id=str(review.drink_id),
                 user_id=str(review.user_id),
                 rating=int(review.rating),
@@ -168,7 +158,6 @@ class ReviewApplicationService:
             if not drink_delete_review_output_dto.status:
                 return drink_delete_review_output_dto
             return DeleteReviewOutputDto()
-        except ResourceNotFoundError as e:
-            return FailedOutputDto.build_resource_not_found_error(message=str(e))
+
         except Exception as e:
             return FailedOutputDto.build_system_error(message=str(e))
