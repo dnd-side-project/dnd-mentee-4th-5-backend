@@ -44,6 +44,7 @@ class CreateReviewInputDto(BaseModel):
 
 
 class CreateReviewOutputDto(SuccessOutputDto):
+    review_id: str
     drink_id: str
     user_id: str
     rating: int

@@ -1,12 +1,11 @@
 import time
 
-from sqlalchemy import Column, Float, Integer, String
-from sqlalchemy.dialects.postgresql import UUID
-
 from reviews.domain.entities import Review
 from reviews.domain.value_objects import ReviewRating
-from shared_kernel.domain.value_objects import UserId, DrinkId, ReviewId
+from shared_kernel.domain.value_objects import DrinkId, ReviewId, UserId
 from shared_kernel.infra_structure.database import Base
+from sqlalchemy import Column, Float, Integer, String
+from sqlalchemy.dialects.postgresql import UUID
 
 
 class ReviewOrm(Base):
@@ -23,7 +22,7 @@ class ReviewOrm(Base):
     @classmethod
     def from_review(cls, review: Review) -> "ReviewOrm":
         return ReviewOrm(
-            id=review.id.,
+            id=review.id,
             user_id=str(review.user_id),
             drink_id=review.drink_id,
             rating=int(review.rating),

@@ -5,15 +5,20 @@ from reviews.domain.entities import Review
 from reviews.domain.repository import QueryParam, ReviewRepository
 from reviews.domain.value_objects import OrderType, ReviewRating
 from reviews.infra_structure.orm_models import ReviewOrm
-from shared_kernel.domain.exceptions import InvalidParamInputError, ResourceAlreadyExistError, ResourceNotFoundError
+from shared_kernel.domain.exceptions import (
+    InvalidParamInputError,
+    ResourceAlreadyExistError,
+    ResourceNotFoundError,
+)
+from shared_kernel.domain.value_objects import DrinkId, ReviewId, UserId
 from sqlalchemy import asc, desc
 from sqlalchemy.orm import Session
 
-from shared_kernel.domain.value_objects import UserId, DrinkId, ReviewId
-
 
 class OrmReviewRepository(ReviewRepository):
-    def __init__(self, session_factory: Callable[..., AbstractContextManager[Session]]) -> None:
+    def __init__(
+        self, session_factory: Callable[..., AbstractContextManager[Session]]
+    ) -> None:
         self._session_factory = session_factory
 
     def find_all(self, query_param: QueryParam) -> List[Review]:
@@ -29,11 +34,15 @@ class OrmReviewRepository(ReviewRepository):
 
             if not QueryParam.drinkId:
                 review_orms = (
-                    session.query(ReviewOrm).filter(ReviewOrm.user_id == QueryParam.userId).order_by(order_type)
+                    session.query(ReviewOrm)
+                    .filter(ReviewOrm.user_id == QueryParam.userId)
+                    .order_by(order_type)
                 )
             else:
                 review_orms = (
-                    session.query(ReviewOrm).filter(ReviewOrm.drink_id == QueryParam.drinkId).order_by(order_type)
+                    session.query(ReviewOrm)
+                    .filter(ReviewOrm.drink_id == QueryParam.drinkId)
+                    .order_by(order_type)
                 )
 
             return [
@@ -51,7 +60,9 @@ class OrmReviewRepository(ReviewRepository):
 
     def find_by_review_id(self, review_id: ReviewId) -> Optional[Review]:
         with self._session_factory() as session:
-            review_orm = session.query(ReviewOrm).filter(ReviewOrm.id == str(review_id)).first()
+            review_orm = (
+                session.query(ReviewOrm).filter(ReviewOrm.id == str(review_id)).first()
+            )
             if review_orm is None:
                 raise ResourceNotFoundError(f"{str(review_id)}의 리뷰를 찾지 못했습니다.")
             return review_orm.to_review()
@@ -63,20 +74,28 @@ class OrmReviewRepository(ReviewRepository):
     ) -> Optional[Review]:
         with self._session_factory() as session:
             if not user_id or not drink_id:
-                raise InvalidParamInputError(f"술: {drink_id}, 유저: {user_id}에 해당하는 값이 없습니다.")
+                raise InvalidParamInputError(
+                    f"술: {drink_id}, 유저: {user_id}에 해당하는 값이 없습니다."
+                )
             else:
                 review_orm = (
                     session.query(ReviewOrm)
-                    .filter(ReviewOrm.drink_id == drink_id, ReviewOrm.user_id == user_id)
+                    .filter(
+                        ReviewOrm.drink_id == drink_id, ReviewOrm.user_id == user_id
+                    )
                     .first()
                 )
             if review_orm is None:
-                raise ResourceNotFoundError(f"술: {drink_id}, 유저: {user_id} 리뷰를 찾지 못했습니다.")
+                raise ResourceNotFoundError(
+                    f"술: {drink_id}, 유저: {user_id} 리뷰를 찾지 못했습니다."
+                )
             return review_orm.to_review()
 
     def add(self, review: Review) -> None:
         with self._session_factory() as session:
-            review_orm = session.query(ReviewOrm).filter(ReviewOrm.id == str(review.id)).first()
+            review_orm = (
+                session.query(ReviewOrm).filter(ReviewOrm.id == str(review.id)).first()
+            )
             if review_orm is not None:
                 raise ResourceAlreadyExistError(f"{str(review.id)}는 이미 존재하는 리뷰입니다.")
 
@@ -86,7 +105,9 @@ class OrmReviewRepository(ReviewRepository):
 
     def update(self, review: Review) -> None:
         with self._session_factory() as session:
-            review_orm = session.query(ReviewOrm).filter(ReviewOrm.id == str(review.id)).first()
+            review_orm = (
+                session.query(ReviewOrm).filter(ReviewOrm.id == str(review.id)).first()
+            )
             if review_orm is None:
                 raise ResourceNotFoundError(f"{str(review.id)}의 리뷰를 찾지 못했습니다.")
             review_orm.fetch_review(review)
@@ -94,7 +115,9 @@ class OrmReviewRepository(ReviewRepository):
 
     def delete_by_review_id(self, review_id: ReviewId) -> None:
         with self._session_factory() as session:
-            review_orm = session.query(ReviewOrm).filter(ReviewOrm.id == str(review_id)).first()
+            review_orm = (
+                session.query(ReviewOrm).filter(ReviewOrm.id == str(review_id)).first()
+            )
             if review_orm is None:
                 raise ResourceNotFoundError(f"{str(review_id)}의 리뷰를 찾지 못했습니다.")
             session.delete(review_orm)

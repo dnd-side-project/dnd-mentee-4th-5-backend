@@ -12,6 +12,8 @@ class Review(BaseModel):
     drink_id: DrinkId
     user_id: UserId
     rating: ReviewRating
-    comment: str = Field(default="", min_length=MIN_COMMENT_LEN, max_length=MAX_COMMENT_LEN)
+    comment: str = Field(
+        default="", min_length=MIN_COMMENT_LEN, max_length=MAX_COMMENT_LEN
+    )
     created_at: float
     updated_at: float

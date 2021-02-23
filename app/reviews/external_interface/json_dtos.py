@@ -12,7 +12,9 @@ class GetReviewJsonResponse(BaseModel):
     updated_at: float
 
     @classmethod
-    def build_by_output_dto(cls, output_dto: FindReviewOutputDto) -> "GetReviewJsonResponse":
+    def build_by_output_dto(
+        cls, output_dto: FindReviewOutputDto
+    ) -> "GetReviewJsonResponse":
         return cls(
             review_id=output_dto.review_id,
             user_id=output_dto.user_id,
@@ -38,7 +40,9 @@ class CreateReviewJsonResponse(BaseModel):
     updated_at: float
 
     @classmethod
-    def build_by_output_dto(cls, output_dto: CreateReviewOutputDto) -> "CreateReviewJsonResponse":
+    def build_by_output_dto(
+        cls, output_dto: CreateReviewOutputDto
+    ) -> "CreateReviewJsonResponse":
         return cls(
             drink_id=output_dto.drink_id,
             rating=output_dto.rating,
