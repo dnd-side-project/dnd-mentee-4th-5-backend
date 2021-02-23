@@ -1,20 +1,18 @@
-import uuid
 from unittest import mock
 
 from auth.application.service import AuthApplicationService
 from reviews.application.dtos import CreateReviewOutputDto, FindReviewOutputDto
 from reviews.application.service import ReviewApplicationService
-from reviews.external_interface.json_dtos import (
-    CreateReviewJsonRequest,
-    CreateReviewJsonResponse,
-    UpdateReviewJsonRequest,
-)
+from reviews.external_interface.json_dtos import (CreateReviewJsonRequest,
+                                                  UpdateReviewJsonRequest)
 from shared_kernel.application.dtos import FailedOutputDto
 
 
 def test_get_review(client, app):
     application_service_mock = mock.Mock(spec=ReviewApplicationService)
-    application_service_mock.find_review.return_value = FailedOutputDto.build_resource_not_found_error()
+    application_service_mock.find_review.return_value = (
+        FailedOutputDto.build_resource_not_found_error()
+    )
 
     # valid request but no resource
     with app.container.review_application_service.override(application_service_mock):
@@ -51,7 +49,9 @@ def test_get_review(client, app):
 
 def test_get_reviews(client, app):
     application_service_mock = mock.Mock(spec=ReviewApplicationService)
-    application_service_mock.find_reviews.return_value = FailedOutputDto.build_parameters_error()
+    application_service_mock.find_reviews.return_value = (
+        FailedOutputDto.build_parameters_error()
+    )
 
     # valid request but no resource
     with app.container.review_application_service.override(application_service_mock):
@@ -113,7 +113,9 @@ def test_create_review(client, app):
     auth_service_mock = mock.Mock(AuthApplicationService)
 
     # unauthorized token
-    auth_service_mock.get_token_data.return_value = FailedOutputDto.build_unauthorized_error()
+    auth_service_mock.get_token_data.return_value = (
+        FailedOutputDto.build_unauthorized_error()
+    )
     application_service_mock.create_review.return_value = CreateReviewOutputDto(
         drink_id="drink_id_uuid",
         user_id="user_id_uuid",
@@ -142,7 +144,9 @@ def test_create_review(client, app):
         }
 
     # invalid request
-    application_service_mock.create_review.return_value = FailedOutputDto.build_resource_conflict_error()
+    application_service_mock.create_review.return_value = (
+        FailedOutputDto.build_resource_conflict_error()
+    )
     with app.container.review_application_service.override(application_service_mock):
         response = client.post(
             "/reviews",
@@ -197,7 +201,9 @@ def test_update_review(client, app):
     auth_service_mock = mock.Mock(AuthApplicationService)
 
     # unauthorized token
-    auth_service_mock.get_token_data.return_value = FailedOutputDto.build_unauthorized_error()
+    auth_service_mock.get_token_data.return_value = (
+        FailedOutputDto.build_unauthorized_error()
+    )
     application_service_mock.create_review.return_value = CreateReviewOutputDto(
         drink_id="drink_id_uuid",
         user_id="user_id_uuid",
@@ -214,7 +220,9 @@ def test_update_review(client, app):
                     "access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiaGV1bXNpIn0.OuFWvZ07CwSzR1j7I-wxFHweVb6sB8_U2LezYL7nz3I"
                 },
                 json=UpdateReviewJsonRequest(
-                    review_id="review_id_uuid", rating=4, comment="updated review comment"
+                    review_id="review_id_uuid",
+                    rating=4,
+                    comment="updated review comment",
                 ).dict(),
             )
         assert response.status_code == 401
@@ -224,7 +232,9 @@ def test_update_review(client, app):
         }
 
     # invalid request
-    application_service_mock.create_review.return_value = FailedOutputDto.build_resource_not_found_error()
+    application_service_mock.create_review.return_value = (
+        FailedOutputDto.build_resource_not_found_error()
+    )
     with app.container.review_application_service.override(application_service_mock):
         response = client.post(
             "/reviews",
