@@ -1,11 +1,14 @@
 from typing import List, Optional, Union
 
+from dependency_injector.wiring import Provide, inject
+from fastapi import APIRouter, Depends, Header
+from starlette import status
+from starlette.responses import JSONResponse
+
 from auth.application.dtos import GetTokenDataInputDto
 from auth.application.service import AuthApplicationService
 from container import Container
-from dependency_injector.wiring import Provide, inject
 from drinks.application.service import DrinkApplicationService
-from fastapi import APIRouter, Depends, Header
 from reviews.application.dtos import (
     CreateReviewInputDto,
     DeleteReviewInputDto,
@@ -21,10 +24,9 @@ from reviews.external_interface.json_dtos import (
     DeleteReviewJsonRequest,
     GetReviewJsonResponse,
     UpdateReviewJsonRequest,
+    GetReviewsJsonResponse,
 )
 from shared_kernel.external_interface.json_dto import FailedJsonResponse
-from starlette import status
-from starlette.responses import JSONResponse
 
 router = APIRouter(
     prefix="/reviews",
@@ -45,18 +47,17 @@ def get_review(
     return GetReviewJsonResponse.build_by_output_dto(output_dto)
 
 
-@router.get("", status_code=status.HTTP_200_OK, response_model=List[GetReviewJsonResponse])
+@router.get("", status_code=status.HTTP_200_OK, response_model=List[GetReviewsJsonResponse])
 @inject
 def get_reviews(
     query_param: QueryParam = Depends(),
     review_application_service: ReviewApplicationService = Depends(Provide[Container.review_application_service]),
-) -> Union[List[GetReviewJsonResponse], JSONResponse]:
-    input_dto = FindReviewsInputDto(query_param=query_param)
+) -> Union[List[GetReviewsJsonResponse], JSONResponse]:
+    input_dto = FindReviewsInputDto(query_param=query_param.to_enum())
     output_dto = review_application_service.find_reviews(input_dto=input_dto)
     if not output_dto.status:
         return FailedJsonResponse.build_by_output_dto(output_dto)
-    get_reviews_json_response = [GetReviewJsonResponse.build_by_output_dto(review) for review in output_dto.items]
-    return get_reviews_json_response
+    return GetReviewsJsonResponse.build_by_output_dto(output_dto)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED, response_model=CreateReviewJsonResponse)

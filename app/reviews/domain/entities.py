@@ -1,6 +1,7 @@
 from typing import ClassVar
 
 from pydantic import BaseModel, Field
+
 from reviews.domain.value_objects import ReviewRating
 from shared_kernel.domain.value_objects import DrinkId, ReviewId, UserId
 

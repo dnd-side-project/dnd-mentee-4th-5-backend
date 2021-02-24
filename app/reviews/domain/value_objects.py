@@ -17,3 +17,12 @@ class OrderType(Enum):
     LIKE_DESC = "like_desc"
     LIKE_ASC = "like_asc"
     NEWEST = "newest"
+
+    @staticmethod
+    def from_str(label: str) -> "OrderType":
+        switcher = {
+            "like_desc": OrderType.LIKE_DESC,
+            "like_asc": OrderType.LIKE_ASC,
+            "newest": OrderType.NEWEST,
+        }
+        return switcher.get(label, OrderType.NEWEST)

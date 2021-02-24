@@ -1,6 +1,7 @@
 from typing import List
 
 from pydantic import BaseModel
+
 from reviews.domain.repository import QueryParam
 from shared_kernel.application.dtos import SuccessOutputDto
 
