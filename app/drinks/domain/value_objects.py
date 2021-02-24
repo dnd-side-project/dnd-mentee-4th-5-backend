@@ -1,31 +1,19 @@
-import uuid
 from enum import Enum
 from typing import ClassVar
 
 from pydantic import BaseModel, Field
 
 
-class DrinkId(BaseModel):
-    __root__: uuid.UUID = Field(alias="value")
-
-    @classmethod
-    def from_str(cls, drink_id: str) -> "DrinkId":
-        return cls(value=uuid.UUID(drink_id))
-
-    def __str__(self):
-        return str(self.__root__)
-
-
 class DrinkRating(BaseModel):
     MIN_VALUE: ClassVar[int] = 0.0
     MAX_VALUE: ClassVar[int] = 5.0
-    __root__: float = Field(alias="value", default=0.0, ge=MIN_VALUE, le=MAX_VALUE)
+    value: float = Field(default=0.0, ge=MIN_VALUE, le=MAX_VALUE)
 
     def __float__(self) -> float:
-        return self.__root__
+        return self.value
 
 
-class DrinkType(str, Enum):
+class DrinkType(Enum):
     ALL = "all"
     BEER = "beer"
     WINE = "wine"
@@ -35,7 +23,7 @@ class DrinkType(str, Enum):
     ETC = "etc"
 
     @staticmethod
-    def from_str(label):
+    def from_str(label: str) -> "DrinkType":
         switcher = {
             "all": DrinkType.ALL,
             "beer": DrinkType.BEER,
@@ -48,13 +36,13 @@ class DrinkType(str, Enum):
         return switcher.get(label, DrinkType.ALL)
 
 
-class FilterType(str, Enum):
+class FilterType(Enum):
     REVIEW = "review"
     RATING = "rating"
     WISH = "wish"
 
     @staticmethod
-    def from_str(label):
+    def from_str(label: str) -> "FilterType":
         switcher = {
             "review": FilterType.REVIEW,
             "rating": FilterType.RATING,
@@ -63,12 +51,12 @@ class FilterType(str, Enum):
         return switcher.get(label, FilterType.REVIEW)
 
 
-class OrderType(str, Enum):
+class OrderType(Enum):
     DESC = "descending"
     ASC = "ascending"
 
     @staticmethod
-    def from_str(label):
+    def from_str(label: str) -> "OrderType":
         switcher = {
             "descending": OrderType.DESC,
             "ascending": OrderType.ASC,

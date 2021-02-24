@@ -1,4 +1,5 @@
 from auth.application.service import AuthApplicationService
+from drinks.infra_structure.orm_repository import OrmDrinkRepository
 from shared_kernel.infra_structure.database import Database
 from dependency_injector import containers, providers
 from drinks.application.service import DrinkApplicationService
@@ -23,7 +24,7 @@ class Container(containers.DeclarativeContainer):
     user_repository = providers.Singleton(OrmUserRepository, session_factory=db.provided.session)
     review_repository = providers.Singleton(InMemoryReviewRepository)
     wish_repository = providers.Singleton(OrmWishRepository, session_factory=db.provided.session)
-    drink_repository = providers.Singleton(InMemoryDrinkRepository)
+    drink_repository = providers.Singleton(OrmDrinkRepository, session_factory=db.provided.session)
 
     # application service
     user_application_service = providers.Singleton(UserApplicationService, user_repository=user_repository)
