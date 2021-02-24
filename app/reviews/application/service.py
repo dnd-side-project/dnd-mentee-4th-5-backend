@@ -20,7 +20,7 @@ from reviews.domain.repository import ReviewRepository
 from reviews.domain.value_objects import ReviewRating
 from shared_kernel.application.dtos import FailedOutputDto
 from shared_kernel.domain.exceptions import InvalidParamInputError, ResourceAlreadyExistError, ResourceNotFoundError
-from shared_kernel.domain.value_objects import ReviewId
+from shared_kernel.domain.value_objects import ReviewId, DrinkId, UserId
 
 
 class ReviewApplicationService:
@@ -49,8 +49,8 @@ class ReviewApplicationService:
         try:
             reviews = self._review_repository.find_all(query_param=input_dto.query_param)
             return FindReviewsOutputDto(
-                item=[
-                    FindReviewOutputDto(
+                items=[
+                    FindReviewsOutputDto.Item(
                         review_id=str(review.id),
                         drink_id=str(review.drink_id),
                         user_id=str(review.user_id),
@@ -75,8 +75,8 @@ class ReviewApplicationService:
         try:
             review = Review(
                 id=ReviewId.build(user_id=input_dto.user_id, drink_id=input_dto.drink_id),
-                drink_id=input_dto.drink_id,
-                user_id=input_dto.user_id,
+                drink_id=DrinkId(value=input_dto.drink_id),
+                user_id=UserId(value=input_dto.user_id),
                 rating=ReviewRating(value=input_dto.rating),
                 comment=input_dto.comment,
                 created_at=time.time(),
@@ -89,6 +89,7 @@ class ReviewApplicationService:
             if not drink_add_review_output_dto.status:
                 return drink_add_review_output_dto
             return CreateReviewOutputDto(
+                review_id=str(review.id),
                 drink_id=str(review.drink_id),
                 user_id=str(review.user_id),
                 rating=int(review.rating),
@@ -159,5 +160,7 @@ class ReviewApplicationService:
                 return drink_delete_review_output_dto
             return DeleteReviewOutputDto()
 
+        except ResourceNotFoundError as e:
+            return FailedOutputDto.build_resource_not_found_error(message=str(e))
         except Exception as e:
             return FailedOutputDto.build_system_error(message=str(e))

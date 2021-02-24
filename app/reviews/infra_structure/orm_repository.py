@@ -5,9 +5,7 @@ from reviews.domain.entities import Review
 from reviews.domain.repository import QueryParam, ReviewRepository
 from reviews.domain.value_objects import OrderType, ReviewRating
 from reviews.infra_structure.orm_models import ReviewOrm
-from shared_kernel.domain.exceptions import (InvalidParamInputError,
-                                             ResourceAlreadyExistError,
-                                             ResourceNotFoundError)
+from shared_kernel.domain.exceptions import InvalidParamInputError, ResourceAlreadyExistError, ResourceNotFoundError
 from shared_kernel.domain.value_objects import DrinkId, ReviewId, UserId
 from sqlalchemy import asc, desc
 from sqlalchemy.orm import Session
@@ -17,20 +15,35 @@ class OrmReviewRepository(ReviewRepository):
     def __init__(self, session_factory: Callable[..., AbstractContextManager[Session]]) -> None:
         self._session_factory = session_factory
 
+    def find(self, query_param: QueryParam) -> Review:
+        if not query_param.userId or not query_param.drinkId:
+            raise InvalidParamInputError(
+                f"drinkId: {query_param.drinkId} and userId:{query_param.userId}에 해당하는 값이 없습니다."
+            )
+        _query_param = {attr: value for attr, value in query_param if value and not isinstance(attr, OrderType)}
+        with self._session_factory() as session:
+            query = session.query(ReviewOrm)
+            review_orm = query.filter_by(**_query_param)
+            if review_orm is None:
+                raise ResourceNotFoundError(f"리뷰를 찾지 못했습니다.")
+            return review_orm.to_review()
+
     def find_all(self, query_param: QueryParam) -> List[Review]:
-        query_param = {attr: value for attr, value in query_param if value and attr != QueryParam.order}
+        if not query_param.userId and not query_param.drinkId:
+            raise InvalidParamInputError(
+                f"drinkId: {query_param.drinkId} or userId:{query_param.userId}에 해당하는 값이 없습니다."
+            )
+        _query_param = {attr: value for attr, value in query_param if value and not isinstance(attr, OrderType)}
         with self._session_factory as session:
-            if not QueryParam.userId and not QueryParam.drinkId:
-                raise InvalidParamInputError("drink_id, user_id에 해당하는 값이 없습니다.")
 
             order_type = desc(ReviewOrm.updated_at)
-            if query_param.order == OrderType.LIKE_DESC:
-                order_type = desc(ReviewOrm.num_likes)
-            elif query_param.order == OrderType.LIKE_ASC:
-                order_type = asc(ReviewOrm.num_likes)
+            # if order_type == OrderType.LIKE_DESC:
+            #     order_type = desc(ReviewOrm.num_likes)
+            # elif order_type == OrderType.LIKE_ASC:
+            #     order_type = asc(ReviewOrm.num_likes)
 
             query = session.query(ReviewOrm)
-            review_orms = session.query(ReviewOrm).filter_by(**query_param).order_by(order_type)
+            review_orms = query.filter_by(**_query_param).order_by(order_type)
 
             return [
                 Review(
@@ -50,24 +63,6 @@ class OrmReviewRepository(ReviewRepository):
             review_orm = session.query(ReviewOrm).filter(ReviewOrm.id == str(review_id)).first()
             if review_orm is None:
                 raise ResourceNotFoundError(f"{str(review_id)}의 리뷰를 찾지 못했습니다.")
-            return review_orm.to_review()
-
-    def find_by_drink_id_user_id(
-        self,
-        drink_id: DrinkId,
-        user_id: UserId,
-    ) -> Optional[Review]:
-        with self._session_factory() as session:
-            if not user_id or not drink_id:
-                raise InvalidParamInputError(f"술: {drink_id}, 유저: {user_id}에 해당하는 값이 없습니다.")
-            else:
-                review_orm = (
-                    session.query(ReviewOrm)
-                    .filter(ReviewOrm.drink_id == drink_id, ReviewOrm.user_id == user_id)
-                    .first()
-                )
-            if review_orm is None:
-                raise ResourceNotFoundError(f"술: {drink_id}, 유저: {user_id} 리뷰를 찾지 못했습니다.")
             return review_orm.to_review()
 
     def add(self, review: Review) -> None:

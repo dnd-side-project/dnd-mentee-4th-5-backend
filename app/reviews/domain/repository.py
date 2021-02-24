@@ -15,19 +15,15 @@ class QueryParam(BaseModel):
 
 class ReviewRepository(metaclass=ABCMeta):
     @abstractmethod
+    def find(self, query_param: QueryParam) -> Review:
+        pass
+
+    @abstractmethod
     def find_all(self, query_param: QueryParam) -> List[Review]:
         pass
 
     @abstractmethod
     def find_by_review_id(self, review_id: ReviewId) -> Optional[Review]:
-        pass
-
-    @abstractmethod
-    def find_by_drink_id_user_id(
-        self,
-        drink_id: DrinkId,
-        user_id: UserId,
-    ) -> Optional[Review]:
         pass
 
     @abstractmethod

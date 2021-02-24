@@ -32,9 +32,9 @@ class ReviewOrm(Base):
         )
 
     def fetch_review(self, review: Review) -> None:
-        self.id = review
+        self.id = review.id.uuid
         self.user_id = str(review.user_id)
-        self.drink_id = review.drink_id
+        self.drink_id = review.drink_id.uuid
         self.rating = int(review.rating)
         self.comment = review.comment
         self.created_at = review.created_at
