@@ -7,9 +7,7 @@ from starlette.testclient import TestClient
 # fixtures for database (testing ORM Repository)
 @pytest.fixture(scope="session")
 def database():
-    database = Database(
-        db_url=f"postgresql://seokjunhong:@Hse05040!@localhost:5432/jun"
-    )
+    database = Database(db_url=f"postgresql://seokjunhong:@Hse05040!@localhost:5432/jun")
     database.create_database()
     return database
 
