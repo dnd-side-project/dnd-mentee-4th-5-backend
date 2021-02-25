@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from drinks.domain.entities import Drink
 from drinks.domain.repository import DrinkRepository, QueryParam
-from drinks.domain.value_objects import OrderType, FilterType
+from drinks.domain.value_objects import OrderType, FilterType, DrinkType
 from drinks.infra_structure.orm_models import DrinkOrm
 from shared_kernel.domain.exceptions import ResourceNotFoundError, ResourceAlreadyExistError
 from shared_kernel.domain.value_objects import DrinkId
@@ -35,7 +35,10 @@ class OrmDrinkRepository(DrinkRepository):
                 order_type = asc(order_filter)
 
             query = session.query(DrinkOrm)
-            drink_orms = query.filter(DrinkOrm.type == query_param.type.value).order_by(order_type)
+            if query_param.type == DrinkType.ALL:
+                drink_orms = query.order_by(order_type).all()
+            else:
+                drink_orms = query.filter(DrinkOrm.type == query_param.type.value).order_by(order_type).all()
 
             return [drink_orm.to_drink() for drink_orm in drink_orms]
 
@@ -52,10 +55,10 @@ class OrmDrinkRepository(DrinkRepository):
     def update(self, drink: Drink) -> None:
         with self._session_factory() as session:
             drink_orm = session.query(DrinkOrm).filter(DrinkOrm.id == str(drink.id)).first()
-            
+
             if drink_orm is None:
                 raise ResourceNotFoundError(f"{str(drink.id)}의 리뷰를 찾지 못했습니다.")
-                
+
             drink_orm.fetch_drink(drink)
             session.commit()
 
