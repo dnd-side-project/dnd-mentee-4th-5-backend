@@ -1,23 +1,25 @@
 from abc import ABCMeta, abstractmethod
-from typing import List, Optional
+from typing import List, Optional, Union
 
-from drinks.domain.entities import Drink
-from drinks.domain.value_objects import DrinkId
 from pydantic import BaseModel
+from drinks.domain.entities import Drink
+from drinks.domain.value_objects import DrinkType, FilterType, OrderType
+from shared_kernel.domain.value_objects import DrinkId
 
 
 class QueryParam(BaseModel):
-    drink: Optional[str] = "all"
-    filter: Optional[str] = "review"
-    order: Optional[str] = "descending"
+    type: Union[str, DrinkType] = "all"
+    filter: Union[str, FilterType] = "review"
+    order: Union[str, OrderType] = "descending"
 
+    def to_enum(self) -> "QueryParam":
+        self.type = DrinkType.from_str(self.type)
+        self.filter = FilterType.from_str(self.filter)
+        self.order = OrderType.from_str(self.order)
+        return QueryParam(type=self.type, filter=self.filter, order=self.order)
 
+      
 class DrinkRepository(metaclass=ABCMeta):
-    # test use only
-    @abstractmethod
-    def find_all_simple(self) -> List[Drink]:
-        pass
-
     @abstractmethod
     def find_all(self, query_param: QueryParam) -> List[Drink]:
         pass

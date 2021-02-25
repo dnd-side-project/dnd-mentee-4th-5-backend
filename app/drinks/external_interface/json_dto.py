@@ -1,7 +1,6 @@
-import json
-
-from drinks.application.dtos import FindDrinksOutputDto
 from pydantic import BaseModel
+
+from drinks.application.dtos import FindDrinkOutputDto
 
 
 class CreateDrinkJsonRequest(BaseModel):
@@ -17,11 +16,23 @@ class GetDrinksJsonRequest(BaseModel):
     order: str
 
 
-class GetDrinksJsonResponse(BaseModel):
-    drinks_json: str
+class GetDrinkJsonResponse(BaseModel):
+    drink_id: str
+    name: str
+    image_url: str
+    type: str
+    avg_rating: float
+    num_of_reviews: int
+    num_of_wish: int
 
     @classmethod
-    def build_by_output_dto(
-        cls, output_dto: FindDrinksOutputDto
-    ) -> "GetDrinksJsonResponse":
-        return cls(drinks_json=json.dumps(output_dto.drinks_dicts))
+    def build_by_output_dto(cls, output_dto: FindDrinkOutputDto) -> "GetDrinkJsonResponse":
+        return cls(
+            drink_id=output_dto.drink_id,
+            name=output_dto.drink_name,
+            image_url=output_dto.drink_image_url,
+            type=output_dto.drink_type,
+            avg_rating=output_dto.avg_rating,
+            num_of_reviews=output_dto.num_of_reviews,
+            num_of_wish=output_dto.num_of_wish,
+        )

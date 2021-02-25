@@ -1,48 +1,31 @@
+from unittest import mock
+
 import pytest
-from drinks.application.dtos import CreateDrinkInputDto
+from drinks.application.dtos import AddDrinkReviewOutputDto, DeleteDrinkReviewOutputDto, UpdateDrinkReviewOutputDto
 from drinks.application.service import DrinkApplicationService
-from drinks.domain.entities import Drink
-from drinks.domain.value_objects import DrinkId as drinks_DrinkId
-from drinks.domain.value_objects import DrinkRating, DrinkType
-from drinks.infra_structure.in_memory_repository import InMemoryDrinkRepository
-from reviews.application.dtos import (CreateReviewInputDto,
-                                      DeleteReviewInputDto, FindReviewInputDto,
-                                      FindReviewOutputDto,
-                                      UpdateReviewInputDto)
+from reviews.application.dtos import (
+    CreateReviewInputDto,
+    CreateReviewOutputDto,
+    DeleteReviewInputDto,
+    DeleteReviewOutputDto,
+    FindReviewInputDto,
+    FindReviewOutputDto,
+    FindReviewsInputDto,
+    FindReviewsOutputDto,
+    UpdateReviewInputDto,
+    UpdateReviewOutputDto,
+)
 from reviews.application.service import ReviewApplicationService
 from reviews.domain.entities import Review
-from reviews.domain.value_objects import (DrinkId, ReviewId, ReviewRating,
-                                          UserId)
-from reviews.infra_structure.in_memory_repository import \
-    InMemoryReviewRepository
+from reviews.domain.repository import QueryParam, ReviewRepository
+from reviews.domain.value_objects import ReviewRating
 from shared_kernel.application.dtos import FailedOutputDto
-
-
-@pytest.fixture
-def review_repository():
-    return InMemoryReviewRepository()
-
-
-@pytest.fixture
-def review_application_service(review_repository):
-    return ReviewApplicationService(review_repository=review_repository)
-
-
-@pytest.fixture
-def drink_repository():
-    return InMemoryDrinkRepository()
-
-
-@pytest.fixture
-def drink_application_service(drink_repository):
-    return DrinkApplicationService(drink_repository=drink_repository)
-
+from shared_kernel.domain.exceptions import InvalidParamInputError, ResourceAlreadyExistError, ResourceNotFoundError
+from shared_kernel.domain.value_objects import DrinkId, ReviewId, UserId
 
 review_data = [
     (
-        ReviewId.build(
-            user_id="Jun", drink_id="335ca1a4-5175-5e41-8bac-40ffd840834c"
-        ),  # review_id
+        ReviewId.build(user_id="Jun", drink_id="335ca1a4-5175-5e41-8bac-40ffd840834c"),  # review_id
         DrinkId.from_str("335ca1a4-5175-5e41-8bac-40ffd840834c"),  # drink_id
         "Jun",  # user_id
         4,  # rating
@@ -51,29 +34,36 @@ review_data = [
 ]
 
 
-@pytest.mark.parametrize(
-    "review_id, drink_id, user_id, rating, created_at", review_data
-)
-def test_find_review(
-    review_application_service,
-    review_repository,
+@pytest.fixture(scope="function")
+def review_repository_mock():
+    return mock.Mock(spec=ReviewRepository)
+
+
+@pytest.fixture(scope="function")
+def drink_application_service_mock():
+    return mock.Mock(spec=DrinkApplicationService)
+
+
+@pytest.mark.parametrize("review_id, drink_id, user_id, rating, created_at", review_data)
+def test_find_review_success(
+    review_repository_mock,
     review_id,
     drink_id,
     user_id,
     rating,
     created_at,
 ):
-    review_repository.add(
-        Review(
-            id=review_id,
-            drink_id=drink_id,
-            user_id=UserId(value=user_id),
-            rating=ReviewRating(value=rating),
-            comment="hello",
-            created_at=created_at,
-            updated_at=created_at,
-        )
+    review_repository_mock.find_by_review_id.return_value = Review(
+        id=review_id,
+        drink_id=drink_id,
+        user_id=UserId(value=user_id),
+        rating=ReviewRating(value=rating),
+        comment="hello",
+        created_at=created_at,
+        updated_at=created_at,
     )
+    review_application_service = ReviewApplicationService(review_repository=review_repository_mock)
+
     input_dto = FindReviewInputDto(review_id=str(review_id))
 
     actual = review_application_service.find_review(input_dto)
@@ -89,27 +79,157 @@ def test_find_review(
     assert actual == expected
 
 
-@pytest.mark.parametrize(
-    "review_id, drink_id, user_id, rating, created_at", review_data
-)
-def test_create_review(
-    review_application_service,
-    review_repository,
-    drink_application_service,
-    drink_repository,
+@pytest.mark.parametrize("review_id, drink_id, user_id, rating, created_at", review_data)
+def test_find_review_fail(
+    review_repository_mock,
     review_id,
     drink_id,
     user_id,
     rating,
     created_at,
 ):
-    input_dto = CreateDrinkInputDto(
-        drink_id=str(drink_id),
-        drink_name="Golden Ale",
-        drink_image_url="picture of golden ale",
-        drink_type=DrinkType.BEER,
+    review_repository_mock.find_by_review_id.side_effect = ResourceNotFoundError()
+    review_application_service = ReviewApplicationService(review_repository=review_repository_mock)
+
+    input_dto = FindReviewInputDto(review_id=str(review_id))
+    actual = review_application_service.find_review(input_dto)
+    expected = FailedOutputDto(type="Resource Not Found Error", message="")
+
+    assert actual == expected
+
+
+@pytest.mark.parametrize("review_id, drink_id, user_id, rating, created_at", review_data)
+def test_find_reviews_success(
+    review_repository_mock,
+    review_id,
+    drink_id,
+    user_id,
+    rating,
+    created_at,
+):
+    drink_id_2 = "335ca1a4-5175-5e41-8bac-40ffd840835c"
+    user_id_2 = "meme"
+    review_id_2 = ReviewId.build(user_id=user_id_2, drink_id=drink_id_2)
+
+    review_repository_mock.find_all.return_value = [
+        Review(
+            id=review_id,
+            drink_id=drink_id,
+            user_id=UserId(value=user_id),
+            rating=ReviewRating(value=rating),
+            comment="hello",
+            created_at=created_at,
+            updated_at=created_at,
+        ),
+        Review(
+            id=review_id_2,
+            drink_id=DrinkId.from_str(drink_id_2),
+            user_id=UserId(value=user_id_2),
+            rating=ReviewRating(value=rating),
+            comment="olleh",
+            created_at=created_at,
+            updated_at=created_at,
+        ),
+    ]
+    review_application_service = ReviewApplicationService(review_repository=review_repository_mock)
+
+    input_dto = FindReviewsInputDto(query_param=QueryParam())
+    actual = review_application_service.find_reviews(input_dto)
+    expected = FindReviewsOutputDto(
+        items=[
+            FindReviewsOutputDto.Item(
+                review_id=str(review_id),
+                drink_id=str(drink_id),
+                user_id=str(user_id),
+                rating=int(rating),
+                comment="hello",
+                created_at=created_at,
+                updated_at=created_at,
+            ),
+            FindReviewsOutputDto.Item(
+                review_id=str(review_id_2),
+                drink_id=str(drink_id_2),
+                user_id=str(user_id_2),
+                rating=int(rating),
+                comment="olleh",
+                created_at=created_at,
+                updated_at=created_at,
+            ),
+        ]
     )
-    drink_application_service.create_drink(input_dto)
+    assert actual == expected
+
+
+@pytest.mark.parametrize("review_id, drink_id, user_id, rating, created_at", review_data)
+def test_find_reviews_fail(
+    review_repository_mock,
+    review_id,
+    drink_id,
+    user_id,
+    rating,
+    created_at,
+):
+    review_repository_mock.find_all.side_effect = InvalidParamInputError()
+    review_application_service = ReviewApplicationService(review_repository=review_repository_mock)
+
+    input_dto = FindReviewsInputDto(query_param=QueryParam())
+    actual = review_application_service.find_reviews(input_dto)
+    expected = FailedOutputDto(type="Parameters Error", message="")
+
+    assert actual == expected
+
+
+@pytest.mark.parametrize("review_id, drink_id, user_id, rating, created_at", review_data)
+def test_create_review_success(
+    app,
+    review_repository_mock,
+    drink_application_service_mock,
+    review_id,
+    drink_id,
+    user_id,
+    rating,
+    created_at,
+):
+    review_repository_mock.add.return_value = None
+    review_application_service = ReviewApplicationService(review_repository=review_repository_mock)
+
+    drink_application_service_mock.add_drink_review.return_value = AddDrinkReviewOutputDto()
+    with app.container.drink_application_service.override(drink_application_service_mock):
+        input_dto = CreateReviewInputDto(
+            drink_id=str(drink_id),
+            user_id=user_id,
+            rating=int(ReviewRating(value=rating)),
+            comment="",
+        )
+
+        actual = review_application_service.create_review(input_dto, drink_application_service_mock)
+        expected = CreateReviewOutputDto(
+            review_id=str(review_id),
+            drink_id=str(drink_id),
+            user_id=user_id,
+            rating=rating,
+            comment="",
+            created_at=actual.created_at,
+            updated_at=actual.updated_at,
+        )
+
+        assert actual == expected
+
+
+@pytest.mark.parametrize("review_id, drink_id, user_id, rating, created_at", review_data)
+def test_create_review_fail(
+    review_repository_mock,
+    drink_application_service_mock,
+    review_id,
+    drink_id,
+    user_id,
+    rating,
+    created_at,
+):
+    review_repository_mock.add.side_effect = ResourceAlreadyExistError()
+    review_application_service = ReviewApplicationService(review_repository=review_repository_mock)
+
+    drink_application_service_mock.add_drink_review.return_value = AddDrinkReviewOutputDto()
 
     input_dto = CreateReviewInputDto(
         drink_id=str(drink_id),
@@ -118,273 +238,136 @@ def test_create_review(
         comment="",
     )
 
-    output_dto = review_application_service.create_review(
-        input_dto, drink_application_service
-    )
-    assert output_dto.status
-
-    actual = review_repository.find_all()
-    expected = [
-        Review(
-            id=review_id,
-            drink_id=drink_id,
-            user_id=UserId(value=user_id),
-            rating=ReviewRating(value=rating),
-            comment="",
-            created_at=output_dto.created_at,
-            updated_at=output_dto.updated_at,
-        )
-    ]
-    assert actual == expected
-
-    # update rating in drink entity
-    actual = drink_repository.find_all_simple()
-    expected = [
-        Drink(
-            id=drinks_DrinkId.from_str(str(drink_id)),
-            name="Golden Ale",
-            image_url="picture of golden ale",
-            type=DrinkType.BEER,
-            avg_rating=DrinkRating(value=rating),
-            num_of_reviews=1,
-            num_of_wish=0,
-        )
-    ]
+    actual = review_application_service.create_review(input_dto, drink_application_service_mock)
+    expected = FailedOutputDto(type="Resource Conflict Error", message="")
     assert actual == expected
 
 
-@pytest.mark.parametrize(
-    "review_id, drink_id, user_id, rating, created_at", review_data
-)
-def test_update_review(
-    review_application_service,
-    review_repository,
-    drink_application_service,
-    drink_repository,
+@pytest.mark.parametrize("review_id, drink_id, user_id, rating, created_at", review_data)
+def test_update_review_success(
+    review_repository_mock,
+    drink_application_service_mock,
     review_id,
     drink_id,
     user_id,
     rating,
     created_at,
 ):
-    drink_repository.add(
-        Drink(
-            id=drinks_DrinkId.from_str(str(drink_id)),
-            name="Golden Ale",
-            image_url="picture of golden ale",
-            type=DrinkType.BEER,
-            avg_rating=DrinkRating(value=rating),
-            num_of_reviews=1,
-            num_of_wish=0,
-        )
+    review_repository_mock.find_by_review_id.return_value = Review(
+        id=review_id,
+        drink_id=drink_id,
+        user_id=UserId(value=user_id),
+        rating=ReviewRating(value=rating),
+        comment="hello",
+        created_at=created_at,
+        updated_at=created_at,
     )
+    review_repository_mock.update.return_value = None
+    review_application_service = ReviewApplicationService(review_repository=review_repository_mock)
 
-    review_repository.add(
-        Review(
-            id=review_id,
-            drink_id=drink_id,
-            user_id=UserId(value=user_id),
-            rating=ReviewRating(value=rating),
-            comment="",
-            created_at=created_at,
-            updated_at=created_at,
-        )
-    )
+    drink_application_service_mock.update_drink_review.return_value = UpdateDrinkReviewOutputDto()
 
     input_dto = UpdateReviewInputDto(
         review_id=str(review_id),
-        rating=int(ReviewRating(value=5)),
-        comment="This drink sucks",
+        rating=int(ReviewRating(value=rating)),
+        comment="",
     )
-    review_application_service.update_review(input_dto, drink_application_service)
 
-    actual = review_repository.find_by_review_id(review_id=review_id)
-    assert actual.comment == "This drink sucks"
-    assert actual.updated_at != created_at
-
-    # update rating in drink entity
-    actual = drink_repository.find_all_simple()
-    expected = [
-        Drink(
-            id=drinks_DrinkId.from_str(str(drink_id)),
-            name="Golden Ale",
-            image_url="picture of golden ale",
-            type=DrinkType.BEER,
-            avg_rating=DrinkRating(value=5),
-            num_of_reviews=1,
-            num_of_wish=0,
-        )
-    ]
+    actual = review_application_service.update_review(input_dto, drink_application_service_mock)
+    expected = UpdateReviewOutputDto()
     assert actual == expected
 
 
-@pytest.mark.parametrize(
-    "review_id, drink_id, user_id, rating, created_at", review_data
-)
-def test_delete_review(
-    review_application_service,
-    review_repository,
-    drink_application_service,
-    drink_repository,
+@pytest.mark.parametrize("review_id, drink_id, user_id, rating, created_at", review_data)
+def test_update_review_fail(
+    review_repository_mock,
+    drink_application_service_mock,
     review_id,
     drink_id,
     user_id,
     rating,
     created_at,
 ):
-    drink_repository.add(
-        Drink(
-            id=drinks_DrinkId.from_str(str(drink_id)),
-            name="Golden Ale",
-            image_url="picture of golden ale",
-            type=DrinkType.BEER,
-            avg_rating=DrinkRating(value=rating),
-            num_of_reviews=1,
-            num_of_wish=0,
-        )
+    review_repository_mock.find_by_review_id.return_value = Review(
+        id=review_id,
+        drink_id=drink_id,
+        user_id=UserId(value=user_id),
+        rating=ReviewRating(value=rating),
+        comment="hello",
+        created_at=created_at,
+        updated_at=created_at,
     )
+    review_repository_mock.update.side_effect = ResourceNotFoundError()
+    review_application_service = ReviewApplicationService(review_repository=review_repository_mock)
 
-    review_repository.add(
-        Review(
-            id=review_id,
-            drink_id=drink_id,
-            user_id=UserId(value=user_id),
-            rating=ReviewRating(value=rating),
-            comment="",
-            created_at=created_at,
-            updated_at=created_at,
-        )
+    drink_application_service_mock.update_drink_review.return_value = UpdateDrinkReviewOutputDto()
+
+    input_dto = UpdateReviewInputDto(
+        review_id=str(review_id),
+        rating=int(ReviewRating(value=rating)),
+        comment="",
     )
-
-    input_dto = DeleteReviewInputDto(
-        review_id=str(review_id), drink_id=str(drink_id), rating=rating
-    )
-    review_application_service.delete_review(input_dto, drink_application_service)
-
-    actual = review_repository.find_by_review_id(review_id=review_id)
-    expected = None
-    assert actual == expected
-
-    # Check delete when review in-memory repo is empty
-    actual = review_application_service.delete_review(
-        input_dto, drink_application_service
-    )
-    expected = FailedOutputDto.build_resource_not_found_error(
-        f"{str(review_id)}의 리뷰를 찾을 수 없습니다."
-    )
-    assert actual == expected
-
-    # update rating in drink entity
-    actual = drink_repository.find_all_simple()
-    expected = [
-        Drink(
-            id=drinks_DrinkId.from_str(str(drink_id)),
-            name="Golden Ale",
-            image_url="picture of golden ale",
-            type=DrinkType.BEER,
-            avg_rating=DrinkRating(value=0),
-            num_of_reviews=0,
-            num_of_wish=0,
-        )
-    ]
+    actual = review_application_service.update_review(input_dto, drink_application_service_mock)
+    expected = FailedOutputDto(type="Resource Not Found Error", message="")
     assert actual == expected
 
 
-"""
-아래 코드는 현재 미사용
-"""
-#
-# @pytest.mark.parametrize("review_id, drink_id, user_id, rating, created_at", review_data)
-# def test_find_reviews_by_user_id(
-#     review_application_service,
-#     review_repository,
-#     review_id,
-#     drink_id,
-#     user_id,
-#     rating,
-#     created_at,
-# ):
-#     review_repository.add(
-#         Review(
-#             id=review_id,
-#             drink_id=drink_id,
-#             user_id=UserId(value=user_id),
-#             rating=ReviewRating(value=rating),
-#             comment="",
-#             created_at=created_at,
-#         )
-#     )
-#     review_repository.add(
-#         Review(
-#             id=uuid.uuid4(),
-#             drink_id=drink_id,
-#             user_id=UserId(value="diff_user_id"),
-#             rating=ReviewRating(value=rating),
-#             comment="Won't match the user_id",
-#             created_at=1234,
-#         )
-#     )
-#
-#     input_dto = FindReviewsByUserIdInputDto(user_id=str(UserId(value=user_id)))
-#     actual = review_application_service.find_reviews_by_user_id(input_dto=input_dto)
-#     expected = FindReviewsByUserIdOutputDto(
-#         reviews_dicts=[
-#             Review(
-#                 id=review_id,
-#                 drink_id=drink_id,
-#                 user_id=UserId(value=user_id),
-#                 rating=ReviewRating(value=rating),
-#                 comment="",
-#                 created_at=created_at,
-#             ).dict()
-#         ]
-#     )
-#     assert actual == expected
-#
-#
-# @pytest.mark.parametrize("review_id, drink_id, user_id, rating, created_at", review_data)
-# def test_find_reviews_by_drink_id(
-#     review_application_service,
-#     review_repository,
-#     review_id,
-#     drink_id,
-#     user_id,
-#     rating,
-#     created_at,
-# ):
-#     review_repository.add(
-#         Review(
-#             id=review_id,
-#             drink_id=drink_id,
-#             user_id=UserId(value=user_id),
-#             rating=ReviewRating(value=rating),
-#             comment="",
-#             created_at=created_at,
-#         )
-#     )
-#     review_repository.add(
-#         Review(
-#             id=uuid.uuid4(),
-#             drink_id=uuid.uuid4(),
-#             user_id=UserId(value=user_id),
-#             rating=ReviewRating(value=rating),
-#             comment="Won't match the drink_id",
-#             created_at=1234,
-#         )
-#     )
-#
-#     input_dto = FindReviewsByDrinkIdInputDto(drink_id=str(drink_id))
-#     actual = review_application_service.find_reviews_by_drink_id(input_dto=input_dto)
-#     expected = FindReviewsByDrinkIdOutputDto(
-#         reviews_dicts=[
-#             Review(
-#                 id=review_id,
-#                 drink_id=drink_id,
-#                 user_id=UserId(value=user_id),
-#                 rating=ReviewRating(value=rating),
-#                 comment="",
-#                 created_at=created_at,
-#             ).dict()
-#         ]
-#     )
-#     assert actual == expected
+@pytest.mark.parametrize("review_id, drink_id, user_id, rating, created_at", review_data)
+def test_delete_review_success(
+    review_repository_mock,
+    drink_application_service_mock,
+    review_id,
+    drink_id,
+    user_id,
+    rating,
+    created_at,
+):
+    review_repository_mock.find_by_review_id.return_value = Review(
+        id=review_id,
+        drink_id=drink_id,
+        user_id=UserId(value=user_id),
+        rating=ReviewRating(value=rating),
+        comment="hello",
+        created_at=created_at,
+        updated_at=created_at,
+    )
+    review_repository_mock.delete_by_review_id.return_value = None
+    review_application_service = ReviewApplicationService(review_repository=review_repository_mock)
+
+    drink_application_service_mock.delete_drink_review.return_value = DeleteDrinkReviewOutputDto()
+
+    input_dto = DeleteReviewInputDto(review_id=str(review_id))
+
+    actual = review_application_service.delete_review(input_dto, drink_application_service_mock)
+    expected = DeleteReviewOutputDto()
+    assert actual == expected
+
+
+@pytest.mark.parametrize("review_id, drink_id, user_id, rating, created_at", review_data)
+def test_delete_review_fail(
+    review_repository_mock,
+    drink_application_service_mock,
+    review_id,
+    drink_id,
+    user_id,
+    rating,
+    created_at,
+):
+    review_repository_mock.find_by_review_id.return_value = Review(
+        id=review_id,
+        drink_id=drink_id,
+        user_id=UserId(value=user_id),
+        rating=ReviewRating(value=rating),
+        comment="hello",
+        created_at=created_at,
+        updated_at=created_at,
+    )
+    review_repository_mock.delete_by_review_id.side_effect = ResourceNotFoundError()
+    review_application_service = ReviewApplicationService(review_repository=review_repository_mock)
+
+    drink_application_service_mock.delete_drink_review.return_value = DeleteDrinkReviewOutputDto()
+
+    input_dto = DeleteReviewInputDto(review_id=str(review_id))
+    actual = review_application_service.delete_review(input_dto, drink_application_service_mock)
+    expected = FailedOutputDto(type="Resource Not Found Error", message="")
+    assert actual == expected

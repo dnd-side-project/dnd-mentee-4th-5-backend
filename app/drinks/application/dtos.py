@@ -1,7 +1,8 @@
 from typing import List
 
-from drinks.domain.repository import QueryParam
 from pydantic import BaseModel
+
+from drinks.domain.repository import QueryParam
 from shared_kernel.application.dtos import SuccessOutputDto
 
 
@@ -24,11 +25,19 @@ class FindDrinksInputDto(BaseModel):
 
 
 class FindDrinksOutputDto(SuccessOutputDto):
-    drinks_dicts: List[dict]
+    class Item(BaseModel):
+        drink_id: str
+        drink_name: str
+        drink_image_url: str
+        drink_type: str
+        avg_rating: float
+        num_of_reviews: int
+        num_of_wish: int
+
+    items: List[Item]
 
 
 class CreateDrinkInputDto(BaseModel):
-    drink_id: str
     drink_name: str
     drink_image_url: str
     drink_type: str
