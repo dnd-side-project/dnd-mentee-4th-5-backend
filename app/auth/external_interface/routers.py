@@ -1,5 +1,6 @@
 from auth.application.dtos import GetTokenInputDto
-from auth.external_interface.json_dto import GetTokenJsonRequest, GetTokenJsonResponse
+from auth.external_interface.json_dto import (GetTokenJsonRequest,
+                                              GetTokenJsonResponse)
 from container import Container
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends
@@ -15,7 +16,8 @@ router = APIRouter(
 @router.get("/token", status_code=status.HTTP_200_OK)
 @inject
 def get_token(
-    request: GetTokenJsonRequest, auth_application_service=Depends(Provide[Container.auth_application_service])
+    request: GetTokenJsonRequest,
+    auth_application_service=Depends(Provide[Container.auth_application_service]),
 ):
     input_dto = GetTokenInputDto(
         user_id=request.user_id,

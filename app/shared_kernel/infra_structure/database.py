@@ -1,4 +1,4 @@
-from contextlib import contextmanager, AbstractContextManager
+from contextlib import AbstractContextManager, contextmanager
 from typing import Callable
 
 from sqlalchemy import create_engine, orm
