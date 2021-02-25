@@ -1,5 +1,3 @@
-import uuid
-
 import pytest
 
 from shared_kernel.domain.exceptions import ResourceAlreadyExistError, ResourceNotFoundError
@@ -7,33 +5,17 @@ from shared_kernel.domain.value_objects import UserId, DrinkId
 from wishes.domain.entities import Wish
 from wishes.domain.repository import QueryParam
 from wishes.domain.value_objects import WishId
-from wishes.infra_structure.orm_models import WishOrm
 from wishes.infra_structure.orm_repository import OrmWishRepository
 
 
 @pytest.fixture(scope="session", autouse=True)
 def setup(database):
     with database.session() as session:
-        session.query(WishOrm).delete()
-        session.add_all(
-            [
-                WishOrm.from_wish(
-                    Wish(
-                        id=WishId.from_str("bcbfdb54-acb7-5443-926a-42e882ef7db0"),
-                        user_id=UserId(value="heumsi"),
-                        drink_id=DrinkId.from_str("335ca1a4-5175-5e41-8bac-40ffd840834c"),
-                        created_at=1613807667,
-                    )
-                ),
-                WishOrm.from_wish(
-                    Wish(
-                        id=WishId.from_str("35a05a4b-d9ba-5122-af75-7c0022b8bbd9"),
-                        user_id=UserId(value="joon"),
-                        drink_id=DrinkId.from_str("335ca1a4-5175-5e41-8bac-40ffd840834c"),
-                        created_at=1613807667,
-                    )
-                ),
-            ]
+        session.execute("DELETE FROM wish;")
+        session.execute(
+            "INSERT INTO wish(id, user_id, drink_id, created_at) VALUES "
+            "('bcbfdb54-acb7-5443-926a-42e882ef7db0', 'heumsi', '335ca1a4-5175-5e41-8bac-40ffd840834c', '1613807667'), "
+            "('35a05a4b-d9ba-5122-af75-7c0022b8bbd9', 'joon', '335ca1a4-5175-5e41-8bac-40ffd840834c', '1613807667');"
         )
         session.commit()
 

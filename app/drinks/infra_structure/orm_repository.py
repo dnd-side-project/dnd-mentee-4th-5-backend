@@ -1,6 +1,5 @@
 from contextlib import AbstractContextManager
 from typing import Optional, List, Callable
-
 from sqlalchemy import desc, asc
 from sqlalchemy.orm import Session
 
@@ -53,8 +52,10 @@ class OrmDrinkRepository(DrinkRepository):
     def update(self, drink: Drink) -> None:
         with self._session_factory() as session:
             drink_orm = session.query(DrinkOrm).filter(DrinkOrm.id == str(drink.id)).first()
+            
             if drink_orm is None:
                 raise ResourceNotFoundError(f"{str(drink.id)}의 리뷰를 찾지 못했습니다.")
+                
             drink_orm.fetch_drink(drink)
             session.commit()
 

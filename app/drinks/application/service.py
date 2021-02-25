@@ -140,6 +140,7 @@ class DrinkApplicationService:
     def add_drink_review(self, input_dto: AddDrinkReviewInputDto) -> Union[AddDrinkReviewOutputDto, FailedOutputDto]:
         try:
             drink = self._drink_repository.find_by_drink_id(DrinkId.from_str(input_dto.drink_id))
+
             drink.add_rating(input_dto.drink_rating)
             self._drink_repository.update(drink)
 
@@ -178,6 +179,7 @@ class DrinkApplicationService:
     ) -> Union[DeleteDrinkReviewOutputDto, FailedOutputDto]:
         try:
             drink = self._drink_repository.find_by_drink_id(DrinkId.from_str(input_dto.drink_id))
+
             drink.delete_rating(input_dto.drink_rating)
             self._drink_repository.update(drink)
 
@@ -191,6 +193,7 @@ class DrinkApplicationService:
     def add_drink_wish(self, input_dto: AddDrinkWishInputDto) -> Union[AddDrinkWishOutputDto, FailedOutputDto]:
         try:
             drink = self._drink_repository.find_by_drink_id(DrinkId.from_str(input_dto.drink_id))
+
             drink.add_wish()
             self._drink_repository.update(drink)
 
@@ -206,6 +209,7 @@ class DrinkApplicationService:
     ) -> Union[DeleteDrinkWishOutputDto, FailedOutputDto]:
         try:
             drink = self._drink_repository.find_by_drink_id(DrinkId.from_str(input_dto.drink_id))
+
             drink.delete_wish()
             self._drink_repository.update(drink)
 

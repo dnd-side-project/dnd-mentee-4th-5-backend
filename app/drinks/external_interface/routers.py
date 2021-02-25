@@ -13,6 +13,7 @@ from drinks.external_interface.json_dto import (
     CreateDrinkJsonRequest,
     GetDrinkJsonResponse,
 )
+
 from shared_kernel.external_interface.json_dto import FailedJsonResponse
 
 router = APIRouter(
@@ -25,7 +26,9 @@ router = APIRouter(
 @inject
 def create_drink(
     request: CreateDrinkJsonRequest,
-    drink_application_service: DrinkApplicationService = Depends(Provide[Container.drink_application_service]),
+    drink_application_service: DrinkApplicationService = Depends(
+        Provide[Container.drink_application_service]
+    ),
 ) -> Optional[JSONResponse]:
     input_dto = CreateDrinkInputDto(
         drink_id=request.drink_id,

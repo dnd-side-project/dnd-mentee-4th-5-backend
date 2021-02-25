@@ -16,7 +16,8 @@ router = APIRouter(
 @router.get("/token", status_code=status.HTTP_200_OK)
 @inject
 def get_token(
-    request: GetTokenJsonRequest, auth_application_service=Depends(Provide[Container.auth_application_service])
+    request: GetTokenJsonRequest,
+    auth_application_service=Depends(Provide[Container.auth_application_service]),
 ):
     input_dto = GetTokenInputDto(
         user_id=request.user_id,
