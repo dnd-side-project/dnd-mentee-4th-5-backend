@@ -62,7 +62,7 @@ def orm_review_repository(database):
 
 def test_find(orm_review_repository):
     actual = orm_review_repository.find(
-        query_param=QueryParam(drinkId="07a9627a-c930-4292-afd0-b6a2d55de3b2", userId="jun")
+        query_param=QueryParam(drink_id="07a9627a-c930-4292-afd0-b6a2d55de3b2", user_id="jun")
     )
     expected = Review(
         id=ReviewId.from_str("afa213dd-d705-4f4d-953d-ad25e7181367"),
@@ -76,14 +76,14 @@ def test_find(orm_review_repository):
     assert actual == expected
 
     with pytest.raises(InvalidParamInputError):
-        orm_review_repository.find(query_param=QueryParam(userId="jun"))
+        orm_review_repository.find(query_param=QueryParam(user_id="jun"))
 
     with pytest.raises(InvalidParamInputError):
-        orm_review_repository.find(query_param=QueryParam(drinkId="07a9627a-c930-4292-afd0-b6a2d55de3b2"))
+        orm_review_repository.find(query_param=QueryParam(drink_id="07a9627a-c930-4292-afd0-b6a2d55de3b2"))
 
 
-def test_find_all(orm_wish_repository):
-    actual = orm_wish_repository.find_all(QueryParam(drinkId="07a9627a-c930-4292-afd0-b6a2d55de3b2"))
+def test_find_all(orm_review_repository):
+    actual = orm_review_repository.find_all(QueryParam(drink_id="07a9627a-c930-4292-afd0-b6a2d55de3b2"))
     expected = [
         Review(
             id=ReviewId.from_str("afa213dd-d705-4f4d-953d-ad25e7181367"),
@@ -106,7 +106,7 @@ def test_find_all(orm_wish_repository):
     ]
     assert actual == expected
 
-    actual = orm_wish_repository.find_all(QueryParam(userId="jun"))
+    actual = orm_review_repository.find_all(QueryParam(user_id="jun"))
     expected = [
         Review(
             id=ReviewId.from_str("afa213dd-d705-4f4d-953d-ad25e7181367"),
@@ -135,16 +135,16 @@ def test_find_by_review_id(orm_review_repository):
         orm_review_repository.find_by_review_id(ReviewId.from_str("35a05a4b-d9ba-5122-af75-7c0022b8bbd8"))
 
     actual = orm_review_repository.find_by_review_id(
-        review_id=ReviewId.from_str("35a05a4b-d9ba-5122-af75-7c0022b8bbd9")
+        review_id=ReviewId.from_str("afa213dd-d705-4f4d-953d-ad25e7181367")
     )
     expected = Review(
-        id=ReviewId.from_str("35a05a4b-d9ba-5122-af75-7c0022b8bbd9"),
+        id=ReviewId.from_str("afa213dd-d705-4f4d-953d-ad25e7181367"),
         user_id=UserId(value="jun"),
-        drink_id=DrinkId.from_str("335ca1a4-5175-5e41-8bac-40ffd840834c"),
-        rating=ReviewRating(value=3),
-        comment="456",
+        drink_id=DrinkId.from_str("07a9627a-c930-4292-afd0-b6a2d55de3b2"),
+        rating=ReviewRating(value=4),
+        comment="first jun",
         created_at=1613807667,
-        updated_at=1613807667,
+        updated_at=3,
     )
     assert actual == expected
 
@@ -183,9 +183,9 @@ def test_add(orm_review_repository):
 
 
 def test_delete(orm_review_repository):
-    orm_review_repository.find_by_review_id(review_id=ReviewId.from_str("35a05a4b-d9ba-5122-af75-7c0022b8bbd9"))
+    orm_review_repository.find_by_review_id(review_id=ReviewId.from_str("afa213dd-d705-4f4d-953d-ad25e7181367"))
 
-    orm_review_repository.delete_by_review_id(review_id=ReviewId.from_str("35a05a4b-d9ba-5122-af75-7c0022b8bbd9"))
+    orm_review_repository.delete_by_review_id(review_id=ReviewId.from_str("afa213dd-d705-4f4d-953d-ad25e7181367"))
 
     with pytest.raises(ResourceNotFoundError):
-        orm_review_repository.delete_by_review_id(review_id=ReviewId.from_str("35a05a4b-d9ba-5122-af75-7c0022b8bbd9"))
+        orm_review_repository.delete_by_review_id(review_id=ReviewId.from_str("afa213dd-d705-4f4d-953d-ad25e7181367"))

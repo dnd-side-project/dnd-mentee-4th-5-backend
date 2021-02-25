@@ -1,18 +1,15 @@
 from unittest import mock
 
 from auth.application.service import AuthApplicationService
-from reviews.application.dtos import CreateReviewOutputDto, FindReviewOutputDto
+from reviews.application.dtos import CreateReviewOutputDto, FindReviewOutputDto, FindReviewsOutputDto
 from reviews.application.service import ReviewApplicationService
-from reviews.external_interface.json_dtos import (CreateReviewJsonRequest,
-                                                  UpdateReviewJsonRequest)
+from reviews.external_interface.json_dtos import CreateReviewJsonRequest, UpdateReviewJsonRequest
 from shared_kernel.application.dtos import FailedOutputDto
 
 
 def test_get_review(client, app):
     application_service_mock = mock.Mock(spec=ReviewApplicationService)
-    application_service_mock.find_review.return_value = (
-        FailedOutputDto.build_resource_not_found_error()
-    )
+    application_service_mock.find_review.return_value = FailedOutputDto.build_resource_not_found_error()
 
     # valid request but no resource
     with app.container.review_application_service.override(application_service_mock):
@@ -49,9 +46,7 @@ def test_get_review(client, app):
 
 def test_get_reviews(client, app):
     application_service_mock = mock.Mock(spec=ReviewApplicationService)
-    application_service_mock.find_reviews.return_value = (
-        FailedOutputDto.build_parameters_error()
-    )
+    application_service_mock.find_reviews.return_value = FailedOutputDto.build_parameters_error()
 
     # valid request but no resource
     with app.container.review_application_service.override(application_service_mock):
@@ -63,28 +58,30 @@ def test_get_reviews(client, app):
     }
 
     # valid request
-    application_service_mock.find_reviews.return_value = [
-        FindReviewOutputDto(
-            review_id="review_id_uuid",
-            drink_id="drink_id_uuid",
-            user_id="user_id_uuid",
-            rating=4,
-            comment="tastes good",
-            created_at=737373737.6,
-            updated_at=737373737.6,
-        ),
-        FindReviewOutputDto(
-            review_id="review_id_uuid2",
-            drink_id="drink_id_uuid2",
-            user_id="user_id_uuid2",
-            rating=3,
-            comment="tastes good2",
-            created_at=123.123,
-            updated_at=123.123,
-        ),
-    ]
-    with app.container.user_application_service.override(application_service_mock):
-        response = client.get("/reviews?drinkId=drink_id_uuid&order=newest")
+    application_service_mock.find_reviews.return_value = FindReviewsOutputDto(
+        items=[
+            FindReviewsOutputDto.Item(
+                review_id="review_id_uuid",
+                drink_id="drink_id_uuid",
+                user_id="user_id_uuid",
+                rating=4,
+                comment="tastes good",
+                created_at=737373737.6,
+                updated_at=737373737.6,
+            ),
+            FindReviewsOutputDto.Item(
+                review_id="review_id_uuid2",
+                drink_id="drink_id_uuid2",
+                user_id="user_id_uuid2",
+                rating=3,
+                comment="tastes good2",
+                created_at=123.123,
+                updated_at=123.123,
+            ),
+        ]
+    )
+    with app.container.review_application_service.override(application_service_mock):
+        response = client.get("/reviews?drink_id=drink_id_uuid&order=newest")
     assert response.status_code == 200
     assert response.json() == [
         {
@@ -98,7 +95,7 @@ def test_get_reviews(client, app):
         },
         {
             "review_id": "review_id_uuid2",
-            "drink_id": "drink_id_uuid",
+            "drink_id": "drink_id_uuid2",
             "user_id": "user_id_uuid2",
             "rating": 3,
             "comment": "tastes good2",
@@ -113,10 +110,9 @@ def test_create_review(client, app):
     auth_service_mock = mock.Mock(AuthApplicationService)
 
     # unauthorized token
-    auth_service_mock.get_token_data.return_value = (
-        FailedOutputDto.build_unauthorized_error()
-    )
+    auth_service_mock.get_token_data.return_value = FailedOutputDto.build_unauthorized_error()
     application_service_mock.create_review.return_value = CreateReviewOutputDto(
+        review_id="review_id_uuid",
         drink_id="drink_id_uuid",
         user_id="user_id_uuid",
         rating=4,
@@ -144,9 +140,7 @@ def test_create_review(client, app):
         }
 
     # invalid request
-    application_service_mock.create_review.return_value = (
-        FailedOutputDto.build_resource_conflict_error()
-    )
+    application_service_mock.create_review.return_value = FailedOutputDto.build_resource_conflict_error()
     with app.container.review_application_service.override(application_service_mock):
         response = client.post(
             "/reviews",
@@ -167,6 +161,7 @@ def test_create_review(client, app):
 
     # valid request
     application_service_mock.create_review.return_value = CreateReviewOutputDto(
+        review_id="review_id_uuid",
         drink_id="drink_id_uuid",
         user_id="user_id_uuid",
         rating=4,
@@ -186,8 +181,9 @@ def test_create_review(client, app):
                 comment="review comment",
             ).dict(),
         )
-    assert response.status_code == 200
+    assert response.status_code == 201
     assert response.json() == {
+        "review_id": "review_id_uuid",
         "drink_id": "drink_id_uuid",
         "rating": 4,
         "comment": "review comment",
@@ -201,10 +197,9 @@ def test_update_review(client, app):
     auth_service_mock = mock.Mock(AuthApplicationService)
 
     # unauthorized token
-    auth_service_mock.get_token_data.return_value = (
-        FailedOutputDto.build_unauthorized_error()
-    )
+    auth_service_mock.get_token_data.return_value = FailedOutputDto.build_unauthorized_error()
     application_service_mock.create_review.return_value = CreateReviewOutputDto(
+        review_id="review_id_uuid",
         drink_id="drink_id_uuid",
         user_id="user_id_uuid",
         rating=4,
@@ -232,9 +227,7 @@ def test_update_review(client, app):
         }
 
     # invalid request
-    application_service_mock.create_review.return_value = (
-        FailedOutputDto.build_resource_not_found_error()
-    )
+    application_service_mock.create_review.return_value = FailedOutputDto.build_resource_not_found_error()
     with app.container.review_application_service.override(application_service_mock):
         response = client.post(
             "/reviews",
@@ -255,6 +248,7 @@ def test_update_review(client, app):
 
     # valid request
     application_service_mock.create_review.return_value = CreateReviewOutputDto(
+        review_id="review_id_uuid",
         drink_id="drink_id_uuid",
         user_id="user_id_uuid",
         rating=4,
@@ -274,8 +268,9 @@ def test_update_review(client, app):
                 comment="review comment",
             ).dict(),
         )
-    assert response.status_code == 200
+    assert response.status_code == 201
     assert response.json() == {
+        "review_id": "review_id_uuid",
         "drink_id": "drink_id_uuid",
         "rating": 4,
         "comment": "review comment",

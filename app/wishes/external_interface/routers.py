@@ -8,6 +8,7 @@ from starlette.responses import JSONResponse
 from auth.application.dtos import GetTokenDataInputDto
 from auth.application.service import AuthApplicationService
 from container import Container
+from drinks.application.service import DrinkApplicationService
 from shared_kernel.external_interface.json_dto import FailedJsonResponse
 from wishes.application.dto import CreateWishInputDto, DeleteWishInputDto, FindWishesInputDto
 from wishes.application.service import WishApplicationService
@@ -40,6 +41,7 @@ def create_wish(
     access_token: str = Header(...),
     auth_application_service: AuthApplicationService = Depends(Provide[Container.auth_application_service]),
     wish_application_service: WishApplicationService = Depends(Provide[Container.wish_application_service]),
+    drink_application_service: DrinkApplicationService = Depends(Provide[Container.drink_application_service]),
 ) -> Union[CreateWishJsonResponse, JSONResponse]:
     get_token_data_input_dto = GetTokenDataInputDto(access_token=access_token)
     get_token_data_output_dto = auth_application_service.get_token_data(get_token_data_input_dto)
@@ -47,7 +49,7 @@ def create_wish(
         return FailedJsonResponse.build_by_output_dto(get_token_data_output_dto)
 
     input_dto = CreateWishInputDto(user_id=get_token_data_output_dto.user_id, drink_id=drink_id)
-    output_dto = wish_application_service.create_wish(input_dto)
+    output_dto = wish_application_service.create_wish(input_dto, drink_application_service)
     if not output_dto.status:
         return FailedJsonResponse.build_by_output_dto(output_dto)
     return CreateWishJsonResponse.build_by_output_dto(output_dto)
@@ -60,6 +62,7 @@ def delete_wish(
     access_token: str = Header(...),
     auth_application_service: AuthApplicationService = Depends(Provide[Container.auth_application_service]),
     wish_application_service: WishApplicationService = Depends(Provide[Container.wish_application_service]),
+    drink_application_service: DrinkApplicationService = Depends(Provide[Container.drink_application_service]),
 ) -> Union[CreateWishJsonResponse, JSONResponse]:
     get_token_data_input_dto = GetTokenDataInputDto(access_token=access_token)
     get_token_data_output_dto = auth_application_service.get_token_data(get_token_data_input_dto)
@@ -67,6 +70,6 @@ def delete_wish(
         return FailedJsonResponse.build_by_output_dto(get_token_data_output_dto)
 
     input_dto = DeleteWishInputDto(wish_id=wish_id)
-    output_dto = wish_application_service.delete_wish(input_dto)
+    output_dto = wish_application_service.delete_wish(input_dto, drink_application_service)
     if not output_dto.status:
         return FailedJsonResponse.build_by_output_dto(output_dto)
