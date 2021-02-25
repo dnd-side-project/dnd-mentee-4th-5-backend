@@ -4,7 +4,6 @@ from drinks.application.dtos import FindDrinkOutputDto
 
 
 class CreateDrinkJsonRequest(BaseModel):
-    drink_id: str
     drink_name: str
     drink_image_url: str
     drink_type: str

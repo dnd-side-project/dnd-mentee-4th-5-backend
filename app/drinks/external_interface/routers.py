@@ -26,12 +26,9 @@ router = APIRouter(
 @inject
 def create_drink(
     request: CreateDrinkJsonRequest,
-    drink_application_service: DrinkApplicationService = Depends(
-        Provide[Container.drink_application_service]
-    ),
+    drink_application_service: DrinkApplicationService = Depends(Provide[Container.drink_application_service]),
 ) -> Optional[JSONResponse]:
     input_dto = CreateDrinkInputDto(
-        drink_id=request.drink_id,
         drink_name=request.drink_name,
         drink_image_url=request.drink_image_url,
         drink_type=request.drink_type,
@@ -47,7 +44,7 @@ def get_drinks(
     query_param: QueryParam = Depends(),
     drink_application_service: DrinkApplicationService = Depends(Provide[Container.drink_application_service]),
 ) -> Union[List[GetDrinkJsonResponse], JSONResponse]:
-    input_dto = FindDrinksInputDto(query_param=query_param)
+    input_dto = FindDrinksInputDto(query_param=query_param.to_enum())
     output_dto = drink_application_service.find_drinks(input_dto=input_dto)
     if not output_dto.status:
         return FailedJsonResponse.build_by_output_dto(output_dto)
