@@ -17,7 +17,7 @@ def test_get_token_success(auth_application_service_mock, app, client):
     auth_application_service_mock.get_token.return_value = GetTokenOutputDto(access_token="access token value")
 
     with app.container.auth_application_service.override(auth_application_service_mock):
-        response = client.get(
+        response = client.post(
             "/auth/token",
             json=GetTokenJsonRequest(user_id="heumsi", password="1234").dict(),
         )
@@ -31,7 +31,7 @@ def test_get_token_fail(auth_application_service_mock, app, client):
     )
 
     with app.container.auth_application_service.override(auth_application_service_mock):
-        response = client.get(
+        response = client.post(
             "/auth/token",
             json=GetTokenJsonRequest(user_id="heumsi", password="1234").dict(),
         )
