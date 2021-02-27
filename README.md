@@ -1,5 +1,7 @@
 # dnd-mentee-4th-5-backend
 
+![](coverage.svg)
+
 ## 개요
 
 DND 4기 5팀의 백엔드 프로젝트 입니다.
@@ -8,7 +10,67 @@ DND 4기 5팀의 백엔드 프로젝트 입니다.
 
 ## 프로젝트 구조
 
-추후 작성 예정
+기본적으로 DDD (Domain Driven Design) 아키텍처를 지향합니다.  
+도메인 단위로 패키지를 나누고, 그 안에서 레이어 단위로 패키지를 나누었습니다.  
+예를 들어 패키지 구조는 다음과 같습니다.
+
+```
+.
+└── app
+    ├── auth
+    │   ├── application
+    │   ├── domain
+    │   └── external_interface
+    ├── drinks
+    │   ├── application
+    │   ├── domain
+    │   ├── external_interface
+    │   └── infra_structure
+    ├── health
+    │   └── external_interface
+    ├── reviews
+    │   ├── application
+    │   ├── domain
+    │   ├── external_interface
+    │   └── infra_structure
+    ├── shared_kernel
+    │   ├── application
+    │   ├── domain
+    │   ├── external_interface
+    │   └── infra_structure
+    ├── users
+    │   ├── application
+    │   ├── domain
+    │   ├── external_interface
+    │   └── infra_structure
+    └── wishes
+        ├── application
+        ├── domain
+        ├── external_interface
+        └── infra_structure
+└── tests
+```
+
+각 레이어 내부는 예를 들면 다음과 같습니다.
+
+```
+.
+├── application
+│   ├── dtos.py
+│   └── service.py
+├── domain
+│   ├── entities.py
+│   ├── repository.py
+│   └── value_objects.py
+├── external_interface
+│   ├── json_dtos.py
+│   └── routers.py
+└── infra_structure
+    ├── in_memory_repository.py
+    ├── orm_models.py
+    └── orm_repository.py
+
+```
 
 <br>
 
@@ -26,7 +88,44 @@ $ poetry install
 
 ## 실행 및 배포 방법
 
-추후 작성 예정
+### 로컬에서 실행
+
+올바른 실행을 위해 다음과 같이 환경 변수를 세팅해주세요.
+
+```
+JWT_SECRET_KEY = {JWT 에 사용할 SECRET KEY} 
+JWT_ALGORITHM = {JWT 에 사용할 해시 알고리즘 이름}
+DB_URL = {연결할 Postgres DB 의 SQLALCHEMY 커넥션 URL}
+TEST_DB_URL = {연결할 Postgres 테스트용 DB 의 SQLALCHEMY 커넥션 URL}
+```
+
+예를 들면 다음과 같습니다.
+
+```
+JWT_SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
+JWT_ALGORITHM = "HS256"
+DB_URL = "postgresql://root:1234@localhost:5432/coholy"
+TEST_DB_URL = "postgresql://root:1234@localhost:5432/coholy_test"
+```
+
+다음처럼 `python` 커맨드로 실행 가능합니다.
+
+```bash
+$ python app/main.py
+```
+
+### 도커로 실행
+
+다음 처럼 `docker` 빌드 후 컨테이너로 실행 가능합니다.
+
+```bash
+$ docker build -t coholy-backend-server .
+$ docker run -d -p 8080:8080 \
+-e JWT_SECRET_KEY = {JWT 에 사용할 SECRET KEY}  \
+-e {JWT 에 사용할 해시 알고리즘 이름} \
+-e DB_URL = {연결할 Postgres DB 의 SQLALCHEMY 커넥션 URL} \
+coholy-backend-server 
+```
 
 <br>
 
@@ -130,9 +229,8 @@ $ git push origin feature/3/auth
 Pull Request와 Merge은 Github 상에서 이뤄집니다.
 
 - PR 전에 관련 내용이 Issue 에 먼저 등록되어 있어야 합니다. Issue 가 없다면 이를 먼저 작성해주세요.
-- PR 제목은 `#{이슈 번호}: 제목` 으로 해주세요.
-  - 예를 들어, 관련 Issue 번호가 3번이고, 로그인 관련된 내용인 경우 : `#3: 로그인 관련 PR`
 - PR 내용은 설정된 템플릿을 이용해주세요.
+- PR 생성 후 Linked issued 에 관련된 이슈를 추가 해주세요.
 - `feature` -> `develop` Merge 는 `Squash & Merge` 로 해주세요.
 - `develop` -> `main` Merge 는 `Merge commits` 으로 해주세요.
 

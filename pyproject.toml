@@ -2,24 +2,33 @@
 name = "dnd-mentee-4th-5-backend"
 version = "0.1.0"
 description = ""
-authors = ["heumsi <heumsi@naver.com>"]
+authors = ["heumsi <heumsi@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
+python-jose = {extras = ["cryptography"], version = "^3.2.0"}
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+dependency-injector = "^4.19.0"
 fastapi = {extras = ["all"], version = "^0.63.0"}
+pymysql = "^1.0.2"
+sqlalchemy = "^1.3.23"
+psycopg2-binary = "^2.8.6"
 
 [tool.poetry.dev-dependencies]
-commitizen = "^2.13.0"
-pre-commit = "^2.9.3"
-python-semantic-release = "^7.11.0"
 black = "^20.8b1"
+pytest = "^6.2.2"
+Commitizen = "^2.14.2"
+python-semantic-release = "^7.13.2"
 isort = "^5.7.0"
-pytest = "^6.2.1"
+coverage = "^5.4"
+coverage-badge = "^1.0.1"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
-[tool.commitizen]
-name = "cz_conventional_commits"
-version = "0.0.1"
-tag_format = "$version"
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+
+[tool.semantic_release]
+version_variable = [
+    "pyproject.toml:version"
+]
+upload_to_pypi = false
