@@ -1,5 +1,7 @@
 # dnd-mentee-4th-5-backend
 
+![](coverage.svg)
+
 ## 개요
 
 DND 4기 5팀의 백엔드 프로젝트 입니다.
