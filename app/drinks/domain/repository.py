@@ -2,6 +2,7 @@ from abc import ABCMeta, abstractmethod
 from typing import List, Optional, Union
 
 from pydantic import BaseModel
+
 from drinks.domain.entities import Drink
 from drinks.domain.value_objects import DrinkType, FilterType, OrderType
 from shared_kernel.domain.value_objects import DrinkId
@@ -18,7 +19,7 @@ class QueryParam(BaseModel):
         self.order = OrderType.from_str(self.order)
         return QueryParam(type=self.type, filter=self.filter, order=self.order)
 
-      
+
 class DrinkRepository(metaclass=ABCMeta):
     @abstractmethod
     def find_all(self, query_param: QueryParam) -> List[Drink]:

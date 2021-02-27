@@ -4,6 +4,7 @@ import pytest
 
 from shared_kernel.application.dtos import FailedOutputDto
 from shared_kernel.domain.exceptions import ResourceNotFoundError, ResourceAlreadyExistError
+from shared_kernel.domain.value_objects import UserId, UserName
 from users.application.dtos import (
     CreateUserInputDto,
     CreateUserOutputDto,
@@ -19,7 +20,6 @@ from users.application.dtos import (
 from users.application.service import UserApplicationService
 from users.domain.entities import User
 from users.domain.repository import UserRepository
-from shared_kernel.domain.value_objects import UserId, UserName
 
 user_data = [("heumsi", "heumsi", "1234")]
 

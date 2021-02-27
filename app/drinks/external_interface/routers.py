@@ -13,7 +13,6 @@ from drinks.external_interface.json_dto import (
     CreateDrinkJsonRequest,
     GetDrinkJsonResponse,
 )
-
 from shared_kernel.external_interface.json_dto import FailedJsonResponse
 
 router = APIRouter(

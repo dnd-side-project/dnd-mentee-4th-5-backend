@@ -1,6 +1,8 @@
 from unittest import mock
 
 import pytest
+from jose import jwt
+
 from auth.application.dtos import (
     GetTokenInputDto,
     GetTokenOutputDto,
@@ -8,7 +10,6 @@ from auth.application.dtos import (
     GetTokenDataOutputDto,
 )
 from auth.application.service import AuthApplicationService
-from jose import jwt
 from shared_kernel.application.dtos import FailedOutputDto
 from users.application.dtos import LoginOutputDto
 from users.application.service import UserApplicationService

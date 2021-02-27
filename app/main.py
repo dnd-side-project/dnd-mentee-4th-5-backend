@@ -1,5 +1,5 @@
-from fastapi import FastAPI
 import uvicorn
+from fastapi import FastAPI
 
 import auth.external_interface.routers
 import drinks.external_interface.routers

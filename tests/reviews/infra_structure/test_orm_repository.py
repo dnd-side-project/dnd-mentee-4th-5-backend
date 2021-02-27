@@ -1,12 +1,10 @@
-import uuid
-
 import pytest
+
 from reviews.domain.entities import Review
 from reviews.domain.repository import QueryParam
 from reviews.domain.value_objects import ReviewRating
 from reviews.infra_structure.orm_models import ReviewOrm
 from reviews.infra_structure.orm_repository import OrmReviewRepository
-from shared_kernel.application.dtos import FailedOutputDto
 from shared_kernel.domain.exceptions import ResourceAlreadyExistError, ResourceNotFoundError, InvalidParamInputError
 from shared_kernel.domain.value_objects import DrinkId, ReviewId, UserId
 

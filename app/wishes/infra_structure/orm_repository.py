@@ -1,5 +1,5 @@
 from contextlib import AbstractContextManager
-from typing import Callable, List, Optional
+from typing import Callable, List
 
 from sqlalchemy.orm import Session
 

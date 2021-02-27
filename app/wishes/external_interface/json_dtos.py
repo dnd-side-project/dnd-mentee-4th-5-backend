@@ -1,6 +1,7 @@
 from typing import List
 
 from pydantic import BaseModel
+
 from wishes.application.dto import CreateWishOutputDto, FindWishesOutputDto
 
 

@@ -6,6 +6,7 @@ from starlette.testclient import TestClient
 from main import create_app
 from shared_kernel.infra_structure.database import Database
 
+
 # fixtures for database (testing ORM Repository)
 @pytest.fixture(scope="session")
 def database():

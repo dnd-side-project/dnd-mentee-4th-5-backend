@@ -1,7 +1,3 @@
-
-from auth.application.service import AuthApplicationService
-from drinks.infra_structure.orm_repository import OrmDrinkRepository
-from shared_kernel.infra_structure.database import Database
 from dependency_injector import containers, providers
 
 from auth.application.service import AuthApplicationService

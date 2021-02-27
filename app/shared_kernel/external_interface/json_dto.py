@@ -1,9 +1,10 @@
 from typing import ClassVar, Dict
 
 from pydantic import BaseModel
-from shared_kernel.application.dtos import FailedOutputDto
 from starlette import status
 from starlette.responses import JSONResponse
+
+from shared_kernel.application.dtos import FailedOutputDto
 
 
 class FailedJsonResponse(BaseModel):

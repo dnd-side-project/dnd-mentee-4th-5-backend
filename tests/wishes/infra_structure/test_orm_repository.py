@@ -1,5 +1,3 @@
-import uuid
-
 import pytest
 
 from shared_kernel.domain.exceptions import ResourceAlreadyExistError, ResourceNotFoundError

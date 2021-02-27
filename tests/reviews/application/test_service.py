@@ -1,6 +1,7 @@
 from unittest import mock
 
 import pytest
+
 from drinks.application.dtos import AddDrinkReviewOutputDto, DeleteDrinkReviewOutputDto, UpdateDrinkReviewOutputDto
 from drinks.application.service import DrinkApplicationService
 from reviews.application.dtos import (

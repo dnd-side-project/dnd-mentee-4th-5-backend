@@ -1,6 +1,7 @@
+from starlette.responses import JSONResponse
+
 from shared_kernel.application.dtos import FailedOutputDto
 from shared_kernel.external_interface.json_dto import FailedJsonResponse
-from starlette.responses import JSONResponse
 
 
 def test_failed_json_response():

@@ -1,8 +1,8 @@
 import pytest
 
 from shared_kernel.domain.exceptions import ResourceNotFoundError, ResourceAlreadyExistError
-from users.domain.entities import User
 from shared_kernel.domain.value_objects import UserId, UserName
+from users.domain.entities import User
 from users.infra_structure.orm_models import UserOrm
 from users.infra_structure.orm_repository import OrmUserRepository
 

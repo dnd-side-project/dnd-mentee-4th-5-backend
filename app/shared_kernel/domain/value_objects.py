@@ -22,9 +22,7 @@ class DrinkId(BaseModel):
 
     @classmethod
     def build(cls, drink_name: str, created_at: float) -> "DrinkId":
-        return cls(
-            value=uuid.uuid5(uuid.NAMESPACE_DNS, name=drink_name + str(created_at))
-        )
+        return cls(value=uuid.uuid5(uuid.NAMESPACE_DNS, name=drink_name + str(created_at)))
 
     @classmethod
     def from_str(cls, drink_id: str) -> "DrinkId":
