@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dnd-mentee-4th-5-backend"
-version = "0.0.0"
+version = "0.1.0"
 description = ""
 authors = ["heumsi <heumsi@gmail.com>"]
 
