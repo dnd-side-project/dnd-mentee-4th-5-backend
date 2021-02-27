@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dnd-mentee-4th-5-backend"
-version = "0.1.0"
+version = "0.0.0"
 description = ""
 authors = ["heumsi <heumsi@gmail.com>"]
 
@@ -26,3 +26,9 @@ coverage-badge = "^1.0.1"
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
+
+[tool.semantic_release]
+version_variable = [
+    "pyproject.toml:version"
+]
+upload_to_pypi = false
