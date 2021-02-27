@@ -21,6 +21,7 @@ Commitizen = "^2.14.2"
 python-semantic-release = "^7.13.2"
 isort = "^5.7.0"
 coverage = "^5.4"
+coverage-badge = "^1.0.1"
 
 [build-system]
 requires = ["poetry>=0.12"]
