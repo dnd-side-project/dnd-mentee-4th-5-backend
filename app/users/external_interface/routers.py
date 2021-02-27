@@ -8,10 +8,10 @@ from starlette.responses import JSONResponse
 from auth.application.dtos import GetTokenDataInputDto
 from auth.application.service import AuthApplicationService
 from container import Container
-from shared_kernel.external_interface.json_dto import FailedJsonResponse
+from shared_kernel.external_interface.json_dtos import FailedJsonResponse
 from users.application.dtos import CreateUserInputDto, DeleteUserInputDto, FindUserInputDto, UpdateUserInputDto
 from users.application.service import UserApplicationService
-from users.external_interface.json_dto import (
+from users.external_interface.json_dtos import (
     CreateUserJsonRequest,
     CreateUserJsonResponse,
     GetUserJsonResponse,

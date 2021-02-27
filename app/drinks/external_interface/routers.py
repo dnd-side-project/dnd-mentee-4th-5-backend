@@ -9,11 +9,11 @@ from container import Container
 from drinks.application.dtos import CreateDrinkInputDto, FindDrinksInputDto
 from drinks.application.service import DrinkApplicationService
 from drinks.domain.repository import QueryParam
-from drinks.external_interface.json_dto import (
+from drinks.external_interface.json_dtos import (
     CreateDrinkJsonRequest,
     GetDrinkJsonResponse,
 )
-from shared_kernel.external_interface.json_dto import FailedJsonResponse
+from shared_kernel.external_interface.json_dtos import FailedJsonResponse
 
 router = APIRouter(
     prefix="/drinks",

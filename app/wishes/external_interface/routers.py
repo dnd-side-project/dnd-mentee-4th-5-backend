@@ -9,7 +9,7 @@ from auth.application.dtos import GetTokenDataInputDto
 from auth.application.service import AuthApplicationService
 from container import Container
 from drinks.application.service import DrinkApplicationService
-from shared_kernel.external_interface.json_dto import FailedJsonResponse
+from shared_kernel.external_interface.json_dtos import FailedJsonResponse
 from wishes.application.dto import CreateWishInputDto, DeleteWishInputDto, FindWishesInputDto
 from wishes.application.service import WishApplicationService
 from wishes.domain.repository import QueryParam

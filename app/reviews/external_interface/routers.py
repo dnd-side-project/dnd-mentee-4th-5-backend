@@ -26,7 +26,7 @@ from reviews.external_interface.json_dtos import (
     UpdateReviewJsonRequest,
     GetReviewsJsonResponse,
 )
-from shared_kernel.external_interface.json_dto import FailedJsonResponse
+from shared_kernel.external_interface.json_dtos import FailedJsonResponse
 
 router = APIRouter(
     prefix="/reviews",

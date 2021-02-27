@@ -5,7 +5,7 @@ from starlette import status
 from auth.application.dtos import GetTokenInputDto
 from auth.external_interface.json_dto import GetTokenJsonRequest, GetTokenJsonResponse
 from container import Container
-from shared_kernel.external_interface.json_dto import FailedJsonResponse
+from shared_kernel.external_interface.json_dtos import FailedJsonResponse
 
 router = APIRouter(
     prefix="/auth",
